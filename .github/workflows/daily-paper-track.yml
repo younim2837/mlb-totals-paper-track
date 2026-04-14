@@ -2,8 +2,8 @@ name: Daily Paper Track
 
 on:
   schedule:
-    # 15:30 UTC = 08:30 PT during daylight saving, 07:30 PT otherwise.
-    - cron: "30 15 * * *"
+    # 17:00 UTC = 10:00 PT during daylight saving, 09:00 PT otherwise.
+    - cron: "0 17 * * *"
   workflow_dispatch:
     inputs:
       run_date:
