@@ -32,8 +32,8 @@ def kelly_size(
     q = 1.0 - p_win
     full_kelly = max(0.0, (b * p_win - q) / b) if b > 0 else 0.0
     frac_kelly = full_kelly * float(kelly_fraction)
-    cap_fraction = float(max_bet_pct) / 100.0
-    capped = min(frac_kelly, cap_fraction)
+    cap_fraction = None if max_bet_pct is None or float(max_bet_pct) <= 0 else float(max_bet_pct) / 100.0
+    capped = frac_kelly if cap_fraction is None else min(frac_kelly, cap_fraction)
     raw_bet = float(bankroll) * capped
     if raw_bet < float(min_bet):
         recommended = 0.0
@@ -46,7 +46,7 @@ def kelly_size(
         "capped_kelly_pct": round(capped * 100, 1),
         "recommended_bet": float(recommended),
         "raw_bet": float(raw_bet),
-        "was_capped": frac_kelly > cap_fraction,
+        "was_capped": cap_fraction is not None and frac_kelly > cap_fraction,
         "edge_pct": round((p_win - 1.0 / american_to_decimal(american_odds)) * 100, 1),
     }
 
@@ -77,8 +77,8 @@ def kalshi_kelly_size(
     q = 1.0 - p_win
     full_kelly = max(0.0, (b * p_win - q) / b) if b > 0 else 0.0
     frac_kelly = full_kelly * float(kelly_fraction)
-    cap_fraction = float(max_bet_pct) / 100.0
-    capped = min(frac_kelly, cap_fraction)
+    cap_fraction = None if max_bet_pct is None or float(max_bet_pct) <= 0 else float(max_bet_pct) / 100.0
+    capped = frac_kelly if cap_fraction is None else min(frac_kelly, cap_fraction)
     raw_bet = float(bankroll) * capped
     if raw_bet < float(min_bet):
         recommended = 0.0
@@ -91,7 +91,7 @@ def kalshi_kelly_size(
         "capped_kelly_pct": round(capped * 100, 1),
         "recommended_bet": float(recommended),
         "raw_bet": float(raw_bet),
-        "was_capped": frac_kelly > cap_fraction,
+        "was_capped": cap_fraction is not None and frac_kelly > cap_fraction,
         "edge_pct": round((p_win - market_price) * 100, 1),
     }
 
