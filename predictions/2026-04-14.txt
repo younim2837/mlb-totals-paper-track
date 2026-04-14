@@ -14,10 +14,10 @@ Fetching games for 2026-04-14...
   Found 15 upcoming regular season games
 No Odds API key found - run without lines (add key to config.json)
 Fetching Kalshi prediction market lines...
-  Kalshi lines found for 7/15 games
+  Kalshi lines found for 10/15 games
   H2H history found for 15/15 matchups
 Fetching weather for 13 outdoor venues (2 dome/retractable skipped)...
-  Weather fetched for 12/13 venues
+  Weather fetched for 13/13 venues
 Fetching confirmed lineups...
   Lineups found for 12/15 games
 Loading team batting stats...
@@ -39,29 +39,30 @@ Generating predictions...
   Venue: Oriole Park at Camden Yards
   Pitchers: Merrill Kelly (away) vs Trevor Rogers (home)
   DC model: 8.5 runs  (home lambda=4.02  away lambda=4.50)
-  Model sigma: 4.83 runs
-  High-tail risk (>9.5): 43.6%  |  Tail sigma: 4.83
-  Low-tail risk (<7.5): 41.4%  |  Tail sigma: 7.28
-  Team totals: away 4.70  |  home 4.38
+  Model sigma: 4.66 runs
+  High-tail risk (>9.5): 43.6%  |  Tail sigma: 4.66
+  Low-tail risk (<7.5): 41.4%  |  Tail sigma: 7.89
+  Team totals: away 4.73  |  home 4.48
   Calibration: -0.15 runs
-  Why: DC baseline 8.5 + away residual +0.28 + home residual +0.43
-  Residual drivers: Lineups +0.72  |  Bullpen +0.38  |  DC priors +0.29
-  Top features: home:away_bullpen_era_season -0.48, away:away_bullpen_top4_burned_score +0.29, home:dc_lambda_home +0.29, home:home_lineup_delta_k_pct_30g +0.27, home:home_lineup_avg_k_pct +0.25
+  Why: DC baseline 8.5 + away residual +0.31 + home residual +0.54
+  Residual drivers: Bullpen +0.54  |  DC priors +0.39  |  Environment +0.27
+  Top features: home:away_bullpen_era_season -0.47, home:dc_lambda_home +0.35, home:away_bullpen_top4_burned_score +0.26, away:away_bullpen_top4_burned_score +0.23, away:temp_f +0.23
   DC   ATK  DEF  |  Arizona Diamondbacks: +0.000 / +0.007  |  Baltimore Orioles: -0.125 / -0.013
   Starter context: away rest 14d / 81 pitches avg | home rest 14d / 94 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.00
   Umpire: Chris Conroy  (8.6 avg runs/game)
   Weather: 90F  wind 16mph  precip 0.0mm  humidity 47%  dew point 53F
   First pitch local: 18:35  |  day game
-  Predicted Total: 9.1
+  Lineups: away OPS 0.712 (+0.008 vs team, platoon +8)  |  home OPS 0.724 (+0.088 vs team, platoon +5)
+  Predicted Total: 9.2
   Line       Over %  Under %      Signal
   --------------------------------------
-  6.5         63.8%    36.2%     >> OVER
+  6.5         63.5%    36.5%     >> OVER
   7.5         58.6%    41.4%     >> OVER
-  8.5         54.9%    45.1%            
-  9.5         46.7%    53.3%            
-  10.5        38.6%    61.4%    >> UNDER
-  11.5        31.0%    69.0%    >> UNDER
+  8.5         56.0%    44.0%            
+  9.5         47.4%    52.6%            
+  10.5        39.0%    61.0%    >> UNDER
+  11.5        31.1%    68.9%    >> UNDER
 
   ---------------------------------------------
 
@@ -100,32 +101,30 @@ Generating predictions...
   Venue: PNC Park
   Pitchers: Miles Mikolas (away) vs Mitch Keller (home)
   DC model: 10.5 runs  (home lambda=5.66  away lambda=4.89)
-  Model sigma: 4.81 runs
-  High-tail risk (>9.5): 46.4%  |  Tail sigma: 4.81
-  Low-tail risk (<7.5): 38.3%  |  Tail sigma: 8.43
-  Team totals: away 5.39  |  home 4.61
-  Calibration: -0.14 runs
-  Why: DC baseline 10.5 + away residual +0.58 + home residual -0.99
-  Residual drivers: DC priors -1.03  |  Lineups +0.98  |  Bullpen +0.87
-  Top features: home:dc_lambda_home -0.60, away:away_bullpen_top4_burned_score +0.48, home:home_lineup_delta_k_pct_30g +0.43, home:away_bullpen_era_season -0.39, away:home_lineup_mid3_avg_ops +0.34
+  Model sigma: 4.28 runs
+  High-tail risk (>9.5): 43.1%  |  Tail sigma: 4.28
+  Low-tail risk (<7.5): 38.9%  |  Tail sigma: 7.44
+  Team totals: away 5.21  |  home 4.38
+  Calibration: -0.18 runs
+  Why: DC baseline 10.5 + away residual +0.41 + home residual -1.19
+  Residual drivers: DC priors -1.23  |  Bullpen +1.02  |  Lineups -0.52
+  Top features: home:dc_lambda_home -0.62, away:away_bullpen_top4_burned_score +0.47, home:away_bullpen_era_season -0.36, home:away_dc_defense -0.30, away:home_bullpen_era_30g +0.20
   DC   ATK  DEF  |  Washington Nationals: +0.189 / -0.262  |  Pittsburgh Pirates: -0.052 / +0.093
   Starter context: away rest 14d / 87 pitches avg | home rest 14d / 76 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.00
   Umpire: John Libka  (9.2 avg runs/game)
-  First pitch local: 18:40  |  night game
-  Predicted Total: 10.0
-  Kalshi line: 9.5  |  Market: 53.0% over  model edge: +1.1%
-  Kalshi fair price: 54.1%  |  edge: +1.1%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
-
+  Weather: 76F  wind 14mph  precip 4.8mm  humidity 68%  dew point 56F
+  First pitch local: 18:40  |  day game
+  Lineups: away OPS 0.729 (+0.050 vs team, platoon +7)  |  home OPS 0.724 (+0.068 vs team, platoon +5)
+  Predicted Total: 9.6
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         66.1%    33.9%     >> OVER
-  7.5         61.7%    38.3%     >> OVER
-  8.5         62.2%    37.8%     >> OVER
-  9.5         54.1%    45.9%            
-  10.5        45.9%    54.1%            
-  11.5        37.8%    62.2%    >> UNDER
+  7.5         61.1%    38.9%     >> OVER
+  8.5         60.1%    39.9%     >> OVER
+  9.5         50.9%    49.1%            
+  10.5        41.7%    58.3%    >> UNDER
+  11.5        32.9%    67.1%    >> UNDER
 
   ---------------------------------------------
 
@@ -149,6 +148,10 @@ Generating predictions...
   First pitch local: 18:40  |  day game
   Lineups: away OPS 0.702 (+0.089 vs team, platoon +4)  |  home OPS 0.706 (+0.065 vs team, platoon +9)
   Predicted Total: 8.7
+  Kalshi line: 8.5  |  Market: 53.0% over  model edge: -1.3%
+  Kalshi fair price: 51.7%  |  edge: -1.3%  |  side: UNDER
+  Kalshi Kelly: raw $0.61 below minimum bet threshold - skip
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         67.3%    32.7%     >> OVER
@@ -180,7 +183,7 @@ Generating predictions...
   Predicted Total: 11.2
   Kalshi line: 9.5  |  Market: 54.0% over  model edge: +9.7%
   Kalshi fair price: 63.7%  |  edge: +9.7%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Kalshi Kelly: 21.1% full  ->  5.3% quarter-Kelly  ->  BUY $5  (edge: +9.7%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -213,6 +216,10 @@ Generating predictions...
   First pitch local: 19:05  |  day game
   Lineups: away OPS 0.715 (+0.095 vs team, platoon +9)  |  home OPS 0.706 (-0.035 vs team, platoon +6)
   Predicted Total: 9.8
+  Kalshi line: 9.5  |  Market: 49.0% over  model edge: +3.4%
+  Kalshi fair price: 52.4%  |  edge: +3.4%  |  side: OVER
+  Kalshi Kelly: 6.7% full  ->  1.7% quarter-Kelly  ->  BUY $2  (edge: +3.4%)
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         64.7%    35.3%     >> OVER
@@ -244,6 +251,10 @@ Generating predictions...
   First pitch local: 19:15  |  day game
   Lineups: away OPS 0.731 (+0.027 vs team, platoon +5)  |  home OPS 0.742 (-0.040 vs team, platoon +6)
   Predicted Total: 10.0
+  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +9.4%
+  Kalshi fair price: 62.4%  |  edge: +9.4%  |  side: OVER
+  Kalshi Kelly: 19.9% full  ->  5.0% quarter-Kelly  ->  BUY $5  (edge: +9.4%)
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         66.0%    34.0%     >> OVER
@@ -275,6 +286,10 @@ Generating predictions...
   First pitch local: 18:40  |  day game
   Lineups: away OPS 0.699 (+0.026 vs team, platoon +4)  |  home OPS 0.715 (+0.042 vs team, platoon +7)
   Predicted Total: 10.1
+  Kalshi line: 8.5  |  Market: 48.0% over  model edge: +14.6%
+  Kalshi fair price: 62.6%  |  edge: +14.6%  |  side: OVER
+  Kalshi Kelly: 28.1% full  ->  7.0% quarter-Kelly  ->  BUY $7  (edge: +14.6%)
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         65.6%    34.4%     >> OVER
@@ -320,32 +335,33 @@ Generating predictions...
   Venue: American Family Field
   Pitchers: Kevin Gausman (away) vs Jacob Misiorowski (home)
   DC model: 9.9 runs  (home lambda=5.95  away lambda=3.97)
-  Model sigma: 4.65 runs
-  High-tail risk (>9.5): 46.4%  |  Tail sigma: 4.65
-  Low-tail risk (<7.5): 39.6%  |  Tail sigma: 8.34
-  Team totals: away 3.89  |  home 5.81
-  Calibration: -0.19 runs
-  Why: DC baseline 9.9 + away residual -0.01 + home residual -0.03
-  Residual drivers: Bullpen +1.27  |  Lineups +1.11  |  DC priors -1.04
-  Top features: home:dc_lambda_home -0.80, home:home_lineup_avg_k_pct +0.61, home:home_lineup_delta_k_pct_30g +0.28, away:away_bullpen_top4_burned_score +0.26, away:home_lineup_mid3_avg_ops +0.23
+  Model sigma: 4.40 runs
+  High-tail risk (>9.5): 41.4%  |  Tail sigma: 4.40
+  Low-tail risk (<7.5): 42.7%  |  Tail sigma: 6.94
+  Team totals: away 3.98  |  home 4.79
+  Calibration: -0.18 runs
+  Why: DC baseline 9.9 + away residual +0.09 + home residual -1.06
+  Residual drivers: DC priors -0.95  |  Bullpen +0.88  |  Lineups -0.37
+  Top features: home:dc_lambda_home -0.77, away:away_bullpen_top4_burned_score +0.26, home:combined_bullpen_era_30g -0.23, home:away_bullpen_era_season +0.15, home:home_lineup_avg_obp -0.13
   DC   ATK  DEF  |  Toronto Blue Jays: -0.089 / -0.185  |  Milwaukee Brewers: +0.075 / +0.022
   Starter context: away rest 14d / 96 pitches avg | home rest 14d / 85 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.00
   Umpire: David Rackley  (8.6 avg runs/game)
   First pitch local: 18:40  |  night game
-  Predicted Total: 9.7
-  Kalshi line: 7.5  |  Market: 45.0% over  model edge: +15.4%
-  Kalshi fair price: 60.4%  |  edge: +15.4%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Lineups: away OPS 0.712 (+0.037 vs team, platoon +5)  |  home OPS 0.734 (+0.029 vs team, platoon +5)
+  Predicted Total: 8.8
+  Kalshi line: 7.5  |  Market: 45.0% over  model edge: +12.3%
+  Kalshi fair price: 57.3%  |  edge: +12.3%  |  side: OVER
+  Kalshi Kelly: 22.4% full  ->  5.6% quarter-Kelly  ->  BUY $6  (edge: +12.3%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
-  6.5         64.9%    35.1%     >> OVER
-  7.5         60.4%    39.6%     >> OVER
-  8.5         60.2%    39.8%     >> OVER
-  9.5         51.7%    48.3%            
-  10.5        43.2%    56.8%            
-  11.5        34.9%    65.1%    >> UNDER
+  6.5         62.7%    37.3%     >> OVER
+  7.5         57.3%    42.7%            
+  8.5         52.7%    47.3%            
+  9.5         43.7%    56.3%            
+  10.5        35.0%    65.0%    >> UNDER
+  11.5        27.0%    73.0%    >> UNDER
 
   ---------------------------------------------
 
@@ -370,7 +386,7 @@ Generating predictions...
   Predicted Total: 10.6
   Kalshi line: 8.5  |  Market: 55.0% over  model edge: +11.0%
   Kalshi fair price: 66.0%  |  edge: +11.0%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Kalshi Kelly: 24.5% full  ->  6.1% quarter-Kelly  ->  BUY $6  (edge: +11.0%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -404,7 +420,7 @@ Generating predictions...
   Predicted Total: 10.3
   Kalshi line: 8.5  |  Market: 54.0% over  model edge: +10.1%
   Kalshi fair price: 64.1%  |  edge: +10.1%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Kalshi Kelly: 21.9% full  ->  5.5% quarter-Kelly  ->  BUY $5  (edge: +10.1%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -436,7 +452,7 @@ Generating predictions...
   Predicted Total: 11.2
   Kalshi line: 7.5  |  Market: 46.0% over  model edge: +18.4%
   Kalshi fair price: 64.4%  |  edge: +18.4%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Kalshi Kelly: 34.1% full  ->  8.5% quarter-Kelly  ->  BUY $9  (edge: +18.4%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -498,7 +514,7 @@ Generating predictions...
   Predicted Total: 10.3
   Kalshi line: 7.5  |  Market: 48.0% over  model edge: +13.4%
   Kalshi fair price: 61.4%  |  edge: +13.4%  |  side: OVER
-  Kalshi Kelly: raw $0.00 below minimum bet threshold - skip
+  Kalshi Kelly: 25.8% full  ->  6.5% quarter-Kelly  ->  BUY $6  (edge: +13.4%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -514,14 +530,14 @@ Generating predictions...
   ----------------------------------------------------------------
   Matchup                   Line  Model%  Market%   Edge%   Side   Kelly$     Raw$
   ----------------------------------------------------------------
-  Seattle Mariners@San Die   7.5    64.4     46.0    18.4   OVER        0     0.00
-  Toronto Blue Jays@Milwau   7.5    60.4     45.0    15.4   OVER        0     0.00
-  New York Mets@Los Angele   7.5    61.4     48.0    13.4   OVER        0     0.00
-  Cleveland Guardians@St.    8.5    66.0     55.0    11.0   OVER        0     0.00
-  Colorado Rockies@Houston   8.5    64.1     54.0    10.1   OVER        0     0.00
-  Chicago Cubs@Philadelphi   9.5    63.7     54.0     9.7   OVER        0     0.00
-  Washington Nationals@Pit   9.5    54.1     53.0     1.1   OVER        0     0.00
-  Note: no Kalshi Kelly sizing cleared the rounded bet threshold.
+  Seattle Mariners@San Die   7.5    64.4     46.0    18.4   OVER        9     8.52
+  Boston Red Sox@Minnesota   8.5    62.6     48.0    14.6   OVER        7     7.02
+  New York Mets@Los Angele   7.5    61.4     48.0    13.4   OVER        6     6.45
+  Toronto Blue Jays@Milwau   7.5    57.3     45.0    12.3   OVER        6     5.59
+  Cleveland Guardians@St.    8.5    66.0     55.0    11.0   OVER        6     6.13
+  Colorado Rockies@Houston   8.5    64.1     54.0    10.1   OVER        5     5.48
+  Chicago Cubs@Philadelphi   9.5    63.7     54.0     9.7   OVER        5     5.27
+  Miami Marlins@Atlanta Br   8.5    62.4     53.0     9.4   OVER        5     4.98
 
 Saved board export: predictions/2026-04-14-board.tsv
 Saved picks export: predictions/2026-04-14-picks.tsv

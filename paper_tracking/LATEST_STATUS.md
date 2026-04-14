@@ -1,10 +1,10 @@
 # Latest Status (2026)
 
-- Updated: 2026-04-14T20:54:10Z
+- Updated: 2026-04-14T21:13:02Z
 - Daily board files found: 2
 
 ## Kalshi
-- Tracked: 7
+- Tracked: 10
 - Settled: 0
 - Record: 0-0-0
 - Win rate: 0.0%
