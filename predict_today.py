@@ -1251,6 +1251,12 @@ def main():
         upcoming_keys = {(g["away_name"], g["home_name"]) for g in todays_games}
         matched_kalshi = sum(1 for key in kalshi_lines if key in upcoming_keys)
         print(f"  Kalshi lines found for {matched_kalshi}/{len(todays_games)} games")
+        missing_kalshi = sorted(upcoming_keys - set(kalshi_lines))
+        if missing_kalshi:
+            preview = ", ".join(f"{away} @ {home}" for away, home in missing_kalshi[:6])
+            if len(missing_kalshi) > 6:
+                preview += ", ..."
+            print(f"  Kalshi matches missing for: {preview}")
 
     # Note: Kalshi is shown as supplementary data only — not substituted as the line.
     # Use The Odds API (or config.json key) for real sportsbook lines.
