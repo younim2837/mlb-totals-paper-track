@@ -1,0 +1,96 @@
+name: Daily Paper Track
+
+on:
+  schedule:
+    # 15:30 UTC = 08:30 PT during daylight saving, 07:30 PT otherwise.
+    - cron: "30 15 * * *"
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Target date YYYY-MM-DD. Leave blank for current Pacific date."
+        required: false
+        type: string
+      quick:
+        description: "Skip pitcher refresh"
+        required: false
+        default: false
+        type: boolean
+      no_update:
+        description: "Skip all data refreshes"
+        required: false
+        default: false
+        type: boolean
+      all_games:
+        description: "Also generate the all-games report variant"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  run-paper-track:
+    runs-on: ubuntu-latest
+    env:
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      RUN_DATE: ${{ inputs.run_date }}
+      RUN_QUICK: ${{ inputs.quick }}
+      RUN_NO_UPDATE: ${{ inputs.no_update }}
+      RUN_ALL_GAMES: ${{ inputs.all_games }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run daily paper test
+        shell: bash
+        run: |
+          args=()
+          if [ -n "${RUN_DATE}" ]; then
+            args+=("${RUN_DATE}")
+          fi
+          if [ "${RUN_QUICK}" = "true" ]; then
+            args+=("--quick")
+          fi
+          if [ "${RUN_NO_UPDATE}" = "true" ]; then
+            args+=("--no-update")
+          fi
+          if [ "${RUN_ALL_GAMES}" = "true" ]; then
+            args+=("--all-games")
+          fi
+          python paper_track_daily.py "${args[@]}"
+
+      - name: Refresh season trackers
+        shell: bash
+        run: |
+          season="$(TZ=America/Los_Angeles date +%Y)"
+          python grade_paper_tracking.py --season "${season}"
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data predictions paper_tracking
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          target_date="${RUN_DATE}"
+          if [ -z "${target_date}" ]; then
+            target_date="$(TZ=America/Los_Angeles date +%F)"
+          fi
+          git commit -m "Automated paper-track run for ${target_date}"
+          git push

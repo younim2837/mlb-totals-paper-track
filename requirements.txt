@@ -1,0 +1,9 @@
+MLB-StatsAPI
+numpy
+openpyxl
+pandas
+PyYAML
+requests
+scikit-learn
+scipy
+xgboost

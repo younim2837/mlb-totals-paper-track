@@ -1,0 +1,11 @@
+game_id	commence_time	away_team	home_team	predicted_total	posted_line	posted_odds	edge	p_over_line	p_under_line	bet_signal	bet_confidence	bet_block_reason	market_adjustment_method	market_total_before_shrink	market_shrink_delta	market_shrink_fraction	market_num_books	prediction_std	high_tail_prob_9p5	low_tail_prob_7p5	recommended_bet	kalshi_line	kalshi_over_pct
+		Houston Astros	Seattle Mariners	8.5														4.18	22.4	43.6	0.0	7.5	51.0
+		Arizona Diamondbacks	Baltimore Orioles	7.5														4.29	26.3	45.7	0.0	8.5	52.0
+		Washington Nationals	Pittsburgh Pirates	8.8														4.22	28.0	45.4	0.0	7.5	48.0
+		Chicago Cubs	Philadelphia Phillies	6.6														4.18	21.6	47.3	0.0	8.5	47.0
+		Los Angeles Angels	New York Yankees	8.2														4.18	32.0	45.4	0.0	9.5	46.0
+		Miami Marlins	Atlanta Braves	8.6														4.18	33.7	45.4	0.0	8.5	48.0
+		Boston Red Sox	Minnesota Twins	7.9														4.18	23.3	45.3	0.0	7.5	48.0
+		Cleveland Guardians	St. Louis Cardinals	7.3														4.3	27.1	46.1	0.0	8.5	47.0
+		Texas Rangers	Athletics	6.8														4.29	22.7	47.3	0.0		
+		New York Mets	Los Angeles Dodgers	8.1														4.2	26.7	45.4	0.0	8.5	55.0

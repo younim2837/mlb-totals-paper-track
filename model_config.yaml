@@ -1,0 +1,149 @@
+# ============================================================
+# MLB Betting Model — User Configuration
+# ============================================================
+# Edit this file to tune how the model weighs evidence and
+# when it signals bets. No code changes required.
+#
+# Run predictions normally after saving:
+#   python run_today.py
+# ============================================================
+
+
+# ── Elo Rating Tuning ────────────────────────────────────────
+# Controls how the Bayesian team strength ratings behave.
+#
+elo:
+  k_factor: 8           # Learning rate: how much one game shifts ratings.
+                        # Higher = reacts faster to hot/cold streaks (range: 4–16)
+  home_advantage: 0.15  # Run bonus for home team in expected-runs calculation.
+                        # Historical MLB average is ~0.10–0.20 runs
+  offseason_carry: 0.75 # How much of last season's rating carries over (0–1).
+                        # 0.75 = 25% regression to mean. Lower = more regression.
+
+
+# ── Feature Group Weights ────────────────────────────────────
+# Multipliers applied to feature groups before prediction.
+# 1.0 = use as-is. 1.2 = boost 20%. 0.5 = dampen 50%. 0.0 = disable.
+# XGBoost still determines the final blend — these shift the emphasis.
+#
+# NOTE: These are applied as manual overrides on the prediction output,
+# not by retraining. They scale the feature contributions in the final
+# predicted total via a weighted blend of sub-models.
+#
+feature_weights:
+  elo_ratings: 1.0        # Schedule-adjusted team strength (Bayesian layer)
+  recent_form: 1.0        # 10-game rolling averages
+  season_form: 1.0        # Season-to-date averages
+  pitcher: 1.0            # Starting pitcher ERA/WHIP/K9 (last 3 starts)
+  bullpen: 1.0            # Bullpen ERA (10g, 30g, season)
+  park_factor: 1.0        # Historical venue run-scoring factor
+  weather: 1.0            # Temp, wind, precipitation (outdoor games only)
+  umpire: 1.0             # HP umpire historical scoring rate
+  h2h: 1.0                # Head-to-head matchup history
+
+
+# ── Bankroll & Kelly Sizing ──────────────────────────────────
+# Kelly Criterion sizes bets proportional to your edge.
+# Quarter-Kelly is recommended — full Kelly is theoretically optimal
+# but produces brutal drawdowns in practice.
+#
+bankroll:
+  total: 100           # Your current bankroll in dollars
+  kelly_fraction: 0.25  # 0.25 = quarter-Kelly (recommended)
+                        # 0.5 = half-Kelly, 1.0 = full Kelly (aggressive)
+  max_bet_pct: 0        # 0 = no hard cap; show true quarter-Kelly sizing
+  min_bet: 1            # Minimum bet size in dollars (rounds up to this)
+  round_to: 1           # Round bet size to nearest $1 (cleaner sizing)
+
+
+# ── Betting Signal Thresholds ────────────────────────────────
+# Controls when the model says "bet" vs "no edge".
+#
+betting:
+  min_edge_runs: 0.5      # Minimum |model prediction − posted line| to flag a bet.
+                          # Raise to 1.0+ for higher-conviction-only signals.
+  min_confidence_pct: 55  # Minimum P(over) or P(under) required for a BET signal.
+                          # 55% = slight edge. 60%+ = strong conviction.
+  allowed_market_adjustment_methods:
+    - edge_model          # Only allow live bets when the learned edge-model path
+                          # is active. Remove this list to allow all methods.
+  max_bets_per_day: 5     # Cap on flagged bets shown per day (sorted by edge size).
+                          # Set to 0 for no cap.
+
+
+# ── Manual Game Overrides ────────────────────────────────────
+# Inject same-day knowledge the model can't know: lineup changes,
+# injuries, bullpen fatigue after a 13-inning game last night, etc.
+#
+# Format:
+#   "Team Name":
+#     offense_adj: +0.5    # add runs to expected scoring (positive = more runs)
+#     defense_adj: -0.3    # adjust run prevention (negative = worse defense today)
+#
+# These adjust the final predicted total directly, not the Elo ratings.
+# They reset automatically each day (not persisted).
+#
+overrides: {}
+# Examples (uncomment and edit as needed):
+#   "New York Yankees":
+#     offense_adj: -1.0    # Judge and Stanton both out of lineup
+#   "Los Angeles Dodgers":
+#     defense_adj: +0.5    # Bullpen depleted after 11-inning game yesterday
+#   "Houston Astros":
+#     offense_adj: +0.3    # Facing a weak AAA call-up starter
+
+
+# ── Dixon-Coles Priors / Optional Blend ─────────────────────
+# Dixon-Coles now feeds the Bayesian prior layer directly as model features.
+# Keep dc_weight at 0.0 for the intended pipeline:
+#   Dixon-Coles priors -> feature engineering -> XGBoost final prediction
+# Raise dc_weight only if you want an additional post-model ensemble blend.
+#
+dixon_coles:
+  enabled: true
+  dc_weight: 0.0          # Extra post-model DC blend; 0.0 keeps XGBoost final
+  time_decay_halflife: 60  # Better end-to-end with current XGBoost feature stack
+  training_window: 365     # Better end-to-end with current XGBoost feature stack
+  min_games_for_fit: 100   # Keep the early-season fit a bit more conservative
+  l2_penalty: 0.05         # Mild shrinkage on team attack/defense parameters
+
+
+# ── Display Options ──────────────────────────────────────────
+display:
+  show_elo_ratings: true    # Show each team's Elo offense/defense rating
+  show_umpire: true         # Show today's HP umpire and their scoring avg
+  show_weather: true        # Show weather conditions for outdoor games
+  min_kalshi_confidence: 20 # Only show Kalshi market data if market has >= this
+                            # implied probability range (filters garbage markets)
+  kalshi_max_line_diff: 4.5 # Hide Kalshi line if it differs from model by more
+                            # than this many runs (filters thin/bad markets)
+
+
+# -- Market Lines / Future Odds API Integration -----------------
+# This section is intentionally disabled for now.
+# The current production model does NOT use sportsbook lines as an input.
+#
+# Planned architecture:
+#   Stage 1: baseball-only model builds an independent total
+#   Stage 2: optional market-aware shrinkage layer nudges toward the line
+#            when historical evidence says the disagreement is unstable
+#
+# Historical backfill prep:
+#   python collect_lines_historical_oddsapi.py --years 2022-2025 --estimate-only
+#
+market_lines:
+  enabled: true                  # Historical odds backfill is now available
+  source: odds_api_historical    # Intended future source for 2022+ lines
+  use_for_display: true          # Safe once live Odds API lines are available
+  use_for_post_model_shrinkage: true
+  preferred_bookmakers:          # Up to 10 counts as one billed bookmaker group
+    - pinnacle
+    - draftkings
+    - fanduel
+    - betmgm
+    - caesars
+  min_books: 2                   # Ignore thin consensus if fewer books are present
+  snapshot_timezone: America/New_York
+  snapshot_hours_local: [9, 12, 15, 18, 21]
+  max_shrink_fraction: 0.35      # Future cap for post-model move toward market
+  shrink_deadband_runs: 0.25     # Future: ignore tiny model-market differences

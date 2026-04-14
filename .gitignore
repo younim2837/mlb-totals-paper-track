@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.claude/
+.venv/
+venv/
+.env
+config.json
+smoke_exports_*/
+.DS_Store

@@ -1,0 +1,576 @@
+MLB TOTALS MODEL INPUTS REFERENCE
+=================================
+
+This file summarizes the current inputs used by the production MLB totals
+model.
+
+Current model family:
+- Team-split XGBoost
+- One model predicts home runs
+- One model predicts away runs
+- Final total = home prediction + away prediction
+- Both side models are trained as Dixon-Coles residual models
+
+Important:
+- Kalshi lines do NOT go into the point model
+- Sportsbook lines do NOT go into the point model
+- Kelly sizing does NOT go into the point model
+- Those are downstream comparison and betting layers only
+
+
+1. HOW TO THINK ABOUT THE INPUTS
+--------------------------------
+
+The easiest way to understand the feature set is in layers:
+
+1. Bayesian prior layer
+   Dixon-Coles team attack/defense priors and expected runs
+
+2. Team form layer
+   Recent and season-to-date scoring/prevention context
+
+3. Game environment layer
+   Ballpark, dome, weather, umpire
+
+4. Same-day roster layer
+   Confirmed lineups, lineup quality, platoon structure
+
+5. Pitching layer
+   Starter quality, workload, role context, bullpen quality and availability
+
+The production point model currently uses 175 engineered inputs.
+
+
+2. POINT MODEL INPUT GROUPS
+---------------------------
+
+A. Team identity and matchup indexing
+- away_team_id
+- home_team_id
+- h2h_avg_total_runs
+
+Why these exist:
+- team IDs let tree models learn stable team-specific tendencies
+- head-to-head average total gives lightweight matchup-specific context
+
+
+B. Recent team form: 10-game windows
+- home_avg_runs_scored_10g
+- home_avg_runs_allowed_10g
+- home_avg_total_runs_10g
+- home_win_pct_10g
+- away_avg_runs_scored_10g
+- away_avg_runs_allowed_10g
+- away_avg_total_runs_10g
+- away_win_pct_10g
+- combined_scoring_10g
+- combined_allowed_10g
+- home_offense_vs_away_pitching_10g
+- away_offense_vs_home_pitching_10g
+
+Why these exist:
+- capture recent offensive quality
+- capture recent run prevention quality
+- capture whether a team has recently been playing in higher- or lower-scoring games
+- capture directional matchup tension between one offense and the other side's prevention
+
+
+C. Recent team form: 30-game windows
+- home_avg_runs_scored_30g
+- home_avg_runs_allowed_30g
+- home_avg_total_runs_30g
+- home_win_pct_30g
+- away_avg_runs_scored_30g
+- away_avg_runs_allowed_30g
+- away_avg_total_runs_30g
+- away_win_pct_30g
+- combined_scoring_30g
+- combined_allowed_30g
+- home_offense_vs_away_pitching_30g
+- away_offense_vs_home_pitching_30g
+
+Why these exist:
+- provide a more stable medium-horizon baseline than 10-game form
+
+
+D. Season-to-date team form
+- home_season_avg_scored
+- home_season_avg_allowed
+- away_season_avg_scored
+- away_season_avg_allowed
+- combined_season_scoring
+- combined_season_allowed
+- home_days_rest
+- away_days_rest
+
+Why these exist:
+- anchor team quality beyond short streaks
+- rest days can affect lineup freshness and bullpen usage
+
+
+E. Bullpen baseline quality
+- home_bullpen_era_10g
+- home_bullpen_era_30g
+- home_bullpen_era_season
+- away_bullpen_era_10g
+- away_bullpen_era_30g
+- away_bullpen_era_season
+- combined_bullpen_era_10g
+- combined_bullpen_era_30g
+- combined_bullpen_era_season
+
+Why these exist:
+- estimate the run-prevention quality of each team's non-starter innings
+
+
+F. Ballpark and environment
+- park_factor
+- is_dome
+- temp_f
+- wind_mph
+- precip_mm
+- humidity_pct
+- dew_point_f
+- first_pitch_local_hour
+- is_night_game
+
+Why these exist:
+- park factor captures the venue's run environment
+- dome/retractable settings help suppress irrelevant weather influence
+- weather helps explain same-day scoring conditions in outdoor games
+- local first-pitch timing helps distinguish day vs night run environments
+
+
+G. Dixon-Coles Bayesian priors
+- home_dc_attack
+- home_dc_defense
+- away_dc_attack
+- away_dc_defense
+- dc_lambda_home
+- dc_lambda_away
+- dc_expected_total
+- dc_home_edge
+- dc_fit_n_games
+
+Why these exist:
+- this is the main Bayesian prior layer
+- lambdas and expected total provide a structured pregame scoring baseline
+- attack/defense parameters help XGBoost learn where the prior should be corrected
+
+
+H. Rolling team batting quality
+- home_rolling_ops_10g
+- home_rolling_ops_30g
+- home_rolling_bb_pct_10g
+- home_rolling_bb_pct_30g
+- home_rolling_k_pct_10g
+- home_rolling_k_pct_30g
+- away_rolling_ops_10g
+- away_rolling_ops_30g
+- away_rolling_bb_pct_10g
+- away_rolling_bb_pct_30g
+- away_rolling_k_pct_10g
+- away_rolling_k_pct_30g
+
+Why these exist:
+- summarize recent offensive process, not just runs scored
+- OPS acts as a broad production proxy
+- BB percent and K percent help characterize plate-discipline and contact profile
+
+
+I. Same-day lineup strength: home side
+- home_lineup_confirmed
+- home_lineup_batters_known
+- home_lineup_batters_with_sample
+- home_lineup_low_pa_batters
+- home_lineup_platoon_adv_batters
+- home_lineup_avg_pre_pa
+- home_lineup_avg_ops
+- home_lineup_avg_obp
+- home_lineup_avg_slg
+- home_lineup_avg_bb_pct
+- home_lineup_avg_k_pct
+- home_lineup_top3_avg_ops
+- home_lineup_mid3_avg_ops
+- home_lineup_bottom3_avg_ops
+- home_lineup_std_ops
+
+
+J. Same-day lineup strength: away side
+- away_lineup_confirmed
+- away_lineup_batters_known
+- away_lineup_batters_with_sample
+- away_lineup_low_pa_batters
+- away_lineup_platoon_adv_batters
+- away_lineup_avg_pre_pa
+- away_lineup_avg_ops
+- away_lineup_avg_obp
+- away_lineup_avg_slg
+- away_lineup_avg_bb_pct
+- away_lineup_avg_k_pct
+- away_lineup_top3_avg_ops
+- away_lineup_mid3_avg_ops
+- away_lineup_bottom3_avg_ops
+- away_lineup_std_ops
+
+Why these exist:
+- describe the actual nine hitters expected that day
+- capture depth, top-of-order strength, sample reliability, and platoon advantage
+- all player stats are shrinkage-adjusted so tiny samples do not dominate
+
+
+K. Same-day lineup delta vs team baseline
+- home_lineup_delta_ops_30g
+- home_lineup_delta_bb_pct_30g
+- home_lineup_delta_k_pct_30g
+- home_lineup_top3_delta_ops_30g
+- home_lineup_depth_gap_ops
+- away_lineup_delta_ops_30g
+- away_lineup_delta_bb_pct_30g
+- away_lineup_delta_k_pct_30g
+- away_lineup_top3_delta_ops_30g
+- away_lineup_depth_gap_ops
+
+Why these exist:
+- measure whether today's actual lineup is stronger or weaker than the team's recent normal
+- this is safer than using raw lineup strength alone
+
+
+L. Bullpen availability and top-arm usage: home side
+- home_bullpen_top2_quality_score
+- home_bullpen_top4_quality_score
+- home_bullpen_top2_used_yesterday
+- home_bullpen_top2_b2b
+- home_bullpen_top4_used_yesterday
+- home_bullpen_top4_b2b
+- home_bullpen_top4_available_score
+- home_bullpen_top4_burned_score
+- home_bullpen_top4_pitches_3d
+
+
+M. Bullpen availability and top-arm usage: away side
+- away_bullpen_top2_quality_score
+- away_bullpen_top4_quality_score
+- away_bullpen_top2_used_yesterday
+- away_bullpen_top2_b2b
+- away_bullpen_top4_used_yesterday
+- away_bullpen_top4_b2b
+- away_bullpen_top4_available_score
+- away_bullpen_top4_burned_score
+- away_bullpen_top4_pitches_3d
+
+Why these exist:
+- v1 bullpen fatigue features were too blunt
+- these tier-based features try to distinguish "good relievers available" from "good relievers burned"
+
+
+N. Umpire environment
+- ump_avg_total_runs
+
+Why this exists:
+- home plate umpires can subtly influence walk rate, strike zone width, and scoring environment
+
+
+O. Starting pitcher recent performance: home side
+- home_pitcher_era_3g
+- home_pitcher_whip_3g
+- home_pitcher_k9_3g
+- home_pitcher_hr9_3g
+- home_pitcher_ip_3g
+- home_pitcher_avg_pitches_3g
+- home_pitcher_prev_pitches
+- home_pitcher_avg_bf_3g
+- home_pitcher_prev_bf
+- home_pitcher_days_rest
+- home_pitcher_short_rest
+- home_pitcher_long_rest
+- home_pitcher_offseason_gap
+- home_pitcher_short_leash_score
+- home_pitcher_workhorse_score
+- home_pitcher_opener_flag
+- home_pitcher_bulk_flag
+
+
+P. Starting pitcher recent performance: away side
+- away_pitcher_era_3g
+- away_pitcher_whip_3g
+- away_pitcher_k9_3g
+- away_pitcher_hr9_3g
+- away_pitcher_ip_3g
+- away_pitcher_avg_pitches_3g
+- away_pitcher_prev_pitches
+- away_pitcher_avg_bf_3g
+- away_pitcher_prev_bf
+- away_pitcher_days_rest
+- away_pitcher_short_rest
+- away_pitcher_long_rest
+- away_pitcher_offseason_gap
+- away_pitcher_short_leash_score
+- away_pitcher_workhorse_score
+- away_pitcher_opener_flag
+- away_pitcher_bulk_flag
+
+Why these exist:
+- estimate current starter quality
+- estimate workload and durability
+- estimate whether a pitcher is acting more like a true starter, opener, short-leash arm, or bulk guy
+
+
+Q. Combined starter context
+- combined_pitcher_era
+- combined_pitcher_whip
+- combined_pitcher_k9
+- combined_pitcher_avg_pitches_3g
+- combined_pitcher_prev_pitches
+- combined_pitcher_avg_bf_3g
+- combined_pitcher_short_rest_flags
+- combined_pitcher_offseason_gap_flags
+- combined_pitcher_short_leash_score
+- combined_pitcher_workhorse_score
+- combined_pitcher_opener_flags
+- combined_pitcher_bulk_flags
+
+Why these exist:
+- let the model reason about the overall game-level starting-pitching environment
+
+
+3. WHAT THE UNCERTAINTY MODEL USES
+---------------------------------
+
+The uncertainty model uses:
+- all of the same baseball/game features above
+- plus one extra feature: point_prediction
+
+Its job is to predict absolute error, which is then converted into
+game-specific sigma:
+- prediction_std
+
+This lets the probability layer use different spreads for different games.
+
+
+4. WHAT THE TAIL MODELS USE
+---------------------------
+
+There are two tail classifiers:
+- high-tail model for P(total > 9.5)
+- low-tail model for P(total < 7.5)
+
+Each tail model uses:
+- all of the same baseball/game features above
+- plus one extra feature: point_prediction
+
+These tail models do NOT replace the point forecast.
+They help the probability layer express when a game has extra shootout risk or
+extra dud risk.
+
+
+5. WHAT IS NOT A MODEL INPUT
+----------------------------
+
+The following are not inputs to the core baseball model:
+
+- Kalshi lines
+- sportsbook totals
+- Kelly sizing
+- edge calculations
+- displayed bet signals
+
+Those happen after prediction and are part of evaluation / decision support.
+
+
+6. WHERE EACH GROUP COMES FROM
+------------------------------
+
+Main sources:
+- collect_games.py -> historical completed MLB games
+- dixon_coles.py -> Bayesian team priors
+- collect_team_batting.py -> rolling team batting stats
+- collect_team_lineups.py / lineup_features.py -> same-day lineup features
+- collect_bullpen_usage.py / bullpen_usage.py -> bullpen workload and top-arm availability
+- collect_pitcher_stats.py -> pitcher game logs and starter rolling stats
+- collect_umpires.py -> historical home plate umpire records
+- collect_weather.py -> historical weather by venue/date
+- build_features.py -> assembles the historical training matrix
+- predict_today.py -> assembles the same feature family live
+
+
+7. RAW FEATURE LIST
+-------------------
+
+Below is the exact current production feature list from models/model_meta.json.
+
+away_team_id
+home_team_id
+h2h_avg_total_runs
+home_avg_runs_scored_10g
+home_avg_runs_allowed_10g
+home_avg_total_runs_10g
+home_win_pct_10g
+home_avg_runs_scored_30g
+home_avg_runs_allowed_30g
+home_avg_total_runs_30g
+home_win_pct_30g
+home_bullpen_era_10g
+home_bullpen_era_30g
+home_bullpen_era_season
+home_season_avg_scored
+home_season_avg_allowed
+home_days_rest
+away_avg_runs_scored_10g
+away_avg_runs_allowed_10g
+away_avg_total_runs_10g
+away_win_pct_10g
+away_avg_runs_scored_30g
+away_avg_runs_allowed_30g
+away_avg_total_runs_30g
+away_win_pct_30g
+away_bullpen_era_10g
+away_bullpen_era_30g
+away_bullpen_era_season
+away_season_avg_scored
+away_season_avg_allowed
+away_days_rest
+combined_scoring_10g
+combined_allowed_10g
+home_offense_vs_away_pitching_10g
+away_offense_vs_home_pitching_10g
+combined_scoring_30g
+combined_allowed_30g
+home_offense_vs_away_pitching_30g
+away_offense_vs_home_pitching_30g
+combined_season_scoring
+combined_season_allowed
+combined_bullpen_era_10g
+combined_bullpen_era_30g
+combined_bullpen_era_season
+park_factor
+is_dome
+temp_f
+wind_mph
+precip_mm
+home_dc_attack
+home_dc_defense
+away_dc_attack
+away_dc_defense
+dc_lambda_home
+dc_lambda_away
+dc_expected_total
+dc_home_edge
+dc_fit_n_games
+home_rolling_ops_10g
+home_rolling_ops_30g
+home_rolling_bb_pct_10g
+home_rolling_bb_pct_30g
+home_rolling_k_pct_10g
+home_rolling_k_pct_30g
+away_rolling_ops_10g
+away_rolling_ops_30g
+away_rolling_bb_pct_10g
+away_rolling_bb_pct_30g
+away_rolling_k_pct_10g
+away_rolling_k_pct_30g
+home_lineup_confirmed
+home_lineup_batters_known
+home_lineup_batters_with_sample
+home_lineup_low_pa_batters
+home_lineup_platoon_adv_batters
+home_lineup_avg_pre_pa
+home_lineup_avg_ops
+home_lineup_avg_obp
+home_lineup_avg_slg
+home_lineup_avg_bb_pct
+home_lineup_avg_k_pct
+home_lineup_top3_avg_ops
+home_lineup_mid3_avg_ops
+home_lineup_bottom3_avg_ops
+home_lineup_std_ops
+away_lineup_confirmed
+away_lineup_batters_known
+away_lineup_batters_with_sample
+away_lineup_low_pa_batters
+away_lineup_platoon_adv_batters
+away_lineup_avg_pre_pa
+away_lineup_avg_ops
+away_lineup_avg_obp
+away_lineup_avg_slg
+away_lineup_avg_bb_pct
+away_lineup_avg_k_pct
+away_lineup_top3_avg_ops
+away_lineup_mid3_avg_ops
+away_lineup_bottom3_avg_ops
+away_lineup_std_ops
+home_lineup_delta_ops_30g
+home_lineup_delta_bb_pct_30g
+home_lineup_delta_k_pct_30g
+home_lineup_top3_delta_ops_30g
+home_lineup_depth_gap_ops
+away_lineup_delta_ops_30g
+away_lineup_delta_bb_pct_30g
+away_lineup_delta_k_pct_30g
+away_lineup_top3_delta_ops_30g
+away_lineup_depth_gap_ops
+home_bullpen_top2_quality_score
+home_bullpen_top4_quality_score
+home_bullpen_top2_used_yesterday
+home_bullpen_top2_b2b
+home_bullpen_top4_used_yesterday
+home_bullpen_top4_b2b
+home_bullpen_top4_available_score
+home_bullpen_top4_burned_score
+home_bullpen_top4_pitches_3d
+away_bullpen_top2_quality_score
+away_bullpen_top4_quality_score
+away_bullpen_top2_used_yesterday
+away_bullpen_top2_b2b
+away_bullpen_top4_used_yesterday
+away_bullpen_top4_b2b
+away_bullpen_top4_available_score
+away_bullpen_top4_burned_score
+away_bullpen_top4_pitches_3d
+ump_avg_total_runs
+home_pitcher_era_3g
+home_pitcher_whip_3g
+home_pitcher_k9_3g
+home_pitcher_hr9_3g
+home_pitcher_ip_3g
+home_pitcher_avg_pitches_3g
+home_pitcher_prev_pitches
+home_pitcher_avg_bf_3g
+home_pitcher_prev_bf
+home_pitcher_days_rest
+home_pitcher_short_rest
+home_pitcher_long_rest
+home_pitcher_offseason_gap
+home_pitcher_short_leash_score
+home_pitcher_workhorse_score
+home_pitcher_opener_flag
+home_pitcher_bulk_flag
+away_pitcher_era_3g
+away_pitcher_whip_3g
+away_pitcher_k9_3g
+away_pitcher_hr9_3g
+away_pitcher_ip_3g
+away_pitcher_avg_pitches_3g
+away_pitcher_prev_pitches
+away_pitcher_avg_bf_3g
+away_pitcher_prev_bf
+away_pitcher_days_rest
+away_pitcher_short_rest
+away_pitcher_long_rest
+away_pitcher_offseason_gap
+away_pitcher_short_leash_score
+away_pitcher_workhorse_score
+away_pitcher_opener_flag
+away_pitcher_bulk_flag
+combined_pitcher_era
+combined_pitcher_whip
+combined_pitcher_k9
+combined_pitcher_avg_pitches_3g
+combined_pitcher_prev_pitches
+combined_pitcher_avg_bf_3g
+combined_pitcher_short_rest_flags
+combined_pitcher_offseason_gap_flags
+combined_pitcher_short_leash_score
+combined_pitcher_workhorse_score
+combined_pitcher_opener_flags
+combined_pitcher_bulk_flags

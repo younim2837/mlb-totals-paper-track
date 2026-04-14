@@ -1,0 +1,65 @@
+Historical Odds API Setup
+=========================
+
+Purpose
+-------
+This project already has a 2021 historical lines file, but the old
+SportsbookReviewOnline links for 2022-2025 are stale. The intended replacement
+is The Odds API historical endpoint.
+
+Prepared files
+--------------
+- collect_lines_historical_oddsapi.py
+- model_config.yaml -> market_lines section
+
+What the new script does
+------------------------
+1. Reads local MLB game dates from data/mlb_games_raw.tsv
+2. Estimates historical Odds API credit usage before any paid calls happen
+3. Builds a repeated daily snapshot plan
+4. Fetches historical totals snapshots once ODDS_API_KEY exists
+5. Writes:
+   - data/lines_historical_oddsapi_snapshots.tsv
+   - data/lines_historical_oddsapi.tsv
+
+Safe pre-key usage
+------------------
+Run an estimate only:
+
+python collect_lines_historical_oddsapi.py --years 2022-2025 --estimate-only
+
+Recommended future backfill
+---------------------------
+Once the Odds API key is available:
+
+1. Put the key in config.json:
+   {"odds_api_key": "YOUR_KEY_HERE"}
+
+2. Or set an env var:
+   $env:ODDS_API_KEY="YOUR_KEY_HERE"
+
+3. Fetch the backfill:
+   python collect_lines_historical_oddsapi.py --years 2022-2025 --fetch
+
+Resume support
+--------------
+If the job is interrupted, resume from the snapshot file:
+
+python collect_lines_historical_oddsapi.py --years 2022-2025 --fetch --resume
+
+How this fits the model
+-----------------------
+Current state:
+- sportsbook lines are comparison-only
+- the baseball model remains independent
+
+Planned state:
+- keep the baseball-only point model
+- add a second-stage market-aware shrinkage layer
+- use historical sportsbook lines to learn when to trust large model-market gaps
+
+Recommended principle
+---------------------
+Do not feed sportsbook lines directly into the core baseball model as a normal
+feature. Use them after the baseball model predicts, as an optional
+post-prediction calibration / shrinkage stage.

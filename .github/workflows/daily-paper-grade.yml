@@ -1,0 +1,65 @@
+name: Daily Paper Grade
+
+on:
+  schedule:
+    # 13:15 UTC = 06:15 PT during daylight saving, 05:15 PT otherwise.
+    - cron: "15 13 * * *"
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "Season year to rebuild. Leave blank for current Pacific year."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  grade-paper-track:
+    runs-on: ubuntu-latest
+    env:
+      GRADE_SEASON: ${{ inputs.season }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Refresh completed games
+        run: python collect_games.py
+
+      - name: Rebuild paper trackers
+        shell: bash
+        run: |
+          season="${GRADE_SEASON}"
+          if [ -z "${season}" ]; then
+            season="$(TZ=America/Los_Angeles date +%Y)"
+          fi
+          python grade_paper_tracking.py --season "${season}"
+
+      - name: Commit graded outputs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data paper_tracking
+          if git diff --cached --quiet; then
+            echo "No graded changes to commit."
+            exit 0
+          fi
+          season="${GRADE_SEASON}"
+          if [ -z "${season}" ]; then
+            season="$(TZ=America/Los_Angeles date +%Y)"
+          fi
+          git commit -m "Automated paper-track grading for ${season}"
+          git push
