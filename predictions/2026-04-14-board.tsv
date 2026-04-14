@@ -1,16 +1,16 @@
-game_id	commence_time	away_team	home_team	predicted_total	posted_line	posted_odds	edge	p_over_line	p_under_line	bet_signal	bet_confidence	bet_block_reason	market_line_source	market_adjustment_method	market_total_before_shrink	market_shrink_delta	market_shrink_fraction	market_num_books	prediction_std	high_tail_prob_9p5	low_tail_prob_7p5	recommended_bet	kalshi_line	kalshi_yes_ask	kalshi_over_pct
-		Arizona Diamondbacks	Baltimore Orioles	9.6															4.93	46.3	40.0	2.0	8.5	0.55	55.0
-		Kansas City Royals	Detroit Tigers	9.7															4.65	48.6	39.3	4.0	7.5	0.54	54.0
-		Washington Nationals	Pittsburgh Pirates	11.7															5.24	51.8	37.5	8.0	9.5	0.5	50.0
-		San Francisco Giants	Cincinnati Reds	9.6															4.71	46.1	39.6	1.0	9.5	0.48	48.0
-		Chicago Cubs	Philadelphia Phillies	10.6															5.08	53.0	38.1	3.0	9.5	0.52	52.0
-		Los Angeles Angels	New York Yankees	11.5															5.33	52.1	37.8	9.0	8.5	0.55	55.0
-		Miami Marlins	Atlanta Braves	11.0															5.76	52.3	37.8	7.0	8.5	0.53	53.0
-		Boston Red Sox	Minnesota Twins	10.0															4.77	48.5	39.3	7.0	8.5	0.48	48.0
-		Tampa Bay Rays	Chicago White Sox	9.3															4.58	41.6	42.5	0.0			
-		Toronto Blue Jays	Milwaukee Brewers	10.7															5.27	51.2	38.1	8.0	7.5	0.45	45.0
-		Cleveland Guardians	St. Louis Cardinals	10.7															5.84	51.9	38.1	6.0	8.5	0.54	54.0
-		Colorado Rockies	Houston Astros	12.7															5.49	49.9	38.0	13.0	8.5	0.54	54.0
-		Seattle Mariners	San Diego Padres	11.0															5.57	51.8	38.1	8.0	7.5	0.46	46.0
-		Texas Rangers	Athletics	8.8															4.63	40.0	40.9	0.0			
-		New York Mets	Los Angeles Dodgers	10.3															5.43	51.5	37.6	7.0	7.5	0.49	49.0
+target_date	game_id	commence_time	away_team	home_team	predicted_total	posted_line	posted_odds	edge	p_over_line	p_under_line	bet_signal	bet_confidence	bet_block_reason	market_line_source	market_adjustment_method	market_total_before_shrink	market_shrink_delta	market_shrink_fraction	market_num_books	prediction_std	high_tail_prob_9p5	low_tail_prob_7p5	recommended_bet	kalshi_model_over_pct	kalshi_fair_price_pct	kalshi_edge_pct	kalshi_side	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_line	kalshi_yes_ask	kalshi_over_pct	kalshi_recommended_bet	kalshi_raw_bet
+2026-04-14			Arizona Diamondbacks	Baltimore Orioles	9.1															4.83	43.6	41.4	0.0										0.0	0.0
+2026-04-14			Kansas City Royals	Detroit Tigers	10.1															5.01	50.5	38.6	0.0										0.0	0.0
+2026-04-14			Washington Nationals	Pittsburgh Pirates	10.0															4.81	46.4	38.3	0.0	54.1	54.1	1.1	OVER	54.1	53.0	9.5	0.53	53.0	0.0	0.0
+2026-04-14			San Francisco Giants	Cincinnati Reds	8.7															4.7	41.7	40.4	0.0										0.0	0.0
+2026-04-14			Chicago Cubs	Philadelphia Phillies	11.2															4.85	52.9	38.3	0.0	63.7	63.7	9.7	OVER	63.7	54.0	9.5	0.54	54.0	0.0	0.0
+2026-04-14			Los Angeles Angels	New York Yankees	9.8															4.93	50.4	39.6	0.0										0.0	0.0
+2026-04-14			Miami Marlins	Atlanta Braves	10.0															4.76	48.7	38.4	0.0										0.0	0.0
+2026-04-14			Boston Red Sox	Minnesota Twins	10.1															4.98	49.9	39.8	0.0										0.0	0.0
+2026-04-14			Tampa Bay Rays	Chicago White Sox	9.6															4.85	42.2	40.0	0.0										0.0	0.0
+2026-04-14			Toronto Blue Jays	Milwaukee Brewers	9.7															4.65	46.4	39.6	0.0	60.4	60.4	15.4	OVER	60.4	45.0	7.5	0.45	45.0	0.0	0.0
+2026-04-14			Cleveland Guardians	St. Louis Cardinals	10.6															5.08	51.3	38.3	0.0	66.0	66.0	11.0	OVER	66.0	55.0	8.5	0.55	55.0	0.0	0.0
+2026-04-14			Colorado Rockies	Houston Astros	10.3															4.99	47.7	39.6	0.0	64.1	64.1	10.1	OVER	64.1	54.0	8.5	0.54	54.0	0.0	0.0
+2026-04-14			Seattle Mariners	San Diego Padres	11.2															5.57	51.8	38.1	0.0	64.4	64.4	18.4	OVER	64.4	46.0	7.5	0.46	46.0	0.0	0.0
+2026-04-14			Texas Rangers	Athletics	8.9															4.58	40.0	40.9	0.0										0.0	0.0
+2026-04-14			New York Mets	Los Angeles Dodgers	10.3															5.36	50.5	38.7	0.0	61.4	61.4	13.4	OVER	61.4	48.0	7.5	0.48	48.0	0.0	0.0

@@ -1,1 +1,8 @@
-
+target_date	month	game_id	away_team	home_team	predicted_total	kalshi_line	kalshi_side	kalshi_edge_pct	kalshi_fair_price_pct	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_side_market_price	kalshi_recommended_bet	away_score	home_score	total_runs	result	profit_per_contract	roi_pct	settled
+2026-04-14	2026-04		Washington Nationals	Pittsburgh Pirates	10.0	9.5	OVER	1.1	54.1	54.1	53.0	0.53	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Chicago Cubs	Philadelphia Phillies	11.2	9.5	OVER	9.7	63.7	63.7	54.0	0.54	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Toronto Blue Jays	Milwaukee Brewers	9.7	7.5	OVER	15.4	60.4	60.4	45.0	0.45	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Cleveland Guardians	St. Louis Cardinals	10.6	8.5	OVER	11.0	66.0	66.0	55.0	0.55	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Colorado Rockies	Houston Astros	10.3	8.5	OVER	10.1	64.1	64.1	54.0	0.54	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Seattle Mariners	San Diego Padres	11.2	7.5	OVER	18.4	64.4	64.4	46.0	0.46	0.0				pending	0.0	0.0	False
+2026-04-14	2026-04		New York Mets	Los Angeles Dodgers	10.3	7.5	OVER	13.4	61.4	61.4	48.0	0.48	0.0				pending	0.0	0.0	False

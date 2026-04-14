@@ -252,7 +252,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 634509	2021-04-20	2021-04-20 23:05:00+00:00	St. Louis Cardinals	138	Washington Nationals	120	2	3	5	Nationals Park	3309	Adam Wainwright	Patrick Corbin	N	1
 634390	2021-04-21	2021-04-21 18:10:00+00:00	Pittsburgh Pirates	134	Detroit Tigers	116	3	2	5	Comerica Park	2394	Tyler Anderson	Michael Fulmer	S	1
 634405	2021-04-21	2021-04-21 20:05:00+00:00	St. Louis Cardinals	138	Washington Nationals	120	0	1	1	Nationals Park	3309	Carlos Martinez	Max Scherzer	N	1
-634408	2021-04-21	2021-04-21 21:10:00+00:00	Arizona Diamondbacks	109	Cincinnati Reds	113	5	4	9	Great American Ball Park	2602	Zac Gallen	Luis Castillo	N	1
 634423	2021-04-21	2021-04-21 22:40:00+00:00	Pittsburgh Pirates	134	Detroit Tigers	116	2	5	7	Comerica Park	2394	Miguel Yajure	Spencer Turnbull	S	2
 634424	2021-04-21	2021-04-21 19:10:00+00:00	Houston Astros	117	Colorado Rockies	115	3	6	9	Coors Field	19	José Urquidy	Austin Gomber	N	1
 634428	2021-04-21	2021-04-21 17:05:00+00:00	San Francisco Giants	137	Philadelphia Phillies	143	5	6	11	Citizens Bank Park	2681	Anthony DeSclafani	Zach Eflin	N	1
@@ -731,7 +730,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 634064	2021-05-26	2021-05-26 23:10:00+00:00	Kansas City Royals	118	Tampa Bay Rays	139	1	2	3	Tropicana Field	12	Mike Minor	Tyler Glasnow	N	1
 634074	2021-05-26	2021-05-26 19:37:00+00:00	Seattle Mariners	136	Oakland Athletics	133	3	6	9	Oakland Coliseum	10	Robert Dugger	James Kaprielian	N	1
 633888	2021-05-27	2021-05-27 16:35:00+00:00	Chicago Cubs	112	Pittsburgh Pirates	134	5	3	8	PNC Park	31	Kyle Hendricks	Tyler Anderson	N	1
-633890	2021-05-27	2021-05-27 18:05:00+00:00	Cincinnati Reds	113	Washington Nationals	120	3	5	8	Nationals Park	3309	Jeff Hoffman	Joe Ross	N	1
 633910	2021-05-27	2021-05-27 20:10:00+00:00	Toronto Blue Jays	141	New York Yankees	147	3	5	8	Yankee Stadium	3313	Robbie Ray	Jordan Montgomery	Y	2
 633912	2021-05-27	2021-05-27 16:15:00+00:00	Colorado Rockies	115	New York Mets	121	2	4	6	Citi Field	3289	Antonio Senzatela	Joey Lucchesi	Y	2
 633914	2021-05-27	2021-05-28 01:40:00+00:00	St. Louis Cardinals	138	Arizona Diamondbacks	109	5	4	9	Chase Field	15	Carlos Martinez	Jon Duplantier	N	1
@@ -1155,7 +1153,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 633493	2021-06-27	2021-06-27 17:10:00+00:00	Atlanta Braves	144	Cincinnati Reds	113	4	0	4	Great American Ball Park	2602	Kyle Muller	Tyler Mahle	N	1
 633494	2021-06-27	2021-06-27 17:10:00+00:00	Houston Astros	117	Detroit Tigers	116	1	2	3	Comerica Park	2394	Jake Odorizzi	Tarik Skubal	N	1
 633499	2021-06-27	2021-06-27 21:15:00+00:00	Seattle Mariners	136	Chicago White Sox	145	5	7	12	Guaranteed Rate Field	4	Robert Dugger	Ryan Burr	N	1
-633501	2021-06-27	2021-06-27 18:10:00+00:00	Seattle Mariners	136	Chicago White Sox	145	3	2	5	Guaranteed Rate Field	4	Logan Gilbert	Lance Lynn	N	1
 633504	2021-06-27	2021-06-27 17:10:00+00:00	Philadelphia Phillies	143	New York Mets	121	4	2	6	Citi Field	3289	Zack Wheeler	Marcus Stroman	N	1
 633515	2021-06-27	2021-06-27 17:07:00+00:00	Baltimore Orioles	110	Toronto Blue Jays	141	2	5	7	Sahlen Field	2756	Jorge López	Ross Stripling	N	1
 633516	2021-06-27	2021-06-27 18:35:00+00:00	Kansas City Royals	118	Texas Rangers	140	1	4	5	Globe Life Field	5325	Brady Singer	Jordan Lyles	N	1
@@ -1390,13 +1387,11 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 633252	2021-07-18	2021-07-18 17:10:00+00:00	Milwaukee Brewers	158	Cincinnati Reds	113	8	0	8	Great American Ball Park	2602	Corbin Burnes	Sonny Gray	N	1
 633255	2021-07-18	2021-07-18 19:10:00+00:00	Los Angeles Dodgers	119	Colorado Rockies	115	5	6	11	Coors Field	19	David Price	Jon Gray	N	1
 633256	2021-07-18	2021-07-18 17:07:00+00:00	Texas Rangers	140	Toronto Blue Jays	141	0	5	5	Sahlen Field	2756	Kolby Allard	Hyun Jin Ryu	Y	1
-633267	2021-07-18	2021-07-18 17:05:00+00:00	San Diego Padres	135	Washington Nationals	120	10	4	14	Nationals Park	3309	Blake Snell	Patrick Corbin	N	1
 633273	2021-07-18	2021-07-18 23:08:00+00:00	Boston Red Sox	111	New York Yankees	147	1	9	10	Yankee Stadium	3313	Martín Pérez	Jameson Taillon	N	1
 633280	2021-07-18	2021-07-18 17:10:00+00:00	Minnesota Twins	142	Detroit Tigers	116	0	7	7	Comerica Park	2394	J.A. Happ	Wily Peralta	N	1
 633284	2021-07-18	2021-07-18 20:07:00+00:00	Seattle Mariners	136	Los Angeles Angels	108	7	4	11	Angel Stadium	1	Logan Gilbert	Patrick Sandoval	N	1
 633287	2021-07-18	2021-07-18 18:10:00+00:00	Baltimore Orioles	110	Kansas City Royals	118	5	0	5	Kauffman Stadium	7	Matt Harvey	Carlos Hernández	N	1
 633292	2021-07-18	2021-07-18 17:12:00+00:00	Texas Rangers	140	Toronto Blue Jays	141	0	10	10	Sahlen Field	2756	Mike Foltynewicz	Steven Matz	Y	2
-633299	2021-07-18	2021-07-18 17:05:00+00:00	Miami Marlins	146	Philadelphia Phillies	143	2	4	6	Citizens Bank Park	2681	Zach Thompson	Vince Velasquez	N	1
 633300	2021-07-18	2021-07-18 19:05:00+00:00	San Diego Padres	135	Washington Nationals	120	7	8	15	Nationals Park	3309	Joe Musgrove	Max Scherzer	N	1
 633218	2021-07-19	2021-07-19 23:07:00+00:00	Boston Red Sox	111	Toronto Blue Jays	141	13	4	17	Sahlen Field	2756	Nick Pivetta	Ross Stripling	N	1
 633226	2021-07-19	2021-07-20 00:15:00+00:00	Chicago Cubs	112	St. Louis Cardinals	138	3	8	11	Busch Stadium	2889	Alec Mills	Jake Woodford	N	1
@@ -1719,7 +1714,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 632952	2021-08-11	2021-08-12 02:10:00+00:00	Texas Rangers	140	Seattle Mariners	136	1	2	3	T-Mobile Park	680	Spencer Howard	Tyler Anderson	N	1
 632959	2021-08-11	2021-08-11 20:10:00+00:00	Miami Marlins	146	San Diego Padres	135	7	0	7	Petco Park	2680	Sandy Alcantara	Ryan Weathers	N	1
 632965	2021-08-11	2021-08-12 01:38:00+00:00	Toronto Blue Jays	141	Los Angeles Angels	108	10	2	12	Angel Stadium	1	Alek Manoah	Dylan Bundy	N	1
-632966	2021-08-11	2021-08-11 20:10:00+00:00	Washington Nationals	120	New York Mets	121	7	8	15	Citi Field	3289	Paolo Espino	Carlos Carrasco	N	1
 632900	2021-08-12	2021-08-12 17:10:00+00:00	Oakland Athletics	133	Cleveland Indians	114	17	0	17	Progressive Field	5	Chris Bassitt	Eli Morgan	N	1
 632903	2021-08-12	2021-08-12 20:10:00+00:00	Tampa Bay Rays	139	Boston Red Sox	111	8	1	9	Fenway Park	3	Drew Rasmussen	Tanner Houck	N	1
 632912	2021-08-12	2021-08-12 16:15:00+00:00	Washington Nationals	120	New York Mets	121	4	5	9	Citi Field	3289	Erick Fedde	Trevor Williams	Y	2
@@ -1974,7 +1968,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 632692	2021-08-30	2021-08-30 22:40:00+00:00	St. Louis Cardinals	138	Cincinnati Reds	113	3	1	4	Great American Ball Park	2602	Jon Lester	Luis Castillo	N	1
 632703	2021-08-30	2021-08-31 01:40:00+00:00	San Diego Padres	135	Arizona Diamondbacks	109	7	5	12	Chase Field	15	Chris Paddack	Tyler Gilbert	N	1
 633372	2021-08-30	2021-08-30 18:10:00+00:00	Minnesota Twins	142	Detroit Tigers	116	3	2	5	Comerica Park	2394	Bailey Ober	Casey Mize	N	1
-632192	2021-08-31	2021-08-31 17:10:00+00:00	Miami Marlins	146	New York Mets	121	5	6	11	Citi Field	3289	Elieser Hernández	Taijuan Walker	N	1
 632657	2021-08-31	2021-09-01 02:10:00+00:00	Houston Astros	117	Seattle Mariners	136	0	4	4	T-Mobile Park	680	Lance McCullers Jr.	Yusei Kikuchi	N	1
 632663	2021-08-31	2021-09-01 02:10:00+00:00	Atlanta Braves	144	Los Angeles Dodgers	119	2	3	5	Dodger Stadium	22	Charlie Morton	Walker Buehler	N	1
 632669	2021-08-31	2021-08-31 23:10:00+00:00	Boston Red Sox	111	Tampa Bay Rays	139	5	8	13	Tropicana Field	12	Brad Peacock	Ryan Yarbrough	N	1
@@ -2311,7 +2304,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 632366	2021-09-24	2021-09-25 00:10:00+00:00	New York Mets	121	Milwaukee Brewers	158	1	5	6	American Family Field	32	Tylor Megill	Eric Lauer	N	1
 632369	2021-09-24	2021-09-24 23:05:00+00:00	Texas Rangers	140	Baltimore Orioles	110	8	5	13	Oriole Park at Camden Yards	2	Spencer Howard	Alex Wells	N	1
 632373	2021-09-24	2021-09-24 23:10:00+00:00	New York Yankees	147	Boston Red Sox	111	8	3	11	Fenway Park	3	Gerrit Cole	Nathan Eovaldi	N	1
-633224	2021-09-24	2021-09-25 00:10:00+00:00	San Diego Padres	135	Atlanta Braves	144	6	5	11	Petco Park	2680	Reiss Knehr	Bryse Wilson	S	2
 633337	2021-09-24	2021-09-25 00:05:00+00:00	St. Louis Cardinals	138	Chicago Cubs	112	12	4	16	Wrigley Field	17	Jack Flaherty	Zach Davies	S	2
 632335	2021-09-25	2021-09-25 22:10:00+00:00	Miami Marlins	146	Tampa Bay Rays	139	3	7	10	Tropicana Field	12	Sandy Alcantara	Shane McClanahan	N	1
 632338	2021-09-25	2021-09-25 23:10:00+00:00	Washington Nationals	120	Cincinnati Reds	113	6	7	13	Great American Ball Park	2602	Erick Fedde	Vladimir Gutierrez	N	1
@@ -2902,7 +2894,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 663450	2022-05-11	2022-05-11 23:07:00+00:00	Tampa Bay Rays	139	Los Angeles Angels	108	4	2	6	Angel Stadium	1	Shane McClanahan	Shohei Ohtani	N	1
 661519	2022-05-12	2022-05-13 00:10:00+00:00	New York Yankees	147	Chicago White Sox	145	15	7	22	Guaranteed Rate Field	4	Luis Gil	Dylan Cease	N	1
 661694	2022-05-12	2022-05-12 20:05:00+00:00	Houston Astros	117	Minnesota Twins	142	5	0	5	Target Field	3312	Luis Garcia	Josh Winder	N	1
-661702	2022-05-12	2022-05-12 17:10:00+00:00	Houston Astros	117	Minnesota Twins	142	11	3	14	Target Field	3312	José Urquidy	Chris Archer	N	1
 661883	2022-05-12	2022-05-13 00:05:00+00:00	Kansas City Royals	118	Texas Rangers	140	1	3	4	Globe Life Field	5325	Jonathan Heasley	Taylor Hearn	N	1
 662005	2022-05-12	2022-05-12 17:15:00+00:00	Baltimore Orioles	110	St. Louis Cardinals	138	3	2	5	Busch Stadium	2889	Bryan Baker	Steven Matz	N	1
 662372	2022-05-12	2022-05-12 22:35:00+00:00	Cincinnati Reds	113	Pittsburgh Pirates	134	4	0	4	PNC Park	31	Connor Overton	JT Brubaker	N	1
@@ -5477,7 +5468,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 718182	2023-05-14	2023-05-14 15:35:00+00:00	Los Angeles Angels	108	Cleveland Guardians	114	3	4	7	Progressive Field	5	Patrick Sandoval	Tanner Bibee	N	1
 718186	2023-05-14	2023-05-14 20:35:00+00:00	New York Mets	121	Washington Nationals	120	8	2	10	Nationals Park	3309	Max Scherzer	Jake Irvin	N	1
 718187	2023-05-14	2023-05-14 23:10:00+00:00	St. Louis Cardinals	138	Boston Red Sox	111	9	1	10	Fenway Park	3	Miles Mikolas	Corey Kluber	N	1
-718203	2023-05-14	2023-05-14 16:35:00+00:00	New York Mets	121	Washington Nationals	120	2	3	5	Nationals Park	3309	Stephen Nogosek	Trevor Williams	N	1
 718158	2023-05-15	2023-05-16 00:10:00+00:00	Chicago Cubs	112	Houston Astros	117	4	6	10	Minute Maid Park	2392	Jameson Taillon	Framber Valdez	N	1
 718159	2023-05-15	2023-05-16 02:10:00+00:00	Minnesota Twins	142	Los Angeles Dodgers	119	8	9	17	Dodger Stadium	22	Pablo López	Noah Syndergaard	N	1
 718160	2023-05-15	2023-05-16 01:40:00+00:00	Arizona Diamondbacks	109	Oakland Athletics	133	5	2	7	Oakland Coliseum	10	Merrill Kelly	Drew Rucinski	N	1
@@ -6254,7 +6244,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 717402	2023-07-15	2023-07-15 20:05:00+00:00	Cleveland Guardians	114	Texas Rangers	140	0	2	2	Globe Life Field	5325	Gavin Williams	Andrew Heaney	N	1
 717403	2023-07-15	2023-07-15 18:20:00+00:00	Boston Red Sox	111	Chicago Cubs	112	4	10	14	Wrigley Field	17	James Paxton	Marcus Stroman	N	1
 717404	2023-07-15	2023-07-15 19:07:00+00:00	Arizona Diamondbacks	109	Toronto Blue Jays	141	2	5	7	Rogers Centre	14	Zac Gallen	Chris Bassitt	N	1
-717407	2023-07-15	2023-07-15 18:15:00+00:00	Washington Nationals	120	St. Louis Cardinals	138	7	5	12	Busch Stadium	2889	Trevor Williams	Miles Mikolas	N	1
 717408	2023-07-15	2023-07-15 17:05:00+00:00	San Diego Padres	135	Philadelphia Phillies	143	4	6	10	Citizens Bank Park	2681	Blake Snell	Ranger Suarez	S	1
 717411	2023-07-15	2023-07-15 18:10:00+00:00	Tampa Bay Rays	139	Kansas City Royals	118	6	1	7	Kauffman Stadium	7	Tyler Glasnow	Alec Marsh	S	1
 717373	2023-07-16	2023-07-16 20:10:00+00:00	Detroit Tigers	116	Seattle Mariners	136	0	2	2	T-Mobile Park	680	Reese Olson	Bryce Miller	N	1
@@ -6297,7 +6286,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 717362	2023-07-18	2023-07-18 23:07:00+00:00	San Diego Padres	135	Toronto Blue Jays	141	9	1	10	Rogers Centre	14	Joe Musgrove	Alek Manoah	N	1
 717363	2023-07-18	2023-07-18 22:40:00+00:00	Milwaukee Brewers	158	Philadelphia Phillies	143	3	4	7	Citizens Bank Park	2681	Julio Teheran	Aaron Nola	N	1
 717364	2023-07-18	2023-07-18 23:05:00+00:00	Cleveland Guardians	114	Pittsburgh Pirates	134	10	1	11	PNC Park	31	Logan Allen	Mitch Keller	N	1
-717375	2023-07-18	2023-07-18 21:40:00+00:00	San Francisco Giants	137	Cincinnati Reds	113	4	2	6	Great American Ball Park	2602	Logan Webb	Brandon Williamson	N	1
 717333	2023-07-19	2023-07-20 00:10:00+00:00	Detroit Tigers	116	Kansas City Royals	118	3	2	5	Kauffman Stadium	7	Eduardo Rodriguez	Ryan Yarbrough	N	1
 717335	2023-07-19	2023-07-20 01:40:00+00:00	Minnesota Twins	142	Seattle Mariners	136	6	3	9	T-Mobile Park	680	Kenta Maeda	Luis Castillo	N	1
 717336	2023-07-19	2023-07-20 00:05:00+00:00	Washington Nationals	120	Chicago Cubs	112	3	8	11	Wrigley Field	17	Trevor Williams	Kyle Hendricks	N	1
@@ -6353,7 +6341,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 717307	2023-07-22	2023-07-22 23:05:00+00:00	San Francisco Giants	137	Washington Nationals	120	1	10	11	Nationals Park	3309	Logan Webb	Josiah Gray	N	1
 717308	2023-07-22	2023-07-22 18:20:00+00:00	St. Louis Cardinals	138	Chicago Cubs	112	6	8	14	Wrigley Field	17	Miles Mikolas	Michael Fulmer	N	1
 717309	2023-07-22	2023-07-22 23:10:00+00:00	New York Mets	121	Boston Red Sox	111	6	8	14	Fenway Park	3	Max Scherzer	James Paxton	N	1
-717324	2023-07-22	2023-07-22 18:10:00+00:00	New York Mets	121	Boston Red Sox	111	5	4	9	Fenway Park	3	Kodai Senga	Kutter Crawford	N	1
 717278	2023-07-23	2023-07-23 20:07:00+00:00	Pittsburgh Pirates	134	Los Angeles Angels	108	5	7	12	Angel Stadium	1	Mitch Keller	Tyler Anderson	N	1
 717279	2023-07-23	2023-07-23 20:07:00+00:00	Houston Astros	117	Oakland Athletics	133	3	2	5	Oakland Coliseum	10	Hunter Brown	Luis Medina	N	1
 717281	2023-07-23	2023-07-23 20:10:00+00:00	Toronto Blue Jays	141	Seattle Mariners	136	4	3	7	T-Mobile Park	680	Alek Manoah	Bryan Woo	N	1
@@ -6786,7 +6773,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 716871	2023-08-24	2023-08-24 20:20:00+00:00	Los Angeles Dodgers	119	Cleveland Guardians	114	9	3	12	Progressive Field	5	Caleb Ferguson	Gavin Williams	N	1
 716872	2023-08-24	2023-08-24 17:05:00+00:00	Washington Nationals	120	New York Yankees	147	6	5	11	Yankee Stadium	3313	Patrick Corbin	Michael King	N	1
 716873	2023-08-24	2023-08-24 18:10:00+00:00	Boston Red Sox	111	Houston Astros	117	17	1	18	Minute Maid Park	2392	Brayan Bello	J.P. France	N	1
-716875	2023-08-24	2023-08-24 16:10:00+00:00	Los Angeles Dodgers	119	Cleveland Guardians	114	6	1	7	Progressive Field	5	Clayton Kershaw	Xzavion Curry	N	1
 716850	2023-08-25	2023-08-26 00:10:00+00:00	Texas Rangers	140	Minnesota Twins	142	2	12	14	Target Field	3312	Dane Dunning	Sonny Gray	N	1
 716851	2023-08-25	2023-08-26 01:40:00+00:00	Cincinnati Reds	113	Arizona Diamondbacks	109	8	10	18	Chase Field	15	Hunter Greene	Brandon Pfaadt	N	1
 716852	2023-08-25	2023-08-26 02:15:00+00:00	Atlanta Braves	144	San Francisco Giants	137	5	1	6	Oracle Park	2395	Spencer Strider	Logan Webb	N	1
@@ -7256,7 +7242,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 716404	2023-09-28	2023-09-28 23:10:00+00:00	Miami Marlins	146	New York Mets	121	0	1	1	Citi Field	3289	Jesús Luzardo	David Peterson	N	1
 716405	2023-09-28	2023-09-29 00:40:00+00:00	Los Angeles Dodgers	119	Colorado Rockies	115	5	14	19	Coors Field	19	Ryan Yarbrough	Chris Flexen	N	1
 716409	2023-09-28	2023-09-28 22:05:00+00:00	Pittsburgh Pirates	134	Philadelphia Phillies	143	3	2	5	Citizens Bank Park	2681	Luis Ortiz	Zack Wheeler	N	1
-716414	2023-09-28	2023-09-28 17:10:00+00:00	Kansas City Royals	118	Detroit Tigers	116	0	8	8	Comerica Park	2394	Jonathan Bowlan	Tarik Skubal	N	1
 716443	2023-09-28	2023-09-28 18:10:00+00:00	Arizona Diamondbacks	109	Chicago White Sox	145	1	3	4	Guaranteed Rate Field	4	Bryce Jarvis	Touki Toussaint	N	1
 716379	2023-09-29	2023-09-30 02:10:00+00:00	Texas Rangers	140	Seattle Mariners	136	0	8	8	T-Mobile Park	680	Nathan Eovaldi	Bryan Woo	N	1
 716382	2023-09-29	2023-09-30 02:15:00+00:00	Los Angeles Dodgers	119	San Francisco Giants	137	6	2	8	Oracle Park	2395	Lance Lynn	Keaton Winn	N	1
@@ -8035,7 +8020,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 744933	2024-05-22	2024-05-22 23:07:00+00:00	Chicago White Sox	145	Toronto Blue Jays	141	2	9	11	Rogers Centre	14	Nick Nastrini	Chris Bassitt	N	1
 745089	2024-05-22	2024-05-22 22:50:00+00:00	Boston Red Sox	111	Tampa Bay Rays	139	8	5	13	Tropicana Field	12	Brayan Bello	Ryan Pepiot	N	1
 745173	2024-05-22	2024-05-22 17:46:00+00:00	Baltimore Orioles	110	St. Louis Cardinals	138	4	5	9	Busch Stadium	2889	John Means	Kyle Gibson	N	1
-745180	2024-05-22	2024-05-22 16:15:00+00:00	Baltimore Orioles	110	St. Louis Cardinals	138	1	3	4	Busch Stadium	2889	Kyle Bradish	Lance Lynn	N	1
 745502	2024-05-22	2024-05-22 22:40:00+00:00	San Francisco Giants	137	Pittsburgh Pirates	134	9	5	14	PNC Park	31	Blake Snell	Jared Jones	N	1
 745576	2024-05-22	2024-05-22 22:40:00+00:00	Texas Rangers	140	Philadelphia Phillies	143	4	11	15	Citizens Bank Park	2681	Dane Dunning	Taijuan Walker	N	1
 745661	2024-05-22	2024-05-23 01:40:00+00:00	Colorado Rockies	115	Oakland Athletics	133	4	3	7	Oakland Coliseum	10	Austin Gomber	Mitch Spence	N	1
@@ -9274,7 +9258,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 746628	2024-08-26	2024-08-26 17:10:00+00:00	Kansas City Royals	118	Cleveland Guardians	114	4	3	7	Progressive Field	5	Cole Ragans	Nick Sandlin	S	1
 746753	2024-08-26	2024-08-27 00:10:00+00:00	Detroit Tigers	116	Chicago White Sox	145	6	3	9	Guaranteed Rate Field	4	Ty Madden	Davis Martin	N	1
 746915	2024-08-26	2024-08-26 23:10:00+00:00	Toronto Blue Jays	141	Boston Red Sox	111	7	3	10	Fenway Park	3	José Berríos	Zack Kelly	N	1
-746942	2024-08-26	2024-08-26 18:05:00+00:00	Toronto Blue Jays	141	Boston Red Sox	111	4	1	5	Fenway Park	3	Ryan Burr	Nick Pivetta	N	1
 744811	2024-08-27	2024-08-27 22:45:00+00:00	New York Yankees	147	Washington Nationals	120	2	4	6	Nationals Park	3309	Gerrit Cole	Patrick Corbin	N	1
 745132	2024-08-27	2024-08-27 23:45:00+00:00	San Diego Padres	135	St. Louis Cardinals	138	7	5	12	Busch Stadium	2889	Dylan Cease	Miles Mikolas	N	1
 745213	2024-08-27	2024-08-28 01:40:00+00:00	Tampa Bay Rays	139	Seattle Mariners	136	3	2	5	T-Mobile Park	680	Jeffrey Springs	Logan Gilbert	N	1
@@ -9303,7 +9286,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 746589	2024-08-28	2024-08-28 17:10:00+00:00	Kansas City Royals	118	Cleveland Guardians	114	5	7	12	Progressive Field	5	Michael Wacha	Tanner Bibee	N	1
 746672	2024-08-28	2024-08-28 22:40:00+00:00	Oakland Athletics	133	Cincinnati Reds	113	9	6	15	Great American Ball Park	2602	Osvaldo Bido	Fernando Cruz	N	1
 746752	2024-08-28	2024-08-29 00:10:00+00:00	Texas Rangers	140	Chicago White Sox	145	4	3	7	Guaranteed Rate Field	4	Jack Leiter	Matt Foster	N	1
-746755	2024-08-28	2024-08-28 21:10:00+00:00	Texas Rangers	140	Chicago White Sox	145	3	1	4	Guaranteed Rate Field	4	Andrew Heaney	Chris Flexen	N	1
 746913	2024-08-28	2024-08-28 23:10:00+00:00	Toronto Blue Jays	141	Boston Red Sox	111	0	3	3	Fenway Park	3	Chris Bassitt	Brayan Bello	N	1
 747161	2024-08-28	2024-08-29 01:40:00+00:00	New York Mets	121	Arizona Diamondbacks	109	5	8	13	Chase Field	15	Luis Severino	Eduardo Rodriguez	N	1
 745135	2024-08-29	2024-08-29 18:15:00+00:00	San Diego Padres	135	St. Louis Cardinals	138	1	4	5	Busch Stadium	2889	Michael King	Sonny Gray	N	1
@@ -10468,7 +10450,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 777834	2025-05-21	2025-05-21 16:35:00+00:00	Cincinnati Reds	113	Pittsburgh Pirates	134	1	3	4	PNC Park	31	Brady Singer	Andrew Heaney	N	1
 777835	2025-05-21	2025-05-21 23:05:00+00:00	Texas Rangers	140	New York Yankees	147	3	4	7	Yankee Stadium	3313	Jacob deGrom	Ryan Yarbrough	N	1
 777837	2025-05-21	2025-05-21 23:07:00+00:00	San Diego Padres	135	Toronto Blue Jays	141	0	14	14	Rogers Centre	14	Randy Vásquez	Kevin Gausman	N	1
-777861	2025-05-21	2025-05-21 17:10:00+00:00	Cleveland Guardians	114	Minnesota Twins	142	5	6	11	Target Field	3312		Joe Ryan	N	1
 777812	2025-05-22	2025-05-22 19:35:00+00:00	Los Angeles Angels	108	Athletics	133	10	5	15	Sutter Health Park	2529	Tyler Anderson	Luis Severino	N	1
 777814	2025-05-22	2025-05-22 22:40:00+00:00	Milwaukee Brewers	158	Pittsburgh Pirates	134	8	5	13	PNC Park	31	Aaron Civale	Mike Burrows	N	1
 777816	2025-05-22	2025-05-22 17:07:00+00:00	San Diego Padres	135	Toronto Blue Jays	141	6	7	13	Rogers Centre	14	Stephen Kolek	Bowden Francis	N	1
@@ -10693,7 +10674,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 777610	2025-06-07	2025-06-07 20:05:00+00:00	Texas Rangers	140	Washington Nationals	120	5	0	5	Nationals Park	3309	Jacob deGrom	Mitchell Parker	N	1
 777611	2025-06-07	2025-06-07 20:10:00+00:00	Miami Marlins	146	Tampa Bay Rays	139	11	10	21	George M. Steinbrenner Field	2523	Ryan Weathers	Taj Bradley	N	1
 777612	2025-06-07	2025-06-07 20:10:00+00:00	Arizona Diamondbacks	109	Cincinnati Reds	113	1	13	14	Great American Ball Park	2602	Ryne Nelson	Nick Martinez	N	1
-777623	2025-06-07	2025-06-07 18:10:00+00:00	Arizona Diamondbacks	109	Cincinnati Reds	113	3	4	7	Great American Ball Park	2602	Eduardo Rodriguez	Nick Lodolo	N	1
 777582	2025-06-08	2025-06-08 18:15:00+00:00	Los Angeles Dodgers	119	St. Louis Cardinals	138	7	3	10	Busch Stadium	2889	Clayton Kershaw	Michael McGreevy	N	1
 777583	2025-06-08	2025-06-08 19:10:00+00:00	New York Mets	121	Colorado Rockies	115	13	5	18	Coors Field	19	Tylor Megill	Chase Dollander	N	1
 777585	2025-06-08	2025-06-08 18:10:00+00:00	Toronto Blue Jays	141	Minnesota Twins	142	3	6	9	Target Field	3312	Bowden Francis	Joe Ryan	N	1
@@ -11027,7 +11007,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 777284	2025-07-02	2025-07-02 17:05:00+00:00	Detroit Tigers	116	Washington Nationals	120	11	2	13	Nationals Park	3309	Tyler Holton	Trevor Williams	S	1
 777289	2025-07-02	2025-07-02 17:10:00+00:00	Milwaukee Brewers	158	New York Mets	121	7	2	9	Citi Field	3289	Freddy Peralta	Clay Holmes	S	1
 777290	2025-07-02	2025-07-02 22:15:00+00:00	San Diego Padres	135	Philadelphia Phillies	143	1	5	6	Citizens Bank Park	2681	Dylan Cease	Cristopher Sánchez	S	2
-777294	2025-07-02	2025-07-02 18:30:00+00:00	Cincinnati Reds	113	Boston Red Sox	111	3	5	8	Fenway Park	3	Brady Singer	Richard Fitts	N	1
 777251	2025-07-03	2025-07-04 02:10:00+00:00	Kansas City Royals	118	Seattle Mariners	136	3	2	5	T-Mobile Park	680	Seth Lugo	Logan Evans	N	1
 777253	2025-07-03	2025-07-04 02:10:00+00:00	Chicago White Sox	145	Los Angeles Dodgers	119	2	6	8	Dodger Stadium	22	Aaron Civale	Dustin May	N	1
 777256	2025-07-03	2025-07-04 01:40:00+00:00	San Francisco Giants	137	Arizona Diamondbacks	109	7	2	9	Chase Field	15	Robbie Ray	Brandon Pfaadt	N	1
@@ -11411,7 +11390,6 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 776893	2025-08-03	2025-08-03 17:37:00+00:00	Kansas City Royals	118	Toronto Blue Jays	141	7	4	11	Rogers Centre	14	Seth Lugo	Chris Bassitt	N	1
 776894	2025-08-03	2025-08-03 17:35:00+00:00	Milwaukee Brewers	158	Washington Nationals	120	14	3	17	Nationals Park	3309	Logan Henderson	Brad Lord	N	1
 776895	2025-08-03	2025-08-03 15:35:00+00:00	Houston Astros	117	Boston Red Sox	111	1	6	7	Fenway Park	3	Framber Valdez	Lucas Giolito	N	1
-776907	2025-08-03	2025-08-03 17:05:00+00:00	Atlanta Braves	144	Cincinnati Reds	113	4	2	6	Bristol Motor Speedway	6130	Austin Cox	Chase Burns	N	1
 776867	2025-08-04	2025-08-05 01:38:00+00:00	Tampa Bay Rays	139	Los Angeles Angels	108	1	5	6	Angel Stadium	1	Adrian Houser	Yusei Kikuchi	N	1
 776870	2025-08-04	2025-08-05 02:10:00+00:00	St. Louis Cardinals	138	Los Angeles Dodgers	119	3	2	5	Dodger Stadium	22	Sonny Gray	Tyler Glasnow	N	1
 776871	2025-08-04	2025-08-05 00:05:00+00:00	New York Yankees	147	Texas Rangers	140	5	8	13	Globe Life Field	5325	Max Fried	Patrick Corbin	N	1
@@ -12390,3 +12368,13 @@ game_id	date	game_datetime	away_team	away_team_id	home_team	home_team_id	away_sc
 824533	2026-04-12	2026-04-12 17:40:00+00:00	Los Angeles Angels	108	Cincinnati Reds	113	9	6	15	Great American Ball Park	2602	José Soriano	Andrew Abbott	N	1
 824696	2026-04-12	2026-04-12 18:20:00+00:00	Pittsburgh Pirates	134	Chicago Cubs	112	6	7	13	Wrigley Field	17	Bubba Chandler	Jameson Taillon	N	1
 824859	2026-04-12	2026-04-12 17:35:00+00:00	San Francisco Giants	137	Baltimore Orioles	110	2	6	8	Oriole Park at Camden Yards	2	Adrian Houser	Cade Povich	N	1
+823073	2026-04-13	2026-04-13 23:45:00+00:00	Cleveland Guardians	114	St. Louis Cardinals	138	9	3	12	Busch Stadium	2889	Gavin Williams	Matthew Liberatore	N	1
+823153	2026-04-13	2026-04-13 20:10:00+00:00	Houston Astros	117	Seattle Mariners	136	2	6	8	T-Mobile Park	680	Mike Burrows	George Kirby	N	1
+823400	2026-04-13	2026-04-13 22:40:00+00:00	Washington Nationals	120	Pittsburgh Pirates	134	5	16	21	PNC Park	31	PJ Poulin	Paul Skenes	N	1
+823481	2026-04-13	2026-04-13 22:40:00+00:00	Chicago Cubs	112	Philadelphia Phillies	143	7	13	20	Citizens Bank Park	2681	Javier Assad	Cristopher Sánchez	N	1
+823563	2026-04-13	2026-04-13 23:05:00+00:00	Los Angeles Angels	108	New York Yankees	147	10	11	21	Yankee Stadium	3313	Yusei Kikuchi	Will Warren	N	1
+823725	2026-04-13	2026-04-13 23:40:00+00:00	Boston Red Sox	111	Minnesota Twins	142	6	13	19	Target Field	3312	Garrett Crochet	Bailey Ober	N	1
+823964	2026-04-13	2026-04-14 02:10:00+00:00	New York Mets	121	Los Angeles Dodgers	119	0	4	4	UNIQLO Field at Dodger Stadium	22	David Peterson	Justin Wrobleski	N	1
+824856	2026-04-13	2026-04-13 22:35:00+00:00	Arizona Diamondbacks	109	Baltimore Orioles	110	7	9	16	Oriole Park at Camden Yards	2	Ryne Nelson	Dean Kremer	N	1
+824937	2026-04-13	2026-04-13 23:15:00+00:00	Miami Marlins	146	Atlanta Braves	144	10	4	14	Truist Park	4705	Eury Pérez	Grant Holmes	N	1
+825024	2026-04-13	2026-04-14 01:40:00+00:00	Texas Rangers	140	Athletics	133	8	1	9	Sutter Health Park	2529	Nathan Eovaldi	Luis Severino	N	1
