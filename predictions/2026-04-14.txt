@@ -14,8 +14,8 @@ Fetching games for 2026-04-14...
   Found 15 upcoming regular season games
 No Odds API key found - run without lines (add key to config.json)
 Fetching Kalshi prediction market lines...
-  Kalshi lines found for 10/15 games
-  Kalshi matches missing for: Chicago Cubs @ Philadelphia Phillies, Los Angeles Angels @ New York Yankees, Miami Marlins @ Atlanta Braves, Tampa Bay Rays @ Chicago White Sox, Washington Nationals @ Pittsburgh Pirates
+  Kalshi lines found for 8/15 games
+  Kalshi matches missing for: Arizona Diamondbacks @ Baltimore Orioles, Boston Red Sox @ Minnesota Twins, Chicago Cubs @ Philadelphia Phillies, Cleveland Guardians @ St. Louis Cardinals, Los Angeles Angels @ New York Yankees, San Francisco Giants @ Cincinnati Reds, ...
   H2H history found for 15/15 matchups
 Fetching weather for 13 outdoor venues (2 dome/retractable skipped)...
   Weather fetched for 13/13 venues
@@ -56,10 +56,6 @@ Generating predictions...
   First pitch local: 18:35  |  day game
   Lineups: away OPS 0.712 (+0.008 vs team, platoon +8)  |  home OPS 0.724 (+0.088 vs team, platoon +5)
   Predicted Total: 9.2
-  Kalshi line: 8.5  |  Market: 52.0% over  model edge: +4.0%
-  Kalshi fair price: 56.0%  |  edge: +4.0%  |  side: OVER
-  Kalshi Kelly: 8.3% full  ->  2.1% quarter-Kelly  ->  BUY $2  (edge: +4.0%)
-
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         63.5%    36.5%     >> OVER
@@ -156,10 +152,6 @@ Generating predictions...
   First pitch local: 18:40  |  day game
   Lineups: away OPS 0.702 (+0.089 vs team, platoon +4)  |  home OPS 0.706 (+0.065 vs team, platoon +9)
   Predicted Total: 8.7
-  Kalshi line: 8.5  |  Market: 53.0% over  model edge: -1.3%
-  Kalshi fair price: 51.7%  |  edge: -1.3%  |  side: UNDER
-  Kalshi Kelly: raw $0.61 below minimum bet threshold - skip
-
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         67.3%    32.7%     >> OVER
@@ -251,6 +243,10 @@ Generating predictions...
   First pitch local: 19:15  |  day game
   Lineups: away OPS 0.731 (+0.027 vs team, platoon +5)  |  home OPS 0.742 (-0.040 vs team, platoon +6)
   Predicted Total: 10.0
+  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +9.4%
+  Kalshi fair price: 62.4%  |  edge: +9.4%  |  side: OVER
+  Kalshi Kelly: 19.9% full  ->  5.0% quarter-Kelly  ->  BUY $5  (edge: +9.4%)
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         66.0%    34.0%     >> OVER
@@ -282,10 +278,6 @@ Generating predictions...
   First pitch local: 18:40  |  day game
   Lineups: away OPS 0.699 (+0.026 vs team, platoon +4)  |  home OPS 0.715 (+0.042 vs team, platoon +7)
   Predicted Total: 10.1
-  Kalshi line: 8.5  |  Market: 48.0% over  model edge: +14.6%
-  Kalshi fair price: 62.6%  |  edge: +14.6%  |  side: OVER
-  Kalshi Kelly: 28.1% full  ->  7.0% quarter-Kelly  ->  BUY $7  (edge: +14.6%)
-
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         65.6%    34.4%     >> OVER
@@ -316,6 +308,10 @@ Generating predictions...
   First pitch local: 18:40  |  day game
   Lineups: away OPS 0.730 (+0.047 vs team, platoon +7)  |  home OPS 0.688 (+0.114 vs team, platoon +7)
   Predicted Total: 9.6
+  Kalshi line: 7.5  |  Market: 55.0% over  model edge: +5.0%
+  Kalshi fair price: 60.0%  |  edge: +5.0%  |  side: OVER
+  Kalshi Kelly: 11.1% full  ->  2.8% quarter-Kelly  ->  BUY $3  (edge: +5.0%)
+
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         64.5%    35.5%     >> OVER
@@ -380,10 +376,6 @@ Generating predictions...
   First pitch local: 18:45  |  day game
   Lineups: away OPS 0.708 (+0.031 vs team, platoon +9)  |  home OPS 0.713 (+0.038 vs team, platoon +6)
   Predicted Total: 10.6
-  Kalshi line: 8.5  |  Market: 55.0% over  model edge: +11.0%
-  Kalshi fair price: 66.0%  |  edge: +11.0%  |  side: OVER
-  Kalshi Kelly: 24.5% full  ->  6.1% quarter-Kelly  ->  BUY $6  (edge: +11.0%)
-
   Line       Over %  Under %      Signal
   --------------------------------------
   6.5         67.3%    32.7%     >> OVER
@@ -534,13 +526,13 @@ Generating predictions...
   Matchup                   Line  Model%  Market%   Edge%   Side   Kelly$     Raw$
   ----------------------------------------------------------------
   Kansas City Royals@Detro   8.5    62.5     46.0    16.5   OVER        8     7.65
-  Boston Red Sox@Minnesota   8.5    62.6     48.0    14.6   OVER        7     7.02
   Seattle Mariners@San Die   7.5    60.7     48.0    12.7   OVER        6     6.11
   New York Mets@Los Angele   7.5    60.4     48.0    12.4   OVER        6     5.96
   Toronto Blue Jays@Milwau   7.5    57.3     45.0    12.3   OVER        6     5.59
-  Cleveland Guardians@St.    8.5    66.0     55.0    11.0   OVER        6     6.13
   Colorado Rockies@Houston   8.5    64.1     54.0    10.1   OVER        5     5.48
-  Arizona Diamondbacks@Bal   8.5    56.0     52.0     4.0   OVER        2     2.07
+  Miami Marlins@Atlanta Br   8.5    62.4     53.0     9.4   OVER        5     4.98
+  Tampa Bay Rays@Chicago W   7.5    60.0     55.0     5.0   OVER        3     2.78
+  Texas Rangers@Athletics    8.5    53.5     53.0     0.5   OVER        0     0.26
 
 Saved board export: predictions/2026-04-14-board.tsv
 Saved picks export: predictions/2026-04-14-picks.tsv
