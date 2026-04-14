@@ -306,6 +306,45 @@ def format_summary_block(title: str, summary: Summary) -> list[str]:
     ]
 
 
+def write_latest_status_markdown(
+    season: int,
+    board_files: list[Path],
+    sportsbook_df: pd.DataFrame,
+    kalshi_df: pd.DataFrame,
+) -> Path:
+    kalshi_summary = summarize_kalshi(kalshi_df)
+    sportsbook_summary = summarize_sportsbook(sportsbook_df)
+
+    lines = [
+        f"# Latest Status ({season})",
+        "",
+        f"- Updated: {datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z')}",
+        f"- Daily board files found: {len(board_files)}",
+        "",
+        "## Kalshi",
+        f"- Tracked: {kalshi_summary.total}",
+        f"- Settled: {kalshi_summary.settled}",
+        f"- Record: {kalshi_summary.wins}-{kalshi_summary.losses}-{kalshi_summary.pushes}",
+        f"- Win rate: {kalshi_summary.win_rate:.1%}",
+        f"- ROI: {kalshi_summary.roi_pct:+.1f}%",
+        "",
+        "## Sportsbook (Optional)",
+        f"- Tracked: {sportsbook_summary.total}",
+        f"- Settled: {sportsbook_summary.settled}",
+        f"- Record: {sportsbook_summary.wins}-{sportsbook_summary.losses}-{sportsbook_summary.pushes}",
+        f"- Win rate: {sportsbook_summary.win_rate:.1%}",
+        f"- ROI: {sportsbook_summary.roi_pct:+.1f}%",
+        "",
+        f"- Full summary: `paper_summary_{season}.md`",
+        f"- Kalshi detail: `kalshi_tracker_{season}.tsv`",
+        f"- Sportsbook detail: `sportsbook_tracker_{season}.tsv`",
+    ]
+
+    latest_path = PAPER_TRACKING_DIR / "LATEST_STATUS.md"
+    latest_path.write_text("\n".join(lines), encoding="utf-8")
+    return latest_path
+
+
 def write_summary_markdown(
     season: int,
     board_files: list[Path],
@@ -322,28 +361,30 @@ def write_summary_markdown(
         "",
         f"- Updated: {datetime.now(UTC).isoformat(timespec='seconds').replace('+00:00', 'Z')}",
         f"- Daily board files found: {len(board_files)}",
+        "- Primary scorecard: Kalshi forward tracking",
+        "- Sportsbook section is optional and may stay empty if no Odds API key is configured",
         "",
     ]
-    lines.extend(format_summary_block("Sportsbook Picks", sportsbook_summary))
-    if not sportsbook_monthly.empty:
-        lines.append("### Sportsbook Monthly")
-        lines.append("")
-        lines.append("| Month | Bets | Record | Win Rate | ROI |")
-        lines.append("| --- | ---: | --- | ---: | ---: |")
-        for _, row in sportsbook_monthly.iterrows():
-            record = f"{int(row['wins'])}-{int(row['losses'])}-{int(row['pushes'])}"
-            lines.append(
-                f"| {row['month']} | {int(row['bets'])} | {record} | {row['win_rate']:.1%} | {row['roi_pct']:+.1f}% |"
-            )
-        lines.append("")
-
-    lines.extend(format_summary_block("Kalshi Proxy Trades", kalshi_summary))
+    lines.extend(format_summary_block("Kalshi Forward Tracking", kalshi_summary))
     if not kalshi_monthly.empty:
         lines.append("### Kalshi Monthly")
         lines.append("")
         lines.append("| Month | Trades | Record | Win Rate | ROI |")
         lines.append("| --- | ---: | --- | ---: | ---: |")
         for _, row in kalshi_monthly.iterrows():
+            record = f"{int(row['wins'])}-{int(row['losses'])}-{int(row['pushes'])}"
+            lines.append(
+                f"| {row['month']} | {int(row['bets'])} | {record} | {row['win_rate']:.1%} | {row['roi_pct']:+.1f}% |"
+            )
+        lines.append("")
+
+    lines.extend(format_summary_block("Sportsbook Picks (Optional)", sportsbook_summary))
+    if not sportsbook_monthly.empty:
+        lines.append("### Sportsbook Monthly")
+        lines.append("")
+        lines.append("| Month | Bets | Record | Win Rate | ROI |")
+        lines.append("| --- | ---: | --- | ---: | ---: |")
+        for _, row in sportsbook_monthly.iterrows():
             record = f"{int(row['wins'])}-{int(row['losses'])}-{int(row['pushes'])}"
             lines.append(
                 f"| {row['month']} | {int(row['bets'])} | {record} | {row['win_rate']:.1%} | {row['roi_pct']:+.1f}% |"
@@ -379,6 +420,7 @@ def main():
     sportsbook_path = PAPER_TRACKING_DIR / f"sportsbook_tracker_{args.season}.tsv"
     kalshi_path = PAPER_TRACKING_DIR / f"kalshi_tracker_{args.season}.tsv"
     summary_path = write_summary_markdown(args.season, board_files, sportsbook_df, kalshi_df)
+    latest_path = write_latest_status_markdown(args.season, board_files, sportsbook_df, kalshi_df)
 
     sportsbook_df.to_csv(sportsbook_path, sep="\t", index=False)
     kalshi_df.to_csv(kalshi_path, sep="\t", index=False)
@@ -387,6 +429,7 @@ def main():
     print(f"Sportsbook tracker: {sportsbook_path.relative_to(PROJECT_DIR)}")
     print(f"Kalshi tracker: {kalshi_path.relative_to(PROJECT_DIR)}")
     print(f"Summary: {summary_path.relative_to(PROJECT_DIR)}")
+    print(f"Latest status: {latest_path.relative_to(PROJECT_DIR)}")
 
 
 if __name__ == "__main__":
