@@ -1,9 +1,5 @@
 target_date	month	game_id	away_team	home_team	predicted_total	kalshi_line	kalshi_side	kalshi_edge_pct	kalshi_fair_price_pct	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_side_market_price	kalshi_recommended_bet	away_score	home_score	total_runs	result	profit_per_contract	roi_pct	settled
-2026-04-14	2026-04		Kansas City Royals	Detroit Tigers	10.1	8.5	OVER	16.5	62.5	62.5	46.0	0.46	8.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Miami Marlins	Atlanta Braves	10.0	8.5	OVER	9.4	62.4	62.4	53.0	0.53	5.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Tampa Bay Rays	Chicago White Sox	9.6	7.5	OVER	5.0	60.0	60.0	55.0	0.55	3.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Toronto Blue Jays	Milwaukee Brewers	8.8	7.5	OVER	12.3	57.3	57.3	45.0	0.45	6.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Colorado Rockies	Houston Astros	10.3	8.5	OVER	10.1	64.1	64.1	54.0	0.54	5.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Seattle Mariners	San Diego Padres	9.7	7.5	OVER	12.7	60.7	60.7	48.0	0.48	6.0				pending	0.0	0.0	False
-2026-04-14	2026-04		Texas Rangers	Athletics	8.9	8.5	OVER	0.5	53.5	53.5	53.0	0.53	0.0				pending	0.0	0.0	False
-2026-04-14	2026-04		New York Mets	Los Angeles Dodgers	9.7	7.5	OVER	12.4	60.4	60.4	48.0	0.48	6.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Colorado Rockies	Houston Astros	10.3	8.5	OVER	9.1	64.1	64.1	55.0	0.55	5.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Seattle Mariners	San Diego Padres	10.3	7.5	OVER	13.7	62.7	62.7	49.0	0.49	7.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Texas Rangers	Athletics	10.7	8.5	OVER	13.7	66.7	66.7	53.0	0.53	7.0				pending	0.0	0.0	False
+2026-04-14	2026-04		New York Mets	Los Angeles Dodgers	9.8	7.5	OVER	12.1	60.1	60.1	48.0	0.48	6.0				pending	0.0	0.0	False

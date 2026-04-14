@@ -11,23 +11,23 @@ Building team rolling stats...
 Loading pitcher stats...
   Loaded stats for 842 pitchers
 Fetching games for 2026-04-14...
-  Found 15 upcoming regular season games
+  Found 4 upcoming regular season games
+  Skipped 11 games already underway/final (11 live, 0 final)
 No Odds API key found - run without lines (add key to config.json)
 Fetching Kalshi prediction market lines...
-  Kalshi lines found for 8/15 games
-  Kalshi matches missing for: Arizona Diamondbacks @ Baltimore Orioles, Boston Red Sox @ Minnesota Twins, Chicago Cubs @ Philadelphia Phillies, Cleveland Guardians @ St. Louis Cardinals, Los Angeles Angels @ New York Yankees, San Francisco Giants @ Cincinnati Reds, ...
-  H2H history found for 15/15 matchups
-Fetching weather for 13 outdoor venues (2 dome/retractable skipped)...
-  Weather fetched for 13/13 venues
+  Kalshi lines found for 4/4 games
+  H2H history found for 4/4 matchups
+Fetching weather for 3 outdoor venues (1 dome/retractable skipped)...
+  Weather fetched for 3/3 venues
 Fetching confirmed lineups...
-  Lineups found for 14/15 games
+  Lineups found for 4/4 games
 Loading team batting stats...
   Batting stats loaded for 30 teams
 Loading bullpen fatigue stats...
   Bullpen fatigue stats not available (run collect_bullpen_usage.py)
 Loading umpire stats...
   Umpire history for 106 umpires
-  Today's umpires matched: 14/15
+  Today's umpires matched: 4/4
 Loading Dixon-Coles priors...
   DC fit on 2427 games  (mu=1.491  home_adv=0.032)
 Generating predictions...
@@ -35,357 +35,6 @@ Generating predictions...
 ========================================================================
   MLB TOTAL RUNS PREDICTIONS - Tuesday, April 14, 2026
 ========================================================================
-
-  Arizona Diamondbacks @ Baltimore Orioles
-  Venue: Oriole Park at Camden Yards
-  Pitchers: Merrill Kelly (away) vs Trevor Rogers (home)
-  DC model: 8.5 runs  (home lambda=4.02  away lambda=4.50)
-  Model sigma: 4.66 runs
-  High-tail risk (>9.5): 43.6%  |  Tail sigma: 4.66
-  Low-tail risk (<7.5): 41.4%  |  Tail sigma: 7.89
-  Team totals: away 4.73  |  home 4.48
-  Calibration: -0.15 runs
-  Why: DC baseline 8.5 + away residual +0.31 + home residual +0.54
-  Residual drivers: Bullpen +0.54  |  DC priors +0.39  |  Environment +0.27
-  Top features: home:away_bullpen_era_season -0.47, home:dc_lambda_home +0.35, home:away_bullpen_top4_burned_score +0.26, away:away_bullpen_top4_burned_score +0.23, away:temp_f +0.23
-  DC   ATK  DEF  |  Arizona Diamondbacks: +0.000 / +0.007  |  Baltimore Orioles: -0.125 / -0.013
-  Starter context: away rest 14d / 81 pitches avg | home rest 14d / 94 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Chris Conroy  (8.6 avg runs/game)
-  Weather: 90F  wind 16mph  precip 0.0mm  humidity 47%  dew point 53F
-  First pitch local: 18:35  |  day game
-  Lineups: away OPS 0.712 (+0.008 vs team, platoon +8)  |  home OPS 0.724 (+0.088 vs team, platoon +5)
-  Predicted Total: 9.2
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         63.5%    36.5%     >> OVER
-  7.5         58.6%    41.4%     >> OVER
-  8.5         56.0%    44.0%            
-  9.5         47.4%    52.6%            
-  10.5        39.0%    61.0%    >> UNDER
-  11.5        31.1%    68.9%    >> UNDER
-
-  ---------------------------------------------
-
-  Kansas City Royals @ Detroit Tigers
-  Venue: Comerica Park
-  Pitchers: Cole Ragans (away) vs Framber Valdez (home)
-  DC model: 7.1 runs  (home lambda=3.87  away lambda=3.27)
-  Model sigma: 5.01 runs
-  High-tail risk (>9.5): 50.5%  |  Tail sigma: 5.01
-  Low-tail risk (<7.5): 38.6%  |  Tail sigma: 9.03
-  Team totals: away 3.91  |  home 6.22
-  Calibration: -0.12 runs
-  Why: DC baseline 7.1 + away residual +0.68 + home residual +2.43
-  Residual drivers: Bullpen +1.28  |  DC priors +0.94  |  Lineups +0.87
-  Top features: home:away_bullpen_top4_burned_score +0.53, home:dc_lambda_home +0.44, home:away_lineup_depth_gap_ops +0.17, away:away_bullpen_era_10g +0.16, home:away_lineup_mid3_avg_ops +0.14
-  DC   ATK  DEF  |  Kansas City Royals: -0.202 / +0.093  |  Detroit Tigers: -0.077 / +0.103
-  Starter context: away rest 14d / 71 pitches avg | home rest 14d / 87 pitches avg
-  Starter roles: away leash 0.23  |  home leash 0.00
-  Umpire: Andy Fletcher  (9.5 avg runs/game)
-  Weather: 75F  wind 13mph  precip 28.6mm  humidity 77%  dew point 60F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.693 (-0.020 vs team, platoon +7)  |  home OPS 0.710 (+0.082 vs team, platoon +6)
-  Predicted Total: 10.1
-  Kalshi line: 8.5  |  Market: 46.0% over  model edge: +16.5%
-  Kalshi fair price: 62.5%  |  edge: +16.5%  |  side: OVER
-  Kalshi Kelly: 30.6% full  ->  7.7% quarter-Kelly  ->  BUY $8  (edge: +16.5%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         65.5%    34.5%     >> OVER
-  7.5         61.4%    38.6%     >> OVER
-  8.5         62.5%    37.5%     >> OVER
-  9.5         54.8%    45.2%            
-  10.5        46.8%    53.2%            
-  11.5        39.0%    61.0%    >> UNDER
-
-  ---------------------------------------------
-
-  Washington Nationals @ Pittsburgh Pirates
-  Venue: PNC Park
-  Pitchers: PJ Poulin (away) vs Mitch Keller (home)
-  DC model: 10.5 runs  (home lambda=5.66  away lambda=4.89)
-  Model sigma: 4.48 runs
-  High-tail risk (>9.5): 47.0%  |  Tail sigma: 4.48
-  Low-tail risk (<7.5): 38.3%  |  Tail sigma: 8.07
-  Team totals: away 5.64  |  home 4.37
-  Calibration: -0.14 runs
-  Why: DC baseline 10.5 + away residual +0.83 + home residual -1.23
-  Residual drivers: DC priors -1.21  |  Bullpen +0.99  |  Lineups -0.37
-  Top features: home:dc_lambda_home -0.65, away:away_bullpen_top4_burned_score +0.46, home:away_bullpen_era_season -0.41, home:away_dc_defense -0.26, away:home_bullpen_era_30g +0.22
-  DC   ATK  DEF  |  Washington Nationals: +0.189 / -0.262  |  Pittsburgh Pirates: -0.052 / +0.093
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: John Libka  (9.2 avg runs/game)
-  Weather: 76F  wind 14mph  precip 4.8mm  humidity 68%  dew point 56F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.729 (+0.050 vs team, platoon +7)  |  home OPS 0.724 (+0.068 vs team, platoon +5)
-  Predicted Total: 10.0
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         66.8%    33.2%     >> OVER
-  7.5         62.2%    37.8%     >> OVER
-  8.5         63.1%    36.9%     >> OVER
-  9.5         54.4%    45.6%            
-  10.5        45.6%    54.4%            
-  11.5        36.9%    63.1%    >> UNDER
-
-  ---------------------------------------------
-
-  San Francisco Giants @ Cincinnati Reds
-  Venue: Great American Ball Park
-  Pitchers: Robbie Ray (away) vs Brady Singer (home)
-  DC model: 7.7 runs  (home lambda=3.87  away lambda=3.81)
-  Model sigma: 4.70 runs
-  High-tail risk (>9.5): 41.7%  |  Tail sigma: 4.70
-  Low-tail risk (<7.5): 40.4%  |  Tail sigma: 4.88
-  Team totals: away 4.32  |  home 4.38
-  Calibration: -0.17 runs
-  Why: DC baseline 7.7 + away residual +0.59 + home residual +0.60
-  Residual drivers: Bullpen +0.88  |  DC priors +0.32  |  Team form +0.13
-  Top features: home:away_bullpen_era_season -0.33, home:away_bullpen_top4_burned_score +0.32, away:away_bullpen_top4_burned_score +0.27, home:dc_lambda_home +0.22, home:away_bullpen_top4_quality_score +0.17
-  DC   ATK  DEF  |  San Francisco Giants: -0.166 / -0.033  |  Cincinnati Reds: -0.204 / -0.013
-  Starter context: away rest 14d / 97 pitches avg | home rest 14d / 92 pitches avg
-  Starter roles: away leash 0.07  |  home leash 0.00
-  Umpire: Paul Clemons  (8.7 avg runs/game)
-  Weather: 85F  wind 14mph  precip 0.5mm  humidity 57%  dew point 58F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.702 (+0.089 vs team, platoon +4)  |  home OPS 0.706 (+0.065 vs team, platoon +9)
-  Predicted Total: 8.7
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         67.3%    32.7%     >> OVER
-  7.5         59.6%    40.4%     >> OVER
-  8.5         51.7%    48.3%            
-  9.5         43.2%    56.8%            
-  10.5        35.1%    64.9%    >> UNDER
-  11.5        27.6%    72.4%    >> UNDER
-
-  ---------------------------------------------
-
-  Chicago Cubs @ Philadelphia Phillies
-  Venue: Citizens Bank Park
-  Pitchers: Riley Martin (away) vs Aaron Nola (home)
-  DC model: 7.4 runs  (home lambda=3.23  away lambda=4.19)
-  Model sigma: 4.85 runs
-  High-tail risk (>9.5): 52.9%  |  Tail sigma: 4.85
-  Low-tail risk (<7.5): 38.3%  |  Tail sigma: 8.73
-  Team totals: away 5.78  |  home 5.45
-  Why: DC baseline 7.4 + away residual +1.61 + home residual +2.23
-  Residual drivers: Bullpen +1.76  |  Lineups +0.90  |  DC priors +0.72
-  Top features: home:dc_lambda_home +0.48, away:away_lineup_top3_delta_ops_30g +0.36, away:away_bullpen_top4_burned_score +0.33, home:away_bullpen_top4_burned_score +0.29, home:away_bullpen_top4_quality_score +0.28
-  DC   ATK  DEF  |  Chicago Cubs: -0.061 / +0.172  |  Philadelphia Phillie: -0.178 / -0.003
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Mark Wegner  (10.0 avg runs/game)
-  Weather: 86F  wind 13mph  precip 0.0mm  humidity 50%  dew point 54F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.706 (-0.025 vs team, platoon +4)  |  home OPS 0.731 (+0.012 vs team, platoon +4)
-  Predicted Total: 11.2
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         70.5%    29.5%     >> OVER
-  7.5         66.4%    33.6%     >> OVER
-  8.5         71.1%    28.9%     >> OVER
-  9.5         63.7%    36.3%     >> OVER
-  10.5        55.7%    44.3%            
-  11.5        47.5%    52.5%            
-
-  ---------------------------------------------
-
-  Los Angeles Angels @ New York Yankees
-  Venue: Yankee Stadium
-  Pitchers: Reid Detmers (away) vs Ryan Weathers (home)
-  DC model: 8.5 runs  (home lambda=4.88  away lambda=3.60)
-  Model sigma: 4.93 runs
-  High-tail risk (>9.5): 50.4%  |  Tail sigma: 4.93
-  Low-tail risk (<7.5): 39.6%  |  Tail sigma: 8.88
-  Team totals: away 4.31  |  home 5.54
-  Calibration: -0.13 runs
-  Why: DC baseline 8.5 + away residual +0.76 + home residual +0.73
-  Residual drivers: Bullpen +1.14  |  Environment +0.46  |  DC priors -0.31
-  Top features: home:dc_lambda_home -0.40, away:away_bullpen_top4_burned_score +0.29, home:temp_f +0.28, home:away_bullpen_top4_burned_score +0.27, home:home_lineup_batters_with_sample +0.16
-  DC   ATK  DEF  |  Los Angeles Angels: -0.025 / -0.099  |  New York Yankees: -0.036 / +0.183
-  Starter context: away rest 14d / 88 pitches avg | home rest 14d / 68 pitches avg
-  Starter roles: away leash 0.07  |  home leash 0.13
-  Umpire: Ryan Wills  (9.2 avg runs/game)
-  Weather: 88F  wind 12mph  precip 0.5mm  humidity 53%  dew point 55F
-  First pitch local: 19:05  |  day game
-  Lineups: away OPS 0.715 (+0.095 vs team, platoon +9)  |  home OPS 0.706 (-0.035 vs team, platoon +6)
-  Predicted Total: 9.8
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         64.7%    35.3%     >> OVER
-  7.5         60.4%    39.6%     >> OVER
-  8.5         60.4%    39.6%     >> OVER
-  9.5         52.4%    47.6%            
-  10.5        44.4%    55.6%            
-  11.5        36.5%    63.5%    >> UNDER
-
-  ---------------------------------------------
-
-  Miami Marlins @ Atlanta Braves
-  Venue: Truist Park
-  Pitchers: Max Meyer (away) vs Reynaldo López (home)
-  DC model: 9.4 runs  (home lambda=5.82  away lambda=3.53)
-  Model sigma: 4.76 runs
-  High-tail risk (>9.5): 48.7%  |  Tail sigma: 4.76
-  Low-tail risk (<7.5): 38.4%  |  Tail sigma: 8.48
-  Team totals: away 4.11  |  home 5.89
-  Calibration: -0.14 runs
-  Why: DC baseline 9.4 + away residual +0.64 + home residual +0.15
-  Residual drivers: Bullpen +1.63  |  DC priors -0.44  |  Lineups -0.36
-  Top features: home:dc_lambda_home -0.57, away:away_bullpen_top4_burned_score +0.56, home:away_bullpen_top4_burned_score +0.26, away:dc_lambda_away +0.21, home:home_bullpen_top4_quality_score +0.19
-  DC   ATK  DEF  |  Miami Marlins: -0.036 / -0.127  |  Atlanta Braves: +0.112 / +0.194
-  Starter context: away rest 14d / 85 pitches avg | home rest 14d / 63 pitches avg
-  Starter roles: away leash 0.02  |  home leash 0.20
-  Umpire: James Jean  (10.0 avg runs/game)
-  Weather: 84F  wind 8mph  precip 0.0mm  humidity 52%  dew point 50F
-  First pitch local: 19:15  |  day game
-  Lineups: away OPS 0.731 (+0.027 vs team, platoon +5)  |  home OPS 0.742 (-0.040 vs team, platoon +6)
-  Predicted Total: 10.0
-  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +9.4%
-  Kalshi fair price: 62.4%  |  edge: +9.4%  |  side: OVER
-  Kalshi Kelly: 19.9% full  ->  5.0% quarter-Kelly  ->  BUY $5  (edge: +9.4%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         66.0%    34.0%     >> OVER
-  7.5         61.6%    38.4%     >> OVER
-  8.5         62.4%    37.6%     >> OVER
-  9.5         54.2%    45.8%            
-  10.5        45.8%    54.2%            
-  11.5        37.6%    62.4%    >> UNDER
-
-  ---------------------------------------------
-
-  Boston Red Sox @ Minnesota Twins
-  Venue: Target Field
-  Pitchers: Sonny Gray (away) vs Mick Abel (home)
-  DC model: 8.9 runs  (home lambda=4.29  away lambda=4.58)
-  Model sigma: 4.98 runs
-  High-tail risk (>9.5): 49.9%  |  Tail sigma: 4.98
-  Low-tail risk (<7.5): 39.8%  |  Tail sigma: 8.97
-  Team totals: away 5.27  |  home 4.87
-  Calibration: -0.12 runs
-  Why: DC baseline 8.9 + away residual +0.76 + home residual +0.64
-  Residual drivers: Bullpen +1.06  |  Lineups +0.63  |  Environment -0.42
-  Top features: home:away_bullpen_top4_burned_score +0.29, away:away_bullpen_top4_burned_score +0.25, home:dc_lambda_home +0.17, home:away_bullpen_era_season +0.15, home:temp_f -0.14
-  DC   ATK  DEF  |  Boston Red Sox: -0.085 / +0.106  |  Minnesota Twins: +0.039 / -0.115
-  Starter context: away rest 14d / 92 pitches avg | home rest 14d / 63 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.50
-  Umpire: Lance Barrett  (8.8 avg runs/game)
-  Weather: 64F  wind 9mph  precip 3.6mm  humidity 84%  dew point 50F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.699 (+0.026 vs team, platoon +4)  |  home OPS 0.715 (+0.042 vs team, platoon +7)
-  Predicted Total: 10.1
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         65.6%    34.4%     >> OVER
-  7.5         61.4%    38.6%     >> OVER
-  8.5         62.6%    37.4%     >> OVER
-  9.5         54.8%    45.2%            
-  10.5        46.8%    53.2%            
-  11.5        38.9%    61.1%    >> UNDER
-
-  ---------------------------------------------
-
-  Tampa Bay Rays @ Chicago White Sox
-  Venue: Rate Field
-  Pitchers: Shane McClanahan (away) vs Noah Schultz (home)
-  DC model: 8.8 runs  (home lambda=3.72  away lambda=5.04)
-  Model sigma: 4.85 runs
-  High-tail risk (>9.5): 42.2%  |  Tail sigma: 4.85
-  Low-tail risk (<7.5): 40.0%  |  Tail sigma: 8.35
-  Team totals: away 5.15  |  home 4.45
-  Calibration: -0.18 runs
-  Why: DC baseline 8.8 + away residual +0.21 + home residual +0.82
-  Residual drivers: Bullpen +1.11  |  Starters -0.35  |  Other -0.27
-  Top features: away:away_bullpen_top4_burned_score +0.39, home:dc_lambda_home +0.33, home:away_bullpen_top4_burned_score +0.28, home:home_lineup_batters_with_sample +0.22, home:home_bullpen_top4_available_score +0.14
-  DC   ATK  DEF  |  Tampa Bay Rays: +0.015 / -0.128  |  Chicago White Sox: -0.337 / -0.112
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Alex Tosi  (8.7 avg runs/game)
-  Weather: 81F  wind 16mph  precip 7.1mm  humidity 79%  dew point 62F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.730 (+0.047 vs team, platoon +7)  |  home OPS 0.688 (+0.114 vs team, platoon +7)
-  Predicted Total: 9.6
-  Kalshi line: 7.5  |  Market: 55.0% over  model edge: +5.0%
-  Kalshi fair price: 60.0%  |  edge: +5.0%  |  side: OVER
-  Kalshi Kelly: 11.1% full  ->  2.8% quarter-Kelly  ->  BUY $3  (edge: +5.0%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         64.5%    35.5%     >> OVER
-  7.5         60.0%    40.0%     >> OVER
-  8.5         59.0%    41.0%     >> OVER
-  9.5         50.8%    49.2%            
-  10.5        42.6%    57.4%            
-  11.5        34.8%    65.2%    >> UNDER
-
-  ---------------------------------------------
-
-  Toronto Blue Jays @ Milwaukee Brewers
-  Venue: American Family Field
-  Pitchers: Kevin Gausman (away) vs Jacob Misiorowski (home)
-  DC model: 9.9 runs  (home lambda=5.95  away lambda=3.97)
-  Model sigma: 4.40 runs
-  High-tail risk (>9.5): 41.4%  |  Tail sigma: 4.40
-  Low-tail risk (<7.5): 42.7%  |  Tail sigma: 6.94
-  Team totals: away 3.98  |  home 4.79
-  Calibration: -0.18 runs
-  Why: DC baseline 9.9 + away residual +0.09 + home residual -1.06
-  Residual drivers: DC priors -0.95  |  Bullpen +0.88  |  Lineups -0.37
-  Top features: home:dc_lambda_home -0.77, away:away_bullpen_top4_burned_score +0.26, home:combined_bullpen_era_30g -0.23, home:away_bullpen_era_season +0.15, home:home_lineup_avg_obp -0.13
-  DC   ATK  DEF  |  Toronto Blue Jays: -0.089 / -0.185  |  Milwaukee Brewers: +0.075 / +0.022
-  Starter context: away rest 14d / 96 pitches avg | home rest 14d / 85 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: David Rackley  (8.6 avg runs/game)
-  First pitch local: 18:40  |  night game
-  Lineups: away OPS 0.712 (+0.037 vs team, platoon +5)  |  home OPS 0.734 (+0.029 vs team, platoon +5)
-  Predicted Total: 8.8
-  Kalshi line: 7.5  |  Market: 45.0% over  model edge: +12.3%
-  Kalshi fair price: 57.3%  |  edge: +12.3%  |  side: OVER
-  Kalshi Kelly: 22.4% full  ->  5.6% quarter-Kelly  ->  BUY $6  (edge: +12.3%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         62.7%    37.3%     >> OVER
-  7.5         57.3%    42.7%            
-  8.5         52.7%    47.3%            
-  9.5         43.7%    56.3%            
-  10.5        35.0%    65.0%    >> UNDER
-  11.5        27.0%    73.0%    >> UNDER
-
-  ---------------------------------------------
-
-  Cleveland Guardians @ St. Louis Cardinals
-  Venue: Busch Stadium
-  Pitchers: Joey Cantillo (away) vs Michael McGreevy (home)
-  DC model: 8.4 runs  (home lambda=3.45  away lambda=4.93)
-  Model sigma: 5.08 runs
-  High-tail risk (>9.5): 51.3%  |  Tail sigma: 5.08
-  Low-tail risk (<7.5): 38.3%  |  Tail sigma: 9.14
-  Team totals: away 5.67  |  home 4.92
-  Why: DC baseline 8.4 + away residual +0.76 + home residual +1.49
-  Residual drivers: Bullpen +1.32  |  DC priors +0.51  |  Environment +0.27
-  Top features: away:away_bullpen_top4_burned_score +0.33, home:away_bullpen_top4_burned_score +0.31, home:dc_lambda_home +0.31, away:temp_f +0.22, home:away_bullpen_era_season +0.14
-  DC   ATK  DEF  |  Cleveland Guardians: -0.048 / +0.193  |  St. Louis Cardinals: -0.092 / -0.154
-  Starter context: away rest 14d / 86 pitches avg | home rest 14d / 87 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Roberto Ortiz  (8.2 avg runs/game)
-  Weather: 86F  wind 15mph  precip 0.6mm  humidity 67%  dew point 64F
-  First pitch local: 18:45  |  day game
-  Lineups: away OPS 0.708 (+0.031 vs team, platoon +9)  |  home OPS 0.713 (+0.038 vs team, platoon +6)
-  Predicted Total: 10.6
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         67.3%    32.7%     >> OVER
-  7.5         63.3%    36.7%     >> OVER
-  8.5         66.0%    34.0%     >> OVER
-  9.5         58.6%    41.4%     >> OVER
-  10.5        50.8%    49.2%            
-  11.5        43.0%    57.0%            
-
-  ---------------------------------------------
 
   Colorado Rockies @ Houston Astros
   Venue: Daikin Park
@@ -406,9 +55,9 @@ Generating predictions...
   First pitch local: 19:10  |  night game
   Lineups: away OPS 0.684 (+0.052 vs team, platoon +7)  |  home OPS 0.763 (+0.050 vs team, platoon +2)
   Predicted Total: 10.3
-  Kalshi line: 8.5  |  Market: 54.0% over  model edge: +10.1%
-  Kalshi fair price: 64.1%  |  edge: +10.1%  |  side: OVER
-  Kalshi Kelly: 21.9% full  ->  5.5% quarter-Kelly  ->  BUY $5  (edge: +10.1%)
+  Kalshi line: 8.5  |  Market: 55.0% over  model edge: +9.1%
+  Kalshi fair price: 64.1%  |  edge: +9.1%  |  side: OVER
+  Kalshi Kelly: 20.2% full  ->  5.0% quarter-Kelly  ->  BUY $5  (edge: +9.1%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
@@ -425,33 +74,34 @@ Generating predictions...
   Venue: Petco Park
   Pitchers: Bryan Woo (away) vs Michael King (home)
   DC model: 7.9 runs  (home lambda=4.06  away lambda=3.88)
-  Model sigma: 4.65 runs
-  High-tail risk (>9.5): 49.7%  |  Tail sigma: 4.65
-  Low-tail risk (<7.5): 39.3%  |  Tail sigma: 7.93
-  Team totals: away 4.58  |  home 5.07
-  Calibration: -0.18 runs
-  Why: DC baseline 7.9 + away residual +0.79 + home residual +1.11
-  Residual drivers: Bullpen +1.39  |  DC priors +0.68  |  Starters +0.53
-  Top features: away:away_bullpen_top4_burned_score +0.27, home:dc_lambda_home +0.27, home:away_lineup_depth_gap_ops -0.22, away:away_lineup_avg_obp -0.21, away:away_lineup_delta_k_pct_30g +0.20
+  Model sigma: 4.81 runs
+  High-tail risk (>9.5): 51.4%  |  Tail sigma: 4.81
+  Low-tail risk (<7.5): 38.4%  |  Tail sigma: 8.66
+  Team totals: away 4.96  |  home 5.32
+  Calibration: -0.13 runs
+  Why: DC baseline 7.9 + away residual +1.15 + home residual +1.33
+  Residual drivers: Bullpen +1.22  |  DC priors +0.84  |  Lineups +0.50
+  Top features: home:dc_lambda_home +0.39, home:away_bullpen_top4_burned_score +0.28, away:away_bullpen_top4_burned_score +0.20, away:away_bullpen_top4_used_yesterday +0.20, away:dc_expected_total +0.18
   DC   ATK  DEF  |  Seattle Mariners: -0.069 / +0.138  |  San Diego Padres: +0.016 / +0.067
   Starter context: away rest 14d / 93 pitches avg | home rest 14d / 63 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.10
   Umpire: Chad Whitson  (9.1 avg runs/game)
   Weather: 69F  wind 10mph  precip 0.0mm  humidity 65%  dew point 50F
   First pitch local: 18:40  |  day game
-  Predicted Total: 9.7
-  Kalshi line: 7.5  |  Market: 48.0% over  model edge: +12.7%
-  Kalshi fair price: 60.7%  |  edge: +12.7%  |  side: OVER
-  Kalshi Kelly: 24.4% full  ->  6.1% quarter-Kelly  ->  BUY $6  (edge: +12.7%)
+  Lineups: away OPS 0.711 (+0.017 vs team, platoon +7)  |  home OPS 0.719 (+0.036 vs team, platoon +3)
+  Predicted Total: 10.3
+  Kalshi line: 7.5  |  Market: 49.0% over  model edge: +13.7%
+  Kalshi fair price: 62.7%  |  edge: +13.7%  |  side: OVER
+  Kalshi Kelly: 26.8% full  ->  6.7% quarter-Kelly  ->  BUY $7  (edge: +13.7%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
-  6.5         65.4%    34.6%     >> OVER
-  7.5         60.7%    39.3%     >> OVER
-  8.5         60.2%    39.8%     >> OVER
-  9.5         51.7%    48.3%            
-  10.5        43.2%    56.8%            
-  11.5        34.9%    65.1%    >> UNDER
+  6.5         67.0%    33.0%     >> OVER
+  7.5         62.7%    37.3%     >> OVER
+  8.5         64.6%    35.4%     >> OVER
+  9.5         56.6%    43.4%            
+  10.5        48.3%    51.7%            
+  11.5        40.1%    59.9%    >> UNDER
 
   ---------------------------------------------
 
@@ -459,32 +109,33 @@ Generating predictions...
   Venue: Sutter Health Park
   Pitchers: MacKenzie Gore (away) vs Jeffrey Springs (home)
   DC model: 7.7 runs  (home lambda=3.83  away lambda=3.90)
-  Model sigma: 4.58 runs
-  High-tail risk (>9.5): 40.0%  |  Tail sigma: 4.58
-  Low-tail risk (<7.5): 40.9%  |  Tail sigma: 6.04
-  Team totals: away 4.12  |  home 4.77
-  Calibration: -0.19 runs
-  Why: DC baseline 7.7 + away residual +0.31 + home residual +1.05
-  Residual drivers: Bullpen +1.02  |  Lineups +0.86  |  DC priors +0.53
-  Top features: home:home_lineup_avg_k_pct +0.46, away:home_lineup_mid3_avg_ops +0.35, home:away_lineup_depth_gap_ops -0.30, away:away_lineup_delta_k_pct_30g +0.27, home:dc_lambda_home +0.24
+  Model sigma: 5.10 runs
+  High-tail risk (>9.5): 52.4%  |  Tail sigma: 5.10
+  Low-tail risk (<7.5): 38.0%  |  Tail sigma: 9.17
+  Team totals: away 4.57  |  home 6.09
+  Why: DC baseline 7.7 + away residual +0.69 + home residual +2.29
+  Residual drivers: Bullpen +1.50  |  Lineups +0.84  |  DC priors +0.78
+  Top features: home:dc_lambda_home +0.43, home:away_bullpen_top4_burned_score +0.39, home:away_bullpen_top4_quality_score +0.21, home:home_lineup_batters_with_sample +0.20, away:away_bullpen_top4_burned_score +0.18
   DC   ATK  DEF  |  Texas Rangers: -0.091 / +0.113  |  Athletics: -0.069 / +0.039
   Starter context: away rest 14d / 90 pitches avg | home rest 14d / 82 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.00
+  Umpire: Gabe Morales  (9.3 avg runs/game)
   Weather: 66F  wind 9mph  precip 0.0mm  humidity 77%  dew point 49F
   First pitch local: 18:40  |  day game
-  Predicted Total: 8.9
-  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +0.5%
-  Kalshi fair price: 53.5%  |  edge: +0.5%  |  side: OVER
-  Kalshi Kelly: raw $0.26 below minimum bet threshold - skip
+  Lineups: away OPS 0.716 (+0.084 vs team, platoon +7)  |  home OPS 0.703 (+0.036 vs team, platoon +6)
+  Predicted Total: 10.7
+  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +13.7%
+  Kalshi fair price: 66.7%  |  edge: +13.7%  |  side: OVER
+  Kalshi Kelly: 29.1% full  ->  7.3% quarter-Kelly  ->  BUY $7  (edge: +13.7%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
-  6.5         65.4%    34.6%     >> OVER
-  7.5         59.1%    40.9%     >> OVER
-  8.5         53.5%    46.5%            
-  9.5         44.8%    55.2%            
-  10.5        36.3%    63.7%    >> UNDER
-  11.5        28.5%    71.5%    >> UNDER
+  6.5         67.7%    32.3%     >> OVER
+  7.5         63.6%    36.4%     >> OVER
+  8.5         66.7%    33.3%     >> OVER
+  9.5         59.3%    40.7%     >> OVER
+  10.5        51.6%    48.4%            
+  11.5        43.8%    56.2%            
 
   ---------------------------------------------
 
@@ -492,47 +143,44 @@ Generating predictions...
   Venue: UNIQLO Field at Dodger Stadium
   Pitchers: Nolan McLean (away) vs Yoshinobu Yamamoto (home)
   DC model: 9.4 runs  (home lambda=5.90  away lambda=3.46)
-  Model sigma: 4.82 runs
-  High-tail risk (>9.5): 46.9%  |  Tail sigma: 4.82
-  Low-tail risk (<7.5): 39.6%  |  Tail sigma: 8.29
-  Team totals: away 3.35  |  home 6.34
-  Calibration: -0.18 runs
-  Why: DC baseline 9.4 + away residual -0.05 + home residual +0.56
-  Residual drivers: Bullpen +1.21  |  Lineups +1.21  |  DC priors -0.63
-  Top features: home:home_lineup_avg_k_pct +0.52, home:dc_lambda_home -0.49, home:home_lineup_delta_k_pct_30g +0.35, away:home_lineup_mid3_avg_ops +0.34, away:away_bullpen_top4_burned_score +0.32
+  Model sigma: 4.97 runs
+  High-tail risk (>9.5): 46.9%  |  Tail sigma: 4.97
+  Low-tail risk (<7.5): 40.0%  |  Tail sigma: 8.94
+  Team totals: away 3.62  |  home 6.16
+  Calibration: -0.13 runs
+  Why: DC baseline 9.4 + away residual +0.21 + home residual +0.34
+  Residual drivers: Bullpen +1.32  |  DC priors -0.64  |  Lineups +0.40
+  Top features: home:dc_lambda_home -0.52, away:away_bullpen_top4_burned_score +0.31, away:away_bullpen_top4_used_yesterday +0.22, home:home_dc_attack -0.19, away:dc_lambda_away +0.19
   DC   ATK  DEF  |  New York Mets: -0.088 / -0.028  |  Los Angeles Dodgers: +0.224 / +0.160
   Starter context: away rest 14d / 92 pitches avg | home rest 14d / 104 pitches avg
   Starter roles: away leash 0.00  |  home leash 0.00
   Umpire: Hunter Wendelstedt  (8.7 avg runs/game)
   Weather: 73F  wind 8mph  precip 0.0mm  humidity 63%  dew point 46F
   First pitch local: 19:10  |  day game
-  Predicted Total: 9.7
-  Kalshi line: 7.5  |  Market: 48.0% over  model edge: +12.4%
-  Kalshi fair price: 60.4%  |  edge: +12.4%  |  side: OVER
-  Kalshi Kelly: 23.8% full  ->  6.0% quarter-Kelly  ->  BUY $6  (edge: +12.4%)
+  Lineups: away OPS 0.684 (+0.004 vs team, platoon +4)  |  home OPS 0.755 (-0.054 vs team, platoon +6)
+  Predicted Total: 9.8
+  Kalshi line: 7.5  |  Market: 48.0% over  model edge: +12.2%
+  Kalshi fair price: 60.1%  |  edge: +12.1%  |  side: OVER
+  Kalshi Kelly: 23.4% full  ->  5.8% quarter-Kelly  ->  BUY $6  (edge: +12.1%)
 
   Line       Over %  Under %      Signal
   --------------------------------------
-  6.5         64.9%    35.1%     >> OVER
-  7.5         60.4%    39.6%     >> OVER
-  8.5         59.8%    40.2%     >> OVER
-  9.5         51.7%    48.3%            
-  10.5        43.4%    56.6%            
-  11.5        35.5%    64.5%    >> UNDER
+  6.5         64.4%    35.6%     >> OVER
+  7.5         60.2%    39.8%     >> OVER
+  8.5         60.3%    39.7%     >> OVER
+  9.5         52.4%    47.6%            
+  10.5        44.4%    55.6%            
+  11.5        36.6%    63.4%    >> UNDER
 
 
   KALSHI EDGE BOARD
   ----------------------------------------------------------------
   Matchup                   Line  Model%  Market%   Edge%   Side   Kelly$     Raw$
   ----------------------------------------------------------------
-  Kansas City Royals@Detro   8.5    62.5     46.0    16.5   OVER        8     7.65
-  Seattle Mariners@San Die   7.5    60.7     48.0    12.7   OVER        6     6.11
-  New York Mets@Los Angele   7.5    60.4     48.0    12.4   OVER        6     5.96
-  Toronto Blue Jays@Milwau   7.5    57.3     45.0    12.3   OVER        6     5.59
-  Colorado Rockies@Houston   8.5    64.1     54.0    10.1   OVER        5     5.48
-  Miami Marlins@Atlanta Br   8.5    62.4     53.0     9.4   OVER        5     4.98
-  Tampa Bay Rays@Chicago W   7.5    60.0     55.0     5.0   OVER        3     2.78
-  Texas Rangers@Athletics    8.5    53.5     53.0     0.5   OVER        0     0.26
+  Seattle Mariners@San Die   7.5    62.7     49.0    13.7   OVER        7     6.71
+  Texas Rangers@Athletics    8.5    66.7     53.0    13.7   OVER        7     7.28
+  New York Mets@Los Angele   7.5    60.1     48.0    12.1   OVER        6     5.84
+  Colorado Rockies@Houston   8.5    64.1     55.0     9.1   OVER        5     5.05
 
 Saved board export: predictions/2026-04-14-board.tsv
 Saved picks export: predictions/2026-04-14-picks.tsv
