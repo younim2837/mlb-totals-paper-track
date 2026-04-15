@@ -48,7 +48,7 @@ feature_weights:
 # but produces brutal drawdowns in practice.
 #
 bankroll:
-  total: 100           # Your current bankroll in dollars
+  total: 10000         # Your current bankroll in dollars
   kelly_fraction: 0.25  # 0.25 = quarter-Kelly (recommended)
                         # 0.5 = half-Kelly, 1.0 = full Kelly (aggressive)
   max_bet_pct: 0        # 0 = no hard cap; show true quarter-Kelly sizing

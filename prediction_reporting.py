@@ -74,7 +74,9 @@ def export_daily_prediction_reports(predictions: list[dict], target_date: str, i
     board_df = pd.DataFrame(rows, columns=export_cols)
     board_df.to_csv(board_path, sep="\t", index=False)
 
-    picks_df = board_df[board_df["bet_signal"].fillna("NO EDGE") != "NO EDGE"].copy()
+    has_sportsbook_bet = board_df["bet_signal"].fillna("NO EDGE") != "NO EDGE"
+    has_kalshi_bet = board_df["kalshi_recommended_bet"].fillna(0).astype(float) > 0
+    picks_df = board_df[has_sportsbook_bet | has_kalshi_bet].copy()
     picks_df.to_csv(picks_path, sep="\t", index=False)
     return board_path, picks_path
 

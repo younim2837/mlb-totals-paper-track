@@ -16,6 +16,7 @@ Imported by predict_today.py:
 
 import requests
 import re
+import time
 from datetime import date, datetime
 
 KALSHI_API = "https://api.elections.kalshi.com/trade-api/v2"
@@ -217,6 +218,40 @@ def _get_consensus_market(markets: list) -> dict | None:
     return _estimate_consensus_line(markets)
 
 
+def _api_get(url: str, params: dict, max_retries: int = 3) -> requests.Response | None:
+    """GET with retry + exponential backoff. Returns Response or None."""
+    for attempt in range(max_retries):
+        try:
+            r = requests.get(url, params=params, timeout=15)
+            if r.status_code == 200:
+                return r
+            if r.status_code == 429:  # rate limited
+                wait = 2 ** attempt
+                print(f"  Kalshi rate limited, retrying in {wait}s...")
+                time.sleep(wait)
+                continue
+            if r.status_code >= 500:  # server error, retry
+                wait = 2 ** attempt
+                time.sleep(wait)
+                continue
+            # 4xx other than 429: don't retry
+            print(f"  Kalshi API error: HTTP {r.status_code} for {url}")
+            return None
+        except requests.exceptions.Timeout:
+            wait = 2 ** attempt
+            if attempt < max_retries - 1:
+                print(f"  Kalshi timeout, retrying in {wait}s...")
+                time.sleep(wait)
+        except Exception as e:
+            wait = 2 ** attempt
+            if attempt < max_retries - 1:
+                print(f"  Kalshi request error ({e}), retrying in {wait}s...")
+                time.sleep(wait)
+            else:
+                print(f"  Kalshi request failed after {max_retries} attempts: {e}")
+    return None
+
+
 def fetch_kalshi_lines(target_date: str | None = None) -> dict:
     """
     Fetch today's (or target_date's) Kalshi MLB total run lines.
@@ -235,33 +270,41 @@ def fetch_kalshi_lines(target_date: str | None = None) -> dict:
           ...
         }
     """
-    # ── 1. Get all open events for the MLB totals series ─────────────────────
-    try:
-        r = requests.get(
-            f"{KALSHI_API}/events",
-            params={
-                "series_ticker": MLB_TOTAL_SERIES,
-                "status": "open",
-                "limit": 100,
-            },
-            timeout=15,
-        )
-        if r.status_code != 200:
-            print(f"  Kalshi events error: HTTP {r.status_code}")
-            return {}
-        events = r.json().get("events", [])
-    except Exception as e:
-        print(f"  Kalshi request failed: {e}")
-        return {}
+    # ── 1. Get all open events (with cursor pagination) ─────────────────────
+    events = []
+    cursor = None
+    for _ in range(10):  # safety bound on pages
+        params = {
+            "series_ticker": MLB_TOTAL_SERIES,
+            "status": "open",
+            "limit": 200,
+        }
+        if cursor:
+            params["cursor"] = cursor
+
+        r = _api_get(f"{KALSHI_API}/events", params)
+        if r is None:
+            if not events:
+                print("  Kalshi: failed to fetch events")
+                return {}
+            break
+
+        data = r.json()
+        page = data.get("events", [])
+        events.extend(page)
+        cursor = data.get("cursor")
+        if not cursor or not page:
+            break
 
     if not events:
         return {}
 
     # ── 2. For each event, fetch its markets and find the consensus line ──────
     results = {}
+    skipped = []
     for event in events:
         title = event.get("title", "")
-        event_ticker = event.get("ticker") or event.get("event_ticker")
+        event_ticker = event.get("event_ticker") or event.get("ticker")
         if not event_ticker:
             continue
         if not _event_matches_target_date(event, target_date):
@@ -269,24 +312,27 @@ def fetch_kalshi_lines(target_date: str | None = None) -> dict:
 
         teams = _parse_teams_from_title(title)
         if not teams:
+            skipped.append(f"parse-fail: {title}")
             continue
         away_full, home_full = teams
 
-        # Fetch all markets for this event
-        try:
-            r = requests.get(
-                f"{KALSHI_API}/markets",
-                params={"event_ticker": event_ticker, "status": "open", "limit": 50},
-                timeout=15,
-            )
-            if r.status_code != 200:
-                continue
-            markets = r.json().get("markets", [])
-        except Exception:
+        # Fetch all markets for this event (with retry)
+        r = _api_get(
+            f"{KALSHI_API}/markets",
+            {"event_ticker": event_ticker, "status": "open", "limit": 50},
+        )
+        if r is None:
+            skipped.append(f"api-fail: {away_full} @ {home_full}")
+            continue
+
+        markets = r.json().get("markets", [])
+        if not markets:
+            skipped.append(f"no-markets: {away_full} @ {home_full}")
             continue
 
         consensus = _get_consensus_market(markets)
         if consensus is None:
+            skipped.append(f"no-consensus: {away_full} @ {home_full}")
             continue
 
         results[(away_full, home_full)] = {
@@ -299,6 +345,9 @@ def fetch_kalshi_lines(target_date: str | None = None) -> dict:
             "implied_over_pct": consensus["implied_over_pct"],
             "volume":           consensus["volume"],
         }
+
+    if skipped:
+        print(f"  Kalshi skipped {len(skipped)} events: {'; '.join(skipped)}")
 
     return results
 
