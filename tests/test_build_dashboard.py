@@ -43,6 +43,7 @@ class BuildDashboardTests(unittest.TestCase):
                     "kalshi_side_market_price": 0.50,
                     "kalshi_bet_pct_bankroll": 1.25,
                     "kalshi_recommended_bet": 125.0,
+                    "paper_bankroll_after_day": 10125.0,
                     "away_score": 5,
                     "home_score": 4,
                     "total_runs": 9,
@@ -137,6 +138,8 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Kalshi Rules", html_text)
         self.assertIn("57.5%", html_text)
         self.assertIn("% Roll", html_text)
+        self.assertIn("Current Bankroll", html_text)
+        self.assertIn("Started at $10.0k.", html_text)
         self.assertIn("Boston Red Sox", html_text)
 
 

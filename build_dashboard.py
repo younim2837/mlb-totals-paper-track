@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
+from paper_bankroll import load_starting_bankroll
 
 PROJECT_DIR = Path(__file__).resolve().parent
 DATA_DIR = PROJECT_DIR / "data"
@@ -39,6 +40,8 @@ class DashboardSummary:
     profit: float
     average_edge_pct: float
     total_recommended_bet: float
+    starting_bankroll: float
+    current_bankroll: float
 
 
 @dataclass
@@ -91,8 +94,9 @@ def load_json(path: Path) -> dict:
 
 
 def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
+    starting_bankroll = load_starting_bankroll()
     if df.empty:
-        return DashboardSummary(0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        return DashboardSummary(0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, starting_bankroll, starting_bankroll)
 
     settled = df[df["settled"].astype(str).str.lower().eq("true")].copy()
     wins = int((settled["result"] == "win").sum())
@@ -104,6 +108,8 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     roi_pct = profit / total_cost * 100.0 if total_cost > 0 else 0.0
     avg_edge = float(pd.to_numeric(df["kalshi_edge_pct"], errors="coerce").dropna().mean()) if not df.empty else 0.0
     total_bet = float(pd.to_numeric(df["kalshi_recommended_bet"], errors="coerce").fillna(0).sum())
+    bankroll_after_series = pd.to_numeric(df.get("paper_bankroll_after_day"), errors="coerce").dropna()
+    current_bankroll = float(bankroll_after_series.iloc[-1]) if not bankroll_after_series.empty else starting_bankroll
     return DashboardSummary(
         tracked=int(len(df)),
         settled=int(len(settled)),
@@ -115,6 +121,8 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
         profit=profit,
         average_edge_pct=avg_edge,
         total_recommended_bet=total_bet,
+        starting_bankroll=starting_bankroll,
+        current_bankroll=current_bankroll,
     )
 
 
@@ -685,6 +693,11 @@ def render_dashboard(
           <div class="metric-value">{_fmt_money(summary.total_recommended_bet)}</div>
           <div class="metric-note">Cumulative recommended size.</div>
         </div>
+        <div class="metric">
+          <div class="metric-label">Current Bankroll</div>
+          <div class="metric-value">{_fmt_money(summary.current_bankroll)}</div>
+          <div class="metric-note">Started at {_fmt_money(summary.starting_bankroll)}.</div>
+        </div>
       </div>
     </section>
 
@@ -833,6 +846,7 @@ def build_dashboard(season: int) -> Path:
         "kalshi_side_market_price",
         "kalshi_bet_pct_bankroll",
         "kalshi_recommended_bet",
+        "paper_bankroll_after_day",
         "away_score",
         "home_score",
         "total_runs",
