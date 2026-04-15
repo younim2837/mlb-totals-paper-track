@@ -1,12 +1,12 @@
 # 2026 Paper Tracking Summary
 
-- Updated: 2026-04-15T16:46:48Z
-- Daily board files found: 0
+- Updated: 2026-04-15T17:36:13Z
+- Daily board files found: 1
 - Primary scorecard: Kalshi forward tracking
 - Sportsbook section is optional and may stay empty if no Odds API key is configured
 
 ## Kalshi Forward Tracking
-- Tracked: 0
+- Tracked: 13
 - Settled: 0
 - Record: 0-0-0 (W-L-P)
 - Win rate: 0.0%
