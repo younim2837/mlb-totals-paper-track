@@ -256,20 +256,20 @@ def render_dashboard(
             ]
             for item in monthly
         ],
-        "Monthly performance will appear after settled paper trades exist.",
+        "Monthly results will appear once trades have settled.",
         compact=True,
     )
 
     latest_table_html = _table(
         ["Matchup", "Side", "Line", "Model", "Market", "Fair", "Edge", "Bet"],
         latest_pick_rows,
-        "No daily Kalshi bets logged yet. Once the paper tracker runs, today's bets will show here.",
+        "No daily bets logged yet.",
     )
 
     recent_table_html = _table(
         ["Date", "Matchup", "Side", "Line", "Result", "Runs", "Contract ROI"],
         recent_rows,
-        "Settled paper trades will show up here once games have final scores.",
+        "Settled trades will appear here once games are final.",
     )
 
     latest_heading = latest_date or "No daily run yet"
@@ -505,13 +505,13 @@ def render_dashboard(
   <main class="shell">
     <section class="hero">
       <div class="meta-strip">
-        <span class="tag">Paper Trading Dashboard</span>
+        <span class="tag">Paper Trading</span>
         <span class="tag">Season {season}</span>
         <span class="tag">Updated {html.escape(updated_at)}</span>
       </div>
-      <h1>MLB totals paper-tracking, built to be shared.</h1>
+      <h1>MLB Totals Model Dashboard</h1>
       <div class="hero-copy">
-        This page tracks the live Kalshi-style paper results for the MLB totals model and shows the bets the bot would have made on the latest run day. It is rebuilt automatically from the same files your GitHub Actions jobs already maintain.
+        Live paper-trading results and latest model picks.
       </div>
     </section>
 
@@ -519,19 +519,19 @@ def render_dashboard(
       <div class="section-head">
         <div>
           <h2>Season Snapshot</h2>
-          <div class="section-subtitle">High-level scorecard for the current paper-trading sample. This is the first place to send someone who just wants to know how the model is doing.</div>
+          <div class="section-subtitle">Current season results at a glance.</div>
         </div>
       </div>
       <div class="metrics">
         <div class="metric">
           <div class="metric-label">Tracked Trades</div>
           <div class="metric-value">{summary.tracked}</div>
-          <div class="metric-note">All logged Kalshi paper trades so far.</div>
+          <div class="metric-note">All logged paper trades.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Settled Trades</div>
           <div class="metric-value">{summary.settled}</div>
-          <div class="metric-note">Games with final scores and graded outcomes.</div>
+          <div class="metric-note">Trades with final results.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Record</div>
@@ -541,27 +541,27 @@ def render_dashboard(
         <div class="metric">
           <div class="metric-label">Win Rate</div>
           <div class="metric-value">{summary.win_rate:.1%}</div>
-          <div class="metric-note">Pushes excluded from the denominator.</div>
+          <div class="metric-note">Pushes excluded.</div>
         </div>
         <div class="metric">
           <div class="metric-label">ROI</div>
           <div class="metric-value">{_fmt_pct(summary.roi_pct)}</div>
-          <div class="metric-note">Measured per Kalshi contract cost.</div>
+          <div class="metric-note">Per contract cost.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Profit / Contract Units</div>
           <div class="metric-value">{summary.profit:+.2f}</div>
-          <div class="metric-note">Aggregate paper profit across settled contracts.</div>
+          <div class="metric-note">Settled trade total.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Average Edge</div>
           <div class="metric-value">{_fmt_pct(summary.average_edge_pct)}</div>
-          <div class="metric-note">Mean model edge across tracked paper trades.</div>
+          <div class="metric-note">Mean model edge.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Recommended Stakes</div>
           <div class="metric-value">{_fmt_money(summary.total_recommended_bet)}</div>
-          <div class="metric-note">Sum of recommended Kalshi bet sizes logged.</div>
+          <div class="metric-note">Cumulative recommended size.</div>
         </div>
       </div>
     </section>
@@ -570,7 +570,7 @@ def render_dashboard(
       <div class="section-head">
         <div>
           <h2>Latest Daily Bets</h2>
-          <div class="section-subtitle">The bets the bot would have made on the latest saved run date. This is the easiest section to show when someone asks what the model liked today.</div>
+          <div class="section-subtitle">Latest model picks.</div>
         </div>
         <div class="tag">{html.escape(latest_heading)}</div>
       </div>
@@ -582,7 +582,7 @@ def render_dashboard(
         <div class="section-head">
           <div>
             <h2>Recent Settled Trades</h2>
-            <div class="section-subtitle">Latest graded paper results, including outcome and per-contract ROI.</div>
+            <div class="section-subtitle">Most recent graded results.</div>
           </div>
         </div>
         {recent_table_html}
@@ -591,7 +591,7 @@ def render_dashboard(
         <div class="section-head">
           <div>
             <h2>Monthly Performance</h2>
-            <div class="section-subtitle">A compact rolling view of how the forward test is behaving over time.</div>
+            <div class="section-subtitle">Monthly results.</div>
           </div>
         </div>
         {monthly_rows_html}
@@ -599,7 +599,7 @@ def render_dashboard(
     </section>
 
     <div class="footer-note">
-      Generated at {html.escape(generated_at)}. If you want to share this publicly with friends, the cleanest next step is to expose this `docs/index.html` page through a public repo or GitHub Pages.
+      Generated at {html.escape(generated_at)}.
     </div>
   </main>
 </body>
