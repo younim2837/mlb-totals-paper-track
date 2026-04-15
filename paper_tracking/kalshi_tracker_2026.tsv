@@ -1,1 +1,15 @@
-
+target_date	month	game_id	away_team	home_team	predicted_total	kalshi_line	kalshi_side	kalshi_edge_pct	kalshi_fair_price_pct	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_side_market_price	kalshi_recommended_bet	away_score	home_score	total_runs	result	profit_per_contract	roi_pct	settled
+2026-04-14	2026-04		Arizona Diamondbacks	Baltimore Orioles	9.1	8.5	OVER	4.1	55.1	55.1	51.0	0.51	210.0	4	3	7	loss	-0.51	-100.0	True
+2026-04-14	2026-04		Washington Nationals	Pittsburgh Pirates	10.0	12.5	UNDER	-28.2	28.8	71.2	43.0	0.43000000000000005	1235.0	5	4	9	win	0.57	132.55813953488368	True
+2026-04-14	2026-04		San Francisco Giants	Cincinnati Reds	8.7	5.5	OVER	34.2	74.2	74.2	40.0	0.4	1423.0	1	2	3	loss	-0.4	-100.0	True
+2026-04-14	2026-04		Chicago Cubs	Philadelphia Phillies	11.2	12.5	UNDER	-22.6	39.4	60.6	38.0	0.38	910.0	10	4	14	loss	-0.38	-100.0	True
+2026-04-14	2026-04		Los Angeles Angels	New York Yankees	9.8	8.5	OVER	11.4	60.4	60.4	49.0	0.49	559.0	7	1	8	loss	-0.49	-100.0	True
+2026-04-14	2026-04		Miami Marlins	Atlanta Braves	10.0	11.5	UNDER	-16.4	37.6	62.4	46.0	0.45999999999999996	758.0	5	6	11	win	0.54	117.3913043478261	True
+2026-04-14	2026-04		Boston Red Sox	Minnesota Twins	10.1	7.5	OVER	8.4	61.4	61.4	53.0	0.53	447.0	0	6	6	loss	-0.53	-100.0	True
+2026-04-14	2026-04		Tampa Bay Rays	Chicago White Sox	9.6	9.5	OVER	1.8	50.8	50.8	49.0	0.49	89.0	8	5	13	win	0.51	104.08163265306123	True
+2026-04-14	2026-04		Toronto Blue Jays	Milwaukee Brewers	8.8	4.5	OVER	18.9	72.9	72.9	54.0	0.54	1025.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Cleveland Guardians	St. Louis Cardinals	10.6	9.5	OVER	14.5	58.5	58.5	44.0	0.44	649.0	5	6	11	win	0.56	127.2727272727273	True
+2026-04-14	2026-04		Colorado Rockies	Houston Astros	10.3	10.5	UNDER	-13.6	48.4	51.6	38.0	0.38	548.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Seattle Mariners	San Diego Padres	10.3	7.5	OVER	14.7	62.7	62.7	48.0	0.48	706.0				pending	0.0	0.0	False
+2026-04-14	2026-04		Texas Rangers	Athletics	10.7	8.5	OVER	13.7	66.7	66.7	53.0	0.53	728.0				pending	0.0	0.0	False
+2026-04-14	2026-04		New York Mets	Los Angeles Dodgers	9.8	7.5	OVER	11.1	60.1	60.1	49.0	0.49	546.0				pending	0.0	0.0	False

@@ -41,14 +41,37 @@ def current_season() -> int:
     return int(datetime.now(PACIFIC_TZ).strftime("%Y"))
 
 
+def _board_data_row_count(path: Path) -> int:
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            return max(sum(1 for _ in f) - 1, 0)
+    except OSError:
+        return -1
+
+
 def list_board_files(season: int) -> list[Path]:
     pattern = f"{season}-*-board.tsv"
-    files = []
+    chosen_by_date: dict[str, Path] = {}
+    row_counts: dict[Path, int] = {}
+
     for path in sorted(PREDICTIONS_DIR.glob(pattern)):
-        if path.name.endswith("-all-games-board.tsv"):
+        target_date = path.name[:10]
+        current = chosen_by_date.get(target_date)
+        if current is None:
+            chosen_by_date[target_date] = path
             continue
-        files.append(path)
-    return files
+
+        current_rows = row_counts.setdefault(current, _board_data_row_count(current))
+        candidate_rows = row_counts.setdefault(path, _board_data_row_count(path))
+        current_is_all_games = current.name.endswith("-all-games-board.tsv")
+        candidate_is_all_games = path.name.endswith("-all-games-board.tsv")
+
+        if candidate_rows > current_rows:
+            chosen_by_date[target_date] = path
+        elif candidate_rows == current_rows and candidate_is_all_games and not current_is_all_games:
+            chosen_by_date[target_date] = path
+
+    return [chosen_by_date[date_key] for date_key in sorted(chosen_by_date)]
 
 
 def load_results_lookup() -> pd.DataFrame:
@@ -68,14 +91,52 @@ def load_results_lookup() -> pd.DataFrame:
 
 
 def attach_actuals(board: pd.DataFrame, results: pd.DataFrame) -> pd.DataFrame:
-    merged = board.merge(
-        results,
-        on="game_id",
-        how="left",
-        suffixes=("", "_actual"),
-    )
-    if "target_date" not in merged.columns:
-        merged["target_date"] = None
+    attached = board.copy()
+    if "target_date" not in attached.columns:
+        attached["target_date"] = None
+
+    def _normalize_text(value) -> str:
+        if pd.isna(value):
+            return ""
+        return str(value).strip().lower()
+
+    results_by_game_id = {}
+    results_by_matchup = {}
+    for _, row in results.iterrows():
+        actual_payload = {
+            "away_score": row.get("away_score"),
+            "home_score": row.get("home_score"),
+            "total_runs": row.get("total_runs"),
+        }
+        game_id = _normalize_text(row.get("game_id"))
+        if game_id:
+            results_by_game_id[game_id] = actual_payload
+        matchup_key = (
+            _normalize_text(row.get("date")),
+            _normalize_text(row.get("away_team")),
+            _normalize_text(row.get("home_team")),
+        )
+        results_by_matchup[matchup_key] = actual_payload
+
+    actual_rows = []
+    for _, row in attached.iterrows():
+        actual = None
+        game_id = _normalize_text(row.get("game_id"))
+        if game_id:
+            actual = results_by_game_id.get(game_id)
+        if actual is None:
+            matchup_key = (
+                _normalize_text(row.get("target_date")),
+                _normalize_text(row.get("away_team")),
+                _normalize_text(row.get("home_team")),
+            )
+            actual = results_by_matchup.get(matchup_key)
+        actual_rows.append(actual or {"away_score": pd.NA, "home_score": pd.NA, "total_runs": pd.NA})
+
+    actual_df = pd.DataFrame(actual_rows)
+    for col in ["away_score", "home_score", "total_runs"]:
+        attached[col] = actual_df[col] if col in actual_df.columns else pd.NA
+
     for col in [
         "bet_signal",
         "bet_confidence",
@@ -91,9 +152,9 @@ def attach_actuals(board: pd.DataFrame, results: pd.DataFrame) -> pd.DataFrame:
         "kalshi_side_market_prob",
         "kalshi_recommended_bet",
     ]:
-        if col not in merged.columns:
-            merged[col] = pd.NA
-    return merged
+        if col not in attached.columns:
+            attached[col] = pd.NA
+    return attached
 
 
 def sportsbook_outcome(side: str, actual_total: float, line: float) -> tuple[str, float]:

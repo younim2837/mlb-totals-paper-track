@@ -1033,6 +1033,8 @@ def predict_game(game, team_stats, park_factors, model, meta, residual_std,
     # Confidence intervals using residual distribution
     # We model the actual total as Normal(predicted, residual_std)
     result = {
+        "game_id": game.get("game_id"),
+        "commence_time": game.get("game_datetime"),
         "home_team": home,
         "away_team": away,
         "venue": game["venue_name"],
