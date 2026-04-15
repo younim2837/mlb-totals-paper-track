@@ -236,8 +236,15 @@ def _fmt_pct(value: float) -> str:
     return f"{value:+.1f}%"
 
 
-def _fmt_money(value: float) -> str:
-    return f"${value:,.0f}" if abs(value) >= 1 else f"${value:,.2f}"
+def _fmt_money(value: float, signed: bool = False) -> str:
+    prefix = "+" if signed and value > 0 else ""
+    if abs(value) >= 1_000_000:
+        return f"{prefix}${value / 1_000_000:.1f}m"
+    if abs(value) >= 1_000:
+        return f"{prefix}${value / 1_000:.1f}k"
+    if abs(value) >= 1:
+        return f"{prefix}${value:,.0f}"
+    return f"{prefix}${value:,.2f}"
 
 
 def _fmt_number(value) -> str:
@@ -685,7 +692,7 @@ def render_dashboard(
         </div>
         <div class="metric">
           <div class="metric-label">Replay P&amp;L</div>
-          <div class="metric-value">{historical_summary.total_pnl:+.2f}</div>
+          <div class="metric-value">{_fmt_money(historical_summary.total_pnl, signed=True)}</div>
           <div class="metric-note">Historical replay profit.</div>
         </div>
         <div class="metric">
