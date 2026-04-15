@@ -40,6 +40,7 @@ from model_runtime import (
     predict_point_outputs,
 )
 from prediction_betting import add_kalshi_metrics
+from prediction_betting import get_kalshi_betting_thresholds, kalshi_filter_reason
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -178,6 +179,8 @@ def simulate(
     kalshi: dict,
     bankroll_cfg: dict,
     display_cfg: dict,
+    min_kalshi_edge_pct: float = 0.0,
+    min_kalshi_confidence_pct: float = 0.0,
 ) -> pd.DataFrame:
     rows = []
     running_bankroll = float(bankroll_cfg.get("total", 10000))
@@ -241,8 +244,13 @@ def simulate(
             "_low_tail_cfg": None,
         }
         add_kalshi_metrics(pred, residual_std=float(game["prediction_std"]))
-
-        if abs(float(pred["kalshi_line"]) - float(pred["predicted_total"])) > max_line_diff:
+        reason = kalshi_filter_reason(
+            pred,
+            max_line_diff=max_line_diff,
+            min_edge_pct=min_kalshi_edge_pct,
+            min_confidence_pct=min_kalshi_confidence_pct,
+        )
+        if reason is not None:
             rows.append(
                 _no_bet_row(
                     date_str,
@@ -250,7 +258,7 @@ def simulate(
                     home,
                     predicted=game["predicted_total"],
                     actual=actual,
-                    reason="line_diff_too_large",
+                    reason=reason,
                     game_id=game.get("game_id"),
                     prediction_std=round(float(game["prediction_std"]), 3),
                     kalshi_line=pred["kalshi_line"],
@@ -352,13 +360,39 @@ def main():
     parser = argparse.ArgumentParser(description="Simulate 2026 Kalshi betting using historical 10 AM PT lines.")
     parser.add_argument("--season", type=int, default=2026)
     parser.add_argument("--bankroll", type=float, default=None)
+    parser.add_argument("--kelly-fraction", type=float, default=None)
+    parser.add_argument("--max-bet-pct", type=float, default=None)
+    parser.add_argument("--min-bet", type=float, default=None)
+    parser.add_argument("--round-to", type=float, default=None)
+    parser.add_argument("--min-kalshi-edge-pct", type=float, default=None)
+    parser.add_argument("--min-kalshi-confidence-pct", type=float, default=None)
     args = parser.parse_args()
 
     cfg = load_config()
     bankroll_cfg = dict(cfg.get("bankroll", {}) or {})
+    bet_cfg = cfg.get("betting", {}) or {}
+    kalshi_thresholds = get_kalshi_betting_thresholds(bet_cfg)
     if args.bankroll is not None:
         bankroll_cfg["total"] = float(args.bankroll)
+    if args.kelly_fraction is not None:
+        bankroll_cfg["kelly_fraction"] = float(args.kelly_fraction)
+    if args.max_bet_pct is not None:
+        bankroll_cfg["max_bet_pct"] = float(args.max_bet_pct)
+    if args.min_bet is not None:
+        bankroll_cfg["min_bet"] = float(args.min_bet)
+    if args.round_to is not None:
+        bankroll_cfg["round_to"] = float(args.round_to)
     display_cfg = cfg.get("display", {}) or {}
+    min_kalshi_edge_pct = (
+        float(args.min_kalshi_edge_pct)
+        if args.min_kalshi_edge_pct is not None
+        else float(kalshi_thresholds["min_kalshi_edge_pct"])
+    )
+    min_kalshi_confidence_pct = (
+        float(args.min_kalshi_confidence_pct)
+        if args.min_kalshi_confidence_pct is not None
+        else float(kalshi_thresholds["min_kalshi_confidence_pct"])
+    )
 
     print(f"=== {args.season} Kalshi Historical Simulation ===")
     print("Loading model bundle...")
@@ -385,8 +419,24 @@ def main():
     print(f"  Matched {matched}/{len(preds_df)} games to historical Kalshi ladders")
 
     print("Simulating...")
-    sim = simulate(preds_df, kalshi, bankroll_cfg, display_cfg)
+    sim = simulate(
+        preds_df,
+        kalshi,
+        bankroll_cfg,
+        display_cfg,
+        min_kalshi_edge_pct=min_kalshi_edge_pct,
+        min_kalshi_confidence_pct=min_kalshi_confidence_pct,
+    )
     summary = build_summary(sim, float(bankroll_cfg.get("total", 10000)))
+    summary.update(
+        {
+            "kelly_fraction": round(float(bankroll_cfg.get("kelly_fraction", 0.25)), 4),
+            "max_bet_pct": round(float(bankroll_cfg.get("max_bet_pct", 0.0)), 4),
+            "min_bet": round(float(bankroll_cfg.get("min_bet", 1.0)), 4),
+            "min_kalshi_edge_pct": round(float(min_kalshi_edge_pct), 4),
+            "min_kalshi_confidence_pct": round(float(min_kalshi_confidence_pct), 4),
+        }
+    )
 
     out_sim = DATA_DIR / f"season_sim_{args.season}.tsv"
     out_sum = DATA_DIR / "season_sim_summary.json"

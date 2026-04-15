@@ -56,6 +56,7 @@ def export_daily_prediction_reports(predictions: list[dict], target_date: str, i
         "kalshi_line",
         "kalshi_yes_ask",
         "kalshi_over_pct",
+        "kalshi_bet_block_reason",
         "kalshi_recommended_bet",
         "kalshi_raw_bet",
     ]
@@ -294,7 +295,13 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                               f"BUY ${kk['recommended_bet']:.0f}  "
                               f"(edge: {kk['edge_pct']:+.1f}%)")
                     else:
-                        print(f"  Kalshi Kelly: raw ${kk.get('raw_bet', 0.0):.2f} below minimum bet threshold - skip")
+                        reason = p.get("kalshi_bet_block_reason")
+                        if reason == "edge_below_threshold":
+                            print("  Kalshi Kelly: skipped (edge below Kalshi threshold)")
+                        elif reason == "confidence_below_threshold":
+                            print("  Kalshi Kelly: skipped (confidence below Kalshi threshold)")
+                        else:
+                            print(f"  Kalshi Kelly: raw ${kk.get('raw_bet', 0.0):.2f} below minimum bet threshold - skip")
         else:
             print(f"  Predicted Total: {p['predicted_total']}")
             if "kalshi_line" in p:
@@ -318,7 +325,13 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                               f"BUY ${kk['recommended_bet']:.0f}  "
                               f"(edge: {kk['edge_pct']:+.1f}%)")
                     else:
-                        print(f"  Kalshi Kelly: raw ${kk.get('raw_bet', 0.0):.2f} below minimum bet threshold - skip")
+                        reason = p.get("kalshi_bet_block_reason")
+                        if reason == "edge_below_threshold":
+                            print("  Kalshi Kelly: skipped (edge below Kalshi threshold)")
+                        elif reason == "confidence_below_threshold":
+                            print("  Kalshi Kelly: skipped (confidence below Kalshi threshold)")
+                        else:
+                            print(f"  Kalshi Kelly: raw ${kk.get('raw_bet', 0.0):.2f} below minimum bet threshold - skip")
                 print()
             print(f"  {'Line':<8} {'Over %':>8} {'Under %':>8}  {'Signal':>10}")
             print(f"  {'-'*38}")

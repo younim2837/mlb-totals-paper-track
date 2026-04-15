@@ -96,6 +96,14 @@ def kalshi_kelly_size(
     }
 
 
+def get_kalshi_betting_thresholds(bet_cfg: dict | None) -> dict:
+    cfg = bet_cfg or {}
+    return {
+        "min_kalshi_edge_pct": float(cfg.get("min_kalshi_edge_pct", 0.0) or 0.0),
+        "min_kalshi_confidence_pct": float(cfg.get("min_kalshi_confidence_pct", 0.0) or 0.0),
+    }
+
+
 def add_kalshi_metrics(pred: dict, residual_std: float) -> dict:
     if "kalshi_line" not in pred:
         return pred
@@ -140,6 +148,46 @@ def add_kalshi_metrics(pred: dict, residual_std: float) -> dict:
     else:
         pred["kalshi_kelly"] = None
 
+    return pred
+
+
+def kalshi_filter_reason(
+    pred: dict,
+    *,
+    max_line_diff: float | None = None,
+    min_edge_pct: float = 0.0,
+    min_confidence_pct: float = 0.0,
+) -> str | None:
+    if pred.get("kalshi_line") is None:
+        return "no_kalshi"
+
+    if max_line_diff is not None:
+        diff = abs(float(pred["kalshi_line"]) - float(pred["predicted_total"]))
+        if diff > float(max_line_diff):
+            return "line_diff_too_large"
+
+    edge_pct = abs(float(pred.get("kalshi_edge_pct", 0.0) or 0.0))
+    if edge_pct < float(min_edge_pct):
+        return "edge_below_threshold"
+
+    confidence_pct = float(pred.get("kalshi_side_model_prob", 0.0) or 0.0)
+    if confidence_pct < float(min_confidence_pct):
+        return "confidence_below_threshold"
+
+    kelly = pred.get("kalshi_kelly") or {}
+    if float(kelly.get("recommended_bet", 0.0) or 0.0) <= 0.0:
+        return "kelly_below_min_bet"
+
+    return None
+
+
+def suppress_kalshi_bet(pred: dict, reason: str) -> dict:
+    pred["kalshi_bet_block_reason"] = reason
+    kelly = pred.get("kalshi_kelly")
+    if kelly:
+        muted = dict(kelly)
+        muted["recommended_bet"] = 0.0
+        pred["kalshi_kelly"] = muted
     return pred
 
 

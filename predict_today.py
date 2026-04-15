@@ -33,7 +33,10 @@ from prediction_betting import (
     add_kalshi_metrics,
     apply_market_adjustment_to_prediction,
     apply_overrides,
+    get_kalshi_betting_thresholds,
+    kalshi_filter_reason,
     normalize_allowed_market_adjustment_methods,
+    suppress_kalshi_bet,
 )
 from prediction_reporting import display_predictions, export_daily_prediction_reports
 from venue_metadata import DOME_VENUE_IDS, VENUE_COORDS, compute_local_time_features
@@ -1465,6 +1468,7 @@ def main():
     min_edge  = bet_cfg.get("min_edge_runs", 0.5)
     min_conf  = bet_cfg.get("min_confidence_pct", 55)
     max_bets  = bet_cfg.get("max_bets_per_day", 5)
+    kalshi_thresholds = get_kalshi_betting_thresholds(bet_cfg)
     allowed_market_methods = normalize_allowed_market_adjustment_methods(bet_cfg)
     for pred in predictions:
         if "posted_line" in pred:
@@ -1500,8 +1504,14 @@ def main():
     kalshi_max_diff = disp_cfg.get("kalshi_max_line_diff", 2.5)
     for pred in predictions:
         if "kalshi_line" in pred:
-            diff = abs(pred["kalshi_line"] - pred["predicted_total"])
-            if diff > kalshi_max_diff:
+            pred.pop("kalshi_bet_block_reason", None)
+            reason = kalshi_filter_reason(
+                pred,
+                max_line_diff=kalshi_max_diff,
+                min_edge_pct=kalshi_thresholds["min_kalshi_edge_pct"],
+                min_confidence_pct=kalshi_thresholds["min_kalshi_confidence_pct"],
+            )
+            if reason == "line_diff_too_large":
                 del pred["kalshi_line"]
                 del pred["kalshi_over_pct"]
                 del pred["kalshi_yes_ask"]
@@ -1512,6 +1522,8 @@ def main():
                 pred.pop("kalshi_side_model_prob", None)
                 pred.pop("kalshi_side_market_prob", None)
                 pred.pop("kalshi_kelly", None)
+            elif reason is not None:
+                suppress_kalshi_bet(pred, reason)
 
     line_source = "The Odds API" if api_key and live_lines else ("Kalshi" if kalshi_lines else "none")
     display_predictions(predictions, has_lines=bool(live_lines), line_source=line_source,
