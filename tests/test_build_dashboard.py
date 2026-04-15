@@ -141,6 +141,8 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Current Bankroll", html_text)
         self.assertIn("Started at $10.0k.", html_text)
         self.assertIn("Boston Red Sox", html_text)
+        self.assertIn("minmax(min(100%, 220px), 1fr)", html_text)
+        self.assertIn("white-space: nowrap;", html_text)
 
 
 

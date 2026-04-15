@@ -517,29 +517,34 @@ def render_dashboard(
 
     .metrics {{
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
       gap: 14px;
     }}
 
     .metric {{
+      display: flex;
+      flex-direction: column;
       padding: 18px;
       border-radius: 20px;
       background: rgba(255,255,255,0.78);
       border: 1px solid rgba(20, 33, 61, 0.08);
+      overflow: hidden;
     }}
 
     .metric-label {{
       color: var(--ink-soft);
-      font-size: 0.84rem;
+      font-size: clamp(0.72rem, 0.68rem + 0.2vw, 0.84rem);
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.07em;
+      white-space: nowrap;
     }}
 
     .metric-value {{
       margin-top: 10px;
-      font-size: clamp(1.4rem, 3vw, 2.4rem);
+      font-size: clamp(1.15rem, 0.95rem + 1vw, 2.15rem);
       font-weight: 700;
       line-height: 1;
+      white-space: nowrap;
     }}
 
     .metric-note {{
