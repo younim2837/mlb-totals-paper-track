@@ -39,7 +39,6 @@ class DashboardSummary:
     roi_pct: float
     profit: float
     average_edge_pct: float
-    total_recommended_bet: float
     starting_bankroll: float
     current_bankroll: float
 
@@ -96,7 +95,7 @@ def load_json(path: Path) -> dict:
 def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     starting_bankroll = load_starting_bankroll()
     if df.empty:
-        return DashboardSummary(0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, starting_bankroll, starting_bankroll)
+        return DashboardSummary(0, 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, starting_bankroll, starting_bankroll)
 
     settled = df[df["settled"].astype(str).str.lower().eq("true")].copy()
     wins = int((settled["result"] == "win").sum())
@@ -107,7 +106,6 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     profit = float(pd.to_numeric(settled["profit_per_contract"], errors="coerce").fillna(0).sum())
     roi_pct = profit / total_cost * 100.0 if total_cost > 0 else 0.0
     avg_edge = float(pd.to_numeric(df["kalshi_edge_pct"], errors="coerce").dropna().mean()) if not df.empty else 0.0
-    total_bet = float(pd.to_numeric(df["kalshi_recommended_bet"], errors="coerce").fillna(0).sum())
     bankroll_after_series = pd.to_numeric(df.get("paper_bankroll_after_day"), errors="coerce").dropna()
     current_bankroll = float(bankroll_after_series.iloc[-1]) if not bankroll_after_series.empty else starting_bankroll
     return DashboardSummary(
@@ -120,7 +118,6 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
         roi_pct=roi_pct,
         profit=profit,
         average_edge_pct=avg_edge,
-        total_recommended_bet=total_bet,
         starting_bankroll=starting_bankroll,
         current_bankroll=current_bankroll,
     )
@@ -692,11 +689,6 @@ def render_dashboard(
           <div class="metric-label">Average Edge</div>
           <div class="metric-value">{_fmt_pct(summary.average_edge_pct)}</div>
           <div class="metric-note">Mean model edge.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Recommended Stakes</div>
-          <div class="metric-value">{_fmt_money(summary.total_recommended_bet)}</div>
-          <div class="metric-note">Cumulative recommended size.</div>
         </div>
         <div class="metric">
           <div class="metric-label">Current Bankroll</div>
