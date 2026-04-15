@@ -1096,9 +1096,21 @@ def main():
         market_edge_model.save_model(market_edge_path)
         print(f"Market edge model saved to {market_edge_path}")
 
+    # Save training-set feature medians for NaN-fill at inference time.
+    # Features that are rarely null in training but often missing at prediction
+    # time (e.g. lineup, bullpen fatigue) cause XGBoost to follow its learned
+    # default branch, which can introduce a systematic scoring bias.
+    train_medians = train[feature_cols].median()
+    feature_medians = {
+        col: round(float(val), 6)
+        for col, val in train_medians.items()
+        if pd.notna(val)
+    }
+
     meta = {
         "model_family": MODEL_FAMILY,
         "features": feature_cols,
+        "feature_medians": feature_medians,
         "target": TOTAL_TARGET,
         "side_models": side_meta,
         "total_calibration": calibration_cfg,

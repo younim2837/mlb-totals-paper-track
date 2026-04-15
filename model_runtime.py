@@ -188,9 +188,24 @@ def summarize_team_split_drivers(models: dict, X: pd.DataFrame, meta: dict) -> d
     }
 
 
+def _fill_missing_features(X: pd.DataFrame, meta: dict) -> pd.DataFrame:
+    """Fill NaN features with training-set medians to avoid XGBoost default-branch bias."""
+    medians = meta.get("feature_medians")
+    if not medians:
+        return X
+    null_mask = X.isnull()
+    if not null_mask.any().any():
+        return X
+    fill_map = {col: medians[col] for col in X.columns if col in medians and null_mask[col].any()}
+    if fill_map:
+        X = X.fillna(fill_map)
+    return X
+
+
 def predict_point_outputs(model, meta: dict, feature_source: pd.DataFrame):
     feature_order = meta["features"]
     X = feature_source.reindex(columns=feature_order)
+    X = _fill_missing_features(X, meta)
     model_family = meta.get("model_family", "single_total")
 
     if model_family == "team_split":
