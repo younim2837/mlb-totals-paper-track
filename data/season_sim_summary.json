@@ -1,0 +1,15 @@
+{
+  "starting_bankroll": 10000.0,
+  "final_bankroll": 27962.0,
+  "bankroll_return_pct": 179.62,
+  "total_games": 149,
+  "games_with_kalshi": 148,
+  "bets_placed": 147,
+  "wins": 81,
+  "losses": 66,
+  "win_rate": 55.1,
+  "total_wagered": 76634.0,
+  "total_pnl": 17961.98,
+  "roi_pct": 23.44,
+  "avg_edge_pct": 7.49
+}

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -19,6 +20,7 @@ import pandas as pd
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
+DATA_DIR = PROJECT_DIR / "data"
 PREDICTIONS_DIR = PROJECT_DIR / "predictions"
 PAPER_TRACKING_DIR = PROJECT_DIR / "paper_tracking"
 DASHBOARD_DIR = PROJECT_DIR / "docs"
@@ -37,6 +39,20 @@ class DashboardSummary:
     profit: float
     average_edge_pct: float
     total_recommended_bet: float
+
+
+@dataclass
+class HistoricalSummary:
+    total_games: int
+    games_with_kalshi: int
+    bets_placed: int
+    wins: int
+    losses: int
+    win_rate: float
+    roi_pct: float
+    total_pnl: float
+    total_wagered: float
+    avg_edge_pct: float
 
 
 def current_season() -> int:
@@ -58,6 +74,15 @@ def load_tracker(path: Path, columns: list[str]) -> pd.DataFrame:
         if col not in df.columns:
             df[col] = pd.NA
     return df
+
+
+def load_json(path: Path) -> dict:
+    if not path.exists() or path.stat().st_size == 0:
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
 
 
 def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
@@ -85,6 +110,21 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
         profit=profit,
         average_edge_pct=avg_edge,
         total_recommended_bet=total_bet,
+    )
+
+
+def summarize_historical(summary: dict) -> HistoricalSummary:
+    return HistoricalSummary(
+        total_games=int(summary.get("total_games", 0) or 0),
+        games_with_kalshi=int(summary.get("games_with_kalshi", 0) or 0),
+        bets_placed=int(summary.get("bets_placed", 0) or 0),
+        wins=int(summary.get("wins", 0) or 0),
+        losses=int(summary.get("losses", 0) or 0),
+        win_rate=float(summary.get("win_rate", 0.0) or 0.0) / 100.0,
+        roi_pct=float(summary.get("roi_pct", 0.0) or 0.0),
+        total_pnl=float(summary.get("total_pnl", 0.0) or 0.0),
+        total_wagered=float(summary.get("total_wagered", 0.0) or 0.0),
+        avg_edge_pct=float(summary.get("avg_edge_pct", 0.0) or 0.0),
     )
 
 
@@ -120,6 +160,28 @@ def latest_picks_file(season: int) -> Path | None:
     pattern = f"{season}-*-picks.tsv"
     candidates = _choose_best_daily_file(list(PREDICTIONS_DIR.glob(pattern)))
     return candidates[-1] if candidates else None
+
+
+def load_historical_sim(season: int) -> pd.DataFrame:
+    columns = [
+        "date",
+        "game_id",
+        "away_team",
+        "home_team",
+        "predicted_total",
+        "kalshi_line",
+        "kalshi_side",
+        "kalshi_side_market_prob",
+        "kalshi_fair_price_pct",
+        "kalshi_edge_pct",
+        "bet_amount",
+        "actual_total",
+        "result",
+        "pnl_dollars",
+        "roi_pct",
+        "settled",
+    ]
+    return load_tracker(DATA_DIR / f"season_sim_{season}.tsv", columns)
 
 
 def load_latest_picks(season: int) -> tuple[str | None, pd.DataFrame]:
@@ -184,6 +246,15 @@ def _fmt_number(value) -> str:
     return str(value)
 
 
+def _num(value, default: float = 0.0) -> float:
+    if pd.isna(value):
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _table(headers: list[str], rows: list[list[str]], empty_message: str, compact: bool = False) -> str:
     if not rows:
         return f'<div class="empty-state">{html.escape(empty_message)}</div>'
@@ -200,10 +271,12 @@ def render_dashboard(
     season: int,
     updated_at: str,
     summary: DashboardSummary,
+    historical_summary: HistoricalSummary,
     latest_date: str | None,
     latest_picks: pd.DataFrame,
     recent_settled: pd.DataFrame,
     monthly: list[dict],
+    historical_recent: pd.DataFrame,
 ) -> str:
     latest_pick_rows = []
     if not latest_picks.empty:
@@ -221,10 +294,10 @@ def render_dashboard(
                     html.escape(_fmt_number(row.get("kalshi_side"))),
                     html.escape(_fmt_number(row.get("kalshi_line"))),
                     html.escape(_fmt_number(row.get("predicted_total"))),
-                    html.escape(f"{float(row.get('kalshi_side_market_prob', 0) or 0):.1f}%") if pd.notna(row.get("kalshi_side_market_prob")) else "—",
-                    html.escape(f"{float(row.get('kalshi_fair_price_pct', 0) or 0):.1f}%") if pd.notna(row.get("kalshi_fair_price_pct")) else "—",
-                    html.escape(_fmt_pct(float(row.get("kalshi_edge_pct", 0) or 0))),
-                    html.escape(_fmt_money(float(row.get("kalshi_recommended_bet", 0) or 0))),
+                    html.escape(f"{_num(row.get('kalshi_side_market_prob')):.1f}%") if pd.notna(row.get("kalshi_side_market_prob")) else "—",
+                    html.escape(f"{_num(row.get('kalshi_fair_price_pct')):.1f}%") if pd.notna(row.get("kalshi_fair_price_pct")) else "—",
+                    html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
+                    html.escape(_fmt_money(_num(row.get("kalshi_recommended_bet")))),
                 ]
             )
 
@@ -241,6 +314,21 @@ def render_dashboard(
                 f'<span class="{result_class}">{html.escape(result)}</span>',
                 html.escape(_fmt_number(row.get("total_runs"))),
                 html.escape(_fmt_pct(float(row.get("roi_pct", 0) or 0))),
+            ]
+        )
+
+    historical_rows = []
+    for _, row in historical_recent.iterrows():
+        historical_rows.append(
+            [
+                html.escape(str(row.get("date", ""))),
+                html.escape(f"{row.get('away_team', '')} @ {row.get('home_team', '')}"),
+                html.escape(_fmt_number(row.get("kalshi_side"))),
+                html.escape(_fmt_number(row.get("kalshi_line"))),
+                html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
+                html.escape(_fmt_money(_num(row.get("bet_amount")))),
+                html.escape(str(row.get("result", "")).upper()),
+                html.escape(_fmt_pct(_num(row.get("roi_pct")))),
             ]
         )
 
@@ -270,6 +358,12 @@ def render_dashboard(
         ["Date", "Matchup", "Side", "Line", "Result", "Runs", "Contract ROI"],
         recent_rows,
         "Settled trades will appear here once games are final.",
+    )
+
+    historical_table_html = _table(
+        ["Date", "Matchup", "Side", "Line", "Edge", "Bet", "Result", "ROI"],
+        historical_rows,
+        "Historical replay results will appear here once the simulator has been run.",
     )
 
     latest_heading = latest_date or "No daily run yet"
@@ -569,12 +663,63 @@ def render_dashboard(
     <section class="section">
       <div class="section-head">
         <div>
+          <h2>Historical Replay</h2>
+          <div class="section-subtitle">Backfilled 2026 Kalshi results using historical 10 AM PT prices.</div>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Replay Bets</div>
+          <div class="metric-value">{historical_summary.bets_placed}</div>
+          <div class="metric-note">Historical bets identified.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Replay Record</div>
+          <div class="metric-value">{historical_summary.wins}-{historical_summary.losses}</div>
+          <div class="metric-note">Settled historical wins and losses.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Replay ROI</div>
+          <div class="metric-value">{_fmt_pct(historical_summary.roi_pct)}</div>
+          <div class="metric-note">Historical Kalshi replay ROI.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Replay P&amp;L</div>
+          <div class="metric-value">{historical_summary.total_pnl:+.2f}</div>
+          <div class="metric-note">Historical replay profit.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Kalshi Games</div>
+          <div class="metric-value">{historical_summary.games_with_kalshi}</div>
+          <div class="metric-note">Games with historical Kalshi coverage.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Average Edge</div>
+          <div class="metric-value">{_fmt_pct(historical_summary.avg_edge_pct)}</div>
+          <div class="metric-note">Mean replay edge.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
           <h2>Latest Daily Bets</h2>
           <div class="section-subtitle">Latest model picks.</div>
         </div>
         <div class="tag">{html.escape(latest_heading)}</div>
       </div>
       {latest_table_html}
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Recent Historical Replay Bets</h2>
+          <div class="section-subtitle">Most recent settled bets from the historical 2026 Kalshi backfill.</div>
+        </div>
+      </div>
+      {historical_table_html}
     </section>
 
     <section class="section grid-two">
@@ -633,8 +778,13 @@ def build_dashboard(season: int) -> Path:
     ]
     kalshi_df = load_tracker(PAPER_TRACKING_DIR / f"kalshi_tracker_{season}.tsv", kalshi_columns)
     summary = summarize_kalshi(kalshi_df)
+    historical_summary = summarize_historical(load_json(DATA_DIR / "season_sim_summary.json"))
+    historical_df = load_historical_sim(season)
     latest_date, latest_picks = load_latest_picks(season)
     recent = recent_results(kalshi_df)
+    historical_recent = historical_df[historical_df["bet_amount"].fillna(0) > 0].sort_values(
+        by=["date", "bet_amount"], ascending=[False, False]
+    ).head(12).reset_index(drop=True) if not historical_df.empty else pd.DataFrame()
     monthly = monthly_rows(kalshi_df)
     DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
     dashboard_path = DASHBOARD_DIR / "index.html"
@@ -644,10 +794,12 @@ def build_dashboard(season: int) -> Path:
             season=season,
             updated_at=updated_at,
             summary=summary,
+            historical_summary=historical_summary,
             latest_date=latest_date,
             latest_picks=latest_picks,
             recent_settled=recent,
             monthly=monthly,
+            historical_recent=historical_recent,
         ),
         encoding="utf-8",
     )

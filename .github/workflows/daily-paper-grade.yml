@@ -38,6 +38,16 @@ jobs:
       - name: Refresh completed games
         run: python collect_games.py
 
+      - name: Refresh historical Kalshi replay
+        shell: bash
+        run: |
+          season="${GRADE_SEASON}"
+          if [ -z "${season}" ]; then
+            season="$(TZ=America/Los_Angeles date +%Y)"
+          fi
+          python collect_kalshi_historical.py --season "${season}" --resume
+          python simulate_2026_season.py --season "${season}"
+
       - name: Rebuild paper trackers
         shell: bash
         run: |

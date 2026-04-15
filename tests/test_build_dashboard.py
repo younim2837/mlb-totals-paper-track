@@ -17,9 +17,11 @@ class BuildDashboardTests(unittest.TestCase):
         base = TEST_ROOT / f"dashboard-{uuid.uuid4().hex}"
         predictions_dir = base / "predictions"
         paper_tracking_dir = base / "paper_tracking"
+        data_dir = base / "data"
         docs_dir = base / "docs"
         predictions_dir.mkdir(parents=True, exist_ok=True)
         paper_tracking_dir.mkdir(parents=True, exist_ok=True)
+        data_dir.mkdir(parents=True, exist_ok=True)
         docs_dir.mkdir(parents=True, exist_ok=True)
         self.addCleanup(lambda: shutil.rmtree(base, ignore_errors=True))
 
@@ -72,9 +74,50 @@ class BuildDashboardTests(unittest.TestCase):
         )
         picks_df.to_csv(predictions_dir / "2026-04-16-picks.tsv", sep="\t", index=False)
 
+        historical_df = pd.DataFrame(
+            [
+                {
+                    "date": "2026-04-10",
+                    "game_id": 77,
+                    "away_team": "Boston Red Sox",
+                    "home_team": "Toronto Blue Jays",
+                    "predicted_total": 8.4,
+                    "kalshi_line": 7.5,
+                    "kalshi_side": "OVER",
+                    "kalshi_side_market_prob": 48.0,
+                    "kalshi_fair_price_pct": 60.0,
+                    "kalshi_edge_pct": 12.0,
+                    "bet_amount": 110.0,
+                    "actual_total": 10,
+                    "result": "win",
+                    "pnl_dollars": 119.17,
+                    "roi_pct": 108.3,
+                    "settled": True,
+                }
+            ]
+        )
+        historical_df.to_csv(data_dir / "season_sim_2026.tsv", sep="\t", index=False)
+        (data_dir / "season_sim_summary.json").write_text(
+            """{
+  "total_games": 15,
+  "games_with_kalshi": 14,
+  "bets_placed": 9,
+  "wins": 5,
+  "losses": 4,
+  "win_rate": 55.6,
+  "roi_pct": 12.3,
+  "total_pnl": 431.2,
+  "total_wagered": 3500.0,
+  "avg_edge_pct": 8.4
+}""",
+            encoding="utf-8",
+        )
+
         with patch.object(build_dashboard, "PREDICTIONS_DIR", predictions_dir), patch.object(
             build_dashboard, "PAPER_TRACKING_DIR", paper_tracking_dir
-        ), patch.object(build_dashboard, "DASHBOARD_DIR", docs_dir):
+        ), patch.object(build_dashboard, "DASHBOARD_DIR", docs_dir), patch.object(
+            build_dashboard, "DATA_DIR", data_dir
+        ):
             output_path = build_dashboard.build_dashboard(2026)
 
         html_text = output_path.read_text(encoding="utf-8")
@@ -82,6 +125,9 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Seattle Mariners", html_text)
         self.assertIn("Chicago Cubs", html_text)
         self.assertIn("Latest Daily Bets", html_text)
+        self.assertIn("Historical Replay", html_text)
+        self.assertIn("Boston Red Sox", html_text)
+
 
 
 if __name__ == "__main__":
