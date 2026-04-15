@@ -704,6 +704,38 @@ def render_dashboard(
     <section class="section">
       <div class="section-head">
         <div>
+          <h2>Latest Daily Bets</h2>
+          <div class="section-subtitle">Latest model picks.</div>
+        </div>
+        <div class="tag">{html.escape(latest_heading)}</div>
+      </div>
+      {latest_table_html}
+    </section>
+
+    <section class="section grid-two">
+      <div>
+        <div class="section-head">
+          <div>
+            <h2>Recent Settled Trades</h2>
+            <div class="section-subtitle">Most recent graded results.</div>
+          </div>
+        </div>
+        {recent_table_html}
+      </div>
+      <div>
+        <div class="section-head">
+          <div>
+            <h2>Monthly Performance</h2>
+            <div class="section-subtitle">Monthly results.</div>
+          </div>
+        </div>
+        {monthly_rows_html}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
           <h2>Historical Replay</h2>
           <div class="section-subtitle">Backfilled 2026 Kalshi results using historical 10 AM PT prices.</div>
         </div>
@@ -781,43 +813,11 @@ def render_dashboard(
     <section class="section">
       <div class="section-head">
         <div>
-          <h2>Latest Daily Bets</h2>
-          <div class="section-subtitle">Latest model picks.</div>
-        </div>
-        <div class="tag">{html.escape(latest_heading)}</div>
-      </div>
-      {latest_table_html}
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
           <h2>Recent Historical Replay Bets</h2>
           <div class="section-subtitle">Most recent settled bets from the historical 2026 Kalshi backfill.</div>
         </div>
       </div>
       {historical_table_html}
-    </section>
-
-    <section class="section grid-two">
-      <div>
-        <div class="section-head">
-          <div>
-            <h2>Recent Settled Trades</h2>
-            <div class="section-subtitle">Most recent graded results.</div>
-          </div>
-        </div>
-        {recent_table_html}
-      </div>
-      <div>
-        <div class="section-head">
-          <div>
-            <h2>Monthly Performance</h2>
-            <div class="section-subtitle">Monthly results.</div>
-          </div>
-        </div>
-        {monthly_rows_html}
-      </div>
     </section>
 
     <div class="footer-note">
