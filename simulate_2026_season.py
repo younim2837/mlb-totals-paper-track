@@ -163,11 +163,13 @@ def _no_bet_row(date_str, away, home, predicted, actual, reason, **extras):
         "bet_amount": 0.0,
         "bet_contracts": 0.0,
         "risked_amount": 0.0,
+        "bet_pct_bankroll": 0.0,
         "actual_total": actual,
         "won": None,
         "result": "no_bet",
         "pnl_dollars": 0.0,
         "roi_pct": 0.0,
+        "bankroll_before": extras.get("bankroll_before"),
         "bankroll_after": extras.get("bankroll_after"),
         "skip_reason": reason,
         "settled": False,
@@ -191,6 +193,7 @@ def simulate(
         away = game["away_team"]
         home = game["home_team"]
         actual = float(game["total_runs"])
+        bankroll_before = round(running_bankroll, 2)
         key = (date_str, away, home)
         strike_prices = kalshi.get(key)
 
@@ -205,6 +208,7 @@ def simulate(
                     reason="no_kalshi",
                     game_id=game.get("game_id"),
                     prediction_std=round(float(game["prediction_std"]), 3),
+                    bankroll_before=bankroll_before,
                     bankroll_after=round(running_bankroll, 2),
                 )
             )
@@ -222,6 +226,7 @@ def simulate(
                     reason="no_consensus",
                     game_id=game.get("game_id"),
                     prediction_std=round(float(game["prediction_std"]), 3),
+                    bankroll_before=bankroll_before,
                     bankroll_after=round(running_bankroll, 2),
                 )
             )
@@ -266,6 +271,7 @@ def simulate(
                     kalshi_side_market_prob=pred.get("kalshi_side_market_prob"),
                     kalshi_fair_price_pct=pred.get("kalshi_fair_price_pct"),
                     kalshi_edge_pct=pred.get("kalshi_edge_pct"),
+                    bankroll_before=bankroll_before,
                     bankroll_after=round(running_bankroll, 2),
                 )
             )
@@ -273,6 +279,7 @@ def simulate(
 
         kelly = pred.get("kalshi_kelly") or {}
         bet_amount = float(kelly.get("recommended_bet", 0.0) or 0.0)
+        bet_pct_bankroll = (bet_amount / bankroll_before * 100.0) if bankroll_before > 0 else 0.0
         side = pred.get("kalshi_side")
         market_price = float(pred.get("kalshi_side_market_prob", 0.0) or 0.0) / 100.0
         contracts = (bet_amount / market_price) if bet_amount > 0 and market_price > 0 else 0.0
@@ -309,11 +316,13 @@ def simulate(
                 "bet_amount": round(bet_amount, 2),
                 "bet_contracts": round(contracts, 4),
                 "risked_amount": round(bet_amount, 2),
+                "bet_pct_bankroll": round(bet_pct_bankroll, 3),
                 "actual_total": actual,
                 "won": won,
                 "result": result,
                 "pnl_dollars": round(pnl, 2),
                 "roi_pct": round(roi_pct, 2),
+                "bankroll_before": bankroll_before,
                 "bankroll_after": round(running_bankroll, 2),
                 "skip_reason": None if bet_amount > 0 else "kelly_below_min_bet",
                 "settled": settled,

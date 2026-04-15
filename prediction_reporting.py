@@ -57,6 +57,9 @@ def export_daily_prediction_reports(predictions: list[dict], target_date: str, i
         "kalshi_yes_ask",
         "kalshi_over_pct",
         "kalshi_bet_block_reason",
+        "kalshi_bankroll_used",
+        "kalshi_bet_pct_bankroll",
+        "kalshi_raw_bet_pct_bankroll",
         "kalshi_recommended_bet",
         "kalshi_raw_bet",
     ]
@@ -68,6 +71,9 @@ def export_daily_prediction_reports(predictions: list[dict], target_date: str, i
         kalshi_kelly = pred.get("kalshi_kelly") or {}
         row["target_date"] = target_date
         row["recommended_bet"] = kelly.get("recommended_bet", 0.0)
+        row["kalshi_bankroll_used"] = kalshi_kelly.get("bankroll_used", 0.0)
+        row["kalshi_bet_pct_bankroll"] = kalshi_kelly.get("recommended_bet_pct_bankroll", 0.0)
+        row["kalshi_raw_bet_pct_bankroll"] = kalshi_kelly.get("raw_bet_pct_bankroll", 0.0)
         row["kalshi_recommended_bet"] = kalshi_kelly.get("recommended_bet", 0.0)
         row["kalshi_raw_bet"] = kalshi_kelly.get("raw_bet", 0.0)
         rows.append(row)
@@ -292,7 +298,7 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                         cap_note = " (capped)" if kk["was_capped"] else ""
                         print(f"  Kalshi Kelly: {kk['full_kelly_pct']}% full  ->  "
                               f"{kk['frac_kelly_pct']}% quarter-Kelly{cap_note}  ->  "
-                              f"BUY ${kk['recommended_bet']:.0f}  "
+                              f"BUY ${kk['recommended_bet']:.0f} ({kk.get('recommended_bet_pct_bankroll', 0.0):.1f}% bankroll)  "
                               f"(edge: {kk['edge_pct']:+.1f}%)")
                     else:
                         reason = p.get("kalshi_bet_block_reason")
@@ -322,7 +328,7 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                         cap_note = " (capped)" if kk["was_capped"] else ""
                         print(f"  Kalshi Kelly: {kk['full_kelly_pct']}% full  ->  "
                               f"{kk['frac_kelly_pct']}% quarter-Kelly{cap_note}  ->  "
-                              f"BUY ${kk['recommended_bet']:.0f}  "
+                              f"BUY ${kk['recommended_bet']:.0f} ({kk.get('recommended_bet_pct_bankroll', 0.0):.1f}% bankroll)  "
                               f"(edge: {kk['edge_pct']:+.1f}%)")
                     else:
                         reason = p.get("kalshi_bet_block_reason")

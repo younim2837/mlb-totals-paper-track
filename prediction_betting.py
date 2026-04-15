@@ -91,6 +91,9 @@ def kalshi_kelly_size(
         "capped_kelly_pct": round(capped * 100, 1),
         "recommended_bet": float(recommended),
         "raw_bet": float(raw_bet),
+        "bankroll_used": float(bankroll),
+        "recommended_bet_pct_bankroll": (float(recommended) / float(bankroll) * 100.0) if float(bankroll) > 0 else 0.0,
+        "raw_bet_pct_bankroll": (float(raw_bet) / float(bankroll) * 100.0) if float(bankroll) > 0 else 0.0,
         "was_capped": cap_fraction is not None and frac_kelly > cap_fraction,
         "edge_pct": round((p_win - market_price) * 100, 1),
     }

@@ -82,6 +82,13 @@ def load_model_config() -> dict:
             "max_bets_per_day": 5,
             "allowed_market_adjustment_methods": ["edge_model"],
         },
+        "bankroll": {
+            "total": 10000,
+            "kelly_fraction": 0.10,
+            "max_bet_pct": 0,
+            "min_bet": 1,
+            "round_to": 1,
+        },
         "overrides": {},
         "display": {
             "show_elo_ratings": True, "show_umpire": True, "show_weather": True,
@@ -98,6 +105,12 @@ def load_model_config() -> dict:
     }
 
     config_path = os.path.join(os.path.dirname(__file__), "model_config.yaml")
+    bankroll_override = os.environ.get("PAPER_BANKROLL_OVERRIDE")
+    if bankroll_override:
+        try:
+            defaults.setdefault("bankroll", {})["total"] = float(bankroll_override)
+        except ValueError:
+            print(f"  Warning: invalid PAPER_BANKROLL_OVERRIDE={bankroll_override!r} - ignoring")
     if not _YAML_AVAILABLE or not os.path.exists(config_path):
         return defaults
 

@@ -41,6 +41,7 @@ class BuildDashboardTests(unittest.TestCase):
                     "kalshi_side_model_prob": 60.4,
                     "kalshi_side_market_prob": 50.0,
                     "kalshi_side_market_price": 0.50,
+                    "kalshi_bet_pct_bankroll": 1.25,
                     "kalshi_recommended_bet": 125.0,
                     "away_score": 5,
                     "home_score": 4,
@@ -68,6 +69,7 @@ class BuildDashboardTests(unittest.TestCase):
                     "kalshi_side_market_prob": 45.0,
                     "kalshi_fair_price_pct": 58.0,
                     "kalshi_edge_pct": 13.0,
+                    "kalshi_bet_pct_bankroll": 0.8,
                     "kalshi_recommended_bet": 80.0,
                 }
             ]
@@ -88,6 +90,7 @@ class BuildDashboardTests(unittest.TestCase):
                     "kalshi_fair_price_pct": 60.0,
                     "kalshi_edge_pct": 12.0,
                     "bet_amount": 110.0,
+                    "bet_pct_bankroll": 1.1,
                     "actual_total": 10,
                     "result": "win",
                     "pnl_dollars": 119.17,
@@ -133,6 +136,7 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Historical Replay", html_text)
         self.assertIn("Kalshi Rules", html_text)
         self.assertIn("57.5%", html_text)
+        self.assertIn("% Roll", html_text)
         self.assertIn("Boston Red Sox", html_text)
 
 

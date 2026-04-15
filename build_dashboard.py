@@ -185,6 +185,7 @@ def load_historical_sim(season: int) -> pd.DataFrame:
         "kalshi_fair_price_pct",
         "kalshi_edge_pct",
         "bet_amount",
+        "bet_pct_bankroll",
         "actual_total",
         "result",
         "pnl_dollars",
@@ -319,6 +320,7 @@ def render_dashboard(
                     html.escape(f"{_num(row.get('kalshi_fair_price_pct')):.1f}%") if pd.notna(row.get("kalshi_fair_price_pct")) else "—",
                     html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
                     html.escape(_fmt_money(_num(row.get("kalshi_recommended_bet")))),
+                    html.escape(_fmt_plain_pct(_num(row.get("kalshi_bet_pct_bankroll")))),
                 ]
             )
 
@@ -348,6 +350,7 @@ def render_dashboard(
                 html.escape(_fmt_number(row.get("kalshi_line"))),
                 html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
                 html.escape(_fmt_money(_num(row.get("bet_amount")))),
+                html.escape(_fmt_plain_pct(_num(row.get("bet_pct_bankroll")))),
                 html.escape(str(row.get("result", "")).upper()),
                 html.escape(_fmt_pct(_num(row.get("roi_pct")))),
             ]
@@ -370,7 +373,7 @@ def render_dashboard(
     )
 
     latest_table_html = _table(
-        ["Matchup", "Side", "Line", "Model", "Market", "Fair", "Edge", "Bet"],
+        ["Matchup", "Side", "Line", "Model", "Market", "Fair", "Edge", "Bet", "% Roll"],
         latest_pick_rows,
         "No daily bets logged yet.",
     )
@@ -382,7 +385,7 @@ def render_dashboard(
     )
 
     historical_table_html = _table(
-        ["Date", "Matchup", "Side", "Line", "Edge", "Bet", "Result", "ROI"],
+        ["Date", "Matchup", "Side", "Line", "Edge", "Bet", "% Roll", "Result", "ROI"],
         historical_rows,
         "Historical replay results will appear here once the simulator has been run.",
     )
@@ -828,6 +831,7 @@ def build_dashboard(season: int) -> Path:
         "kalshi_side_model_prob",
         "kalshi_side_market_prob",
         "kalshi_side_market_price",
+        "kalshi_bet_pct_bankroll",
         "kalshi_recommended_bet",
         "away_score",
         "home_score",

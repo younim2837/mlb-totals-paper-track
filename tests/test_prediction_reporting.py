@@ -27,6 +27,9 @@ class PredictionReportingTests(unittest.TestCase):
             "kalshi_kelly": {
                 "recommended_bet": 25.0,
                 "raw_bet": 24.6,
+                "bankroll_used": 1000.0,
+                "recommended_bet_pct_bankroll": 2.5,
+                "raw_bet_pct_bankroll": 2.46,
             },
         }
 
@@ -51,6 +54,8 @@ class PredictionReportingTests(unittest.TestCase):
         self.assertEqual(int(board_df.loc[0, "game_id"]), 99)
         self.assertEqual(board_df.loc[0, "commence_time"], "2026-04-14T19:40:00Z")
         self.assertEqual(float(picks_df.loc[0, "kalshi_recommended_bet"]), 25.0)
+        self.assertEqual(float(picks_df.loc[0, "kalshi_bankroll_used"]), 1000.0)
+        self.assertEqual(float(picks_df.loc[0, "kalshi_bet_pct_bankroll"]), 2.5)
 
 
 if __name__ == "__main__":

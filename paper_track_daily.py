@@ -18,6 +18,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from paper_bankroll import resolve_paper_bankroll
+
 
 PROJECT_DIR = Path(__file__).resolve().parent
 PREDICTIONS_DIR = PROJECT_DIR / "predictions"
@@ -30,7 +32,12 @@ def default_target_date() -> str:
     return datetime.now(PACIFIC_TZ).strftime("%Y-%m-%d")
 
 
+def season_for_date(target_date: str) -> int:
+    return int(str(target_date)[:4])
+
+
 def run_daily_pipeline(target_date: str, quick: bool, no_update: bool, include_all_games: bool) -> int:
+    bankroll_total = resolve_paper_bankroll(target_date=target_date, season=season_for_date(target_date))
     cmd = [sys.executable, str(PROJECT_DIR / "run_today.py"), target_date]
     if quick:
         cmd.append("--quick")
@@ -40,8 +47,11 @@ def run_daily_pipeline(target_date: str, quick: bool, no_update: bool, include_a
         cmd.append("--all-games")
 
     print(f"Running daily paper test for {target_date}...")
+    print(f"Using paper bankroll: ${bankroll_total:,.2f}")
     print(" ".join(cmd))
-    completed = subprocess.run(cmd, cwd=PROJECT_DIR)
+    env = os.environ.copy()
+    env["PAPER_BANKROLL_OVERRIDE"] = f"{bankroll_total:.2f}"
+    completed = subprocess.run(cmd, cwd=PROJECT_DIR, env=env)
     return int(completed.returncode)
 
 

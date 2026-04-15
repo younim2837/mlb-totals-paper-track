@@ -16,6 +16,8 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
+from paper_bankroll import load_starting_bankroll
+
 
 PROJECT_DIR = Path(__file__).resolve().parent
 PREDICTIONS_DIR = PROJECT_DIR / "predictions"
@@ -151,6 +153,8 @@ def attach_actuals(board: pd.DataFrame, results: pd.DataFrame) -> pd.DataFrame:
         "kalshi_side_model_prob",
         "kalshi_side_market_prob",
         "kalshi_recommended_bet",
+        "kalshi_bankroll_used",
+        "kalshi_bet_pct_bankroll",
     ]:
         if col not in attached.columns:
             attached[col] = pd.NA
@@ -222,6 +226,9 @@ def build_kalshi_tracker(board_rows: pd.DataFrame) -> pd.DataFrame:
     kalshi = board_rows.loc[board_rows["kalshi_side"].isin(["OVER", "UNDER"])].copy()
     if kalshi.empty:
         return pd.DataFrame()
+    for col in ["away_score", "home_score", "total_runs"]:
+        if col not in kalshi.columns:
+            kalshi[col] = pd.NA
 
     market_price = []
     for _, row in kalshi.iterrows():
@@ -243,9 +250,52 @@ def build_kalshi_tracker(board_rows: pd.DataFrame) -> pd.DataFrame:
     kalshi["settled"] = kalshi["result"].isin(["win", "loss", "push"])
     kalshi["month"] = kalshi["target_date"].astype(str).str[:7]
     kalshi["stake_dollars"] = kalshi["kalshi_side_market_price"]
+    kalshi["kalshi_recommended_bet"] = pd.to_numeric(kalshi["kalshi_recommended_bet"], errors="coerce").fillna(0.0)
+    kalshi["kalshi_bankroll_used"] = pd.to_numeric(kalshi.get("kalshi_bankroll_used"), errors="coerce").fillna(0.0)
+    kalshi["kalshi_bet_pct_bankroll"] = pd.to_numeric(kalshi.get("kalshi_bet_pct_bankroll"), errors="coerce").fillna(0.0)
+    kalshi["kalshi_contracts"] = kalshi.apply(
+        lambda row: (row["kalshi_recommended_bet"] / row["kalshi_side_market_price"])
+        if row["kalshi_recommended_bet"] > 0 and row["kalshi_side_market_price"] > 0
+        else 0.0,
+        axis=1,
+    )
+    kalshi["pnl_dollars"] = kalshi.apply(
+        lambda row: (row["kalshi_contracts"] * row["profit_per_contract"])
+        if row["result"] in {"win", "loss", "push"}
+        else 0.0,
+        axis=1,
+    )
     kalshi["roi_pct"] = kalshi.apply(
         lambda row: (row["profit_per_contract"] / row["stake_dollars"] * 100.0)
         if row["result"] in {"win", "loss"} and row["stake_dollars"] > 0
+        else 0.0,
+        axis=1,
+    )
+    kalshi = kalshi.sort_values(["target_date", "game_id"]).reset_index(drop=True)
+
+    starting_bankroll = load_starting_bankroll()
+    running_bankroll = float(starting_bankroll)
+    bankroll_before_day = []
+    bankroll_after_day = []
+    for target_date, day_df in kalshi.groupby("target_date", sort=True):
+        opening_roll = float(running_bankroll)
+        settled_mask = day_df["settled"].astype(bool)
+        date_pnl = float(pd.to_numeric(day_df.loc[settled_mask, "pnl_dollars"], errors="coerce").fillna(0.0).sum())
+        all_day_bets_settled = bool(settled_mask.all())
+        closing_roll = opening_roll + date_pnl if all_day_bets_settled else opening_roll
+        bankroll_before_day.extend([round(opening_roll, 2)] * len(day_df))
+        bankroll_after_day.extend([round(closing_roll, 2)] * len(day_df))
+        if all_day_bets_settled:
+            running_bankroll = closing_roll
+
+    kalshi["paper_bankroll_at_bet"] = bankroll_before_day
+    kalshi["paper_bankroll_after_day"] = bankroll_after_day
+    zero_bankroll_mask = kalshi["kalshi_bankroll_used"] <= 0
+    kalshi.loc[zero_bankroll_mask, "kalshi_bankroll_used"] = kalshi.loc[zero_bankroll_mask, "paper_bankroll_at_bet"]
+    zero_pct_mask = kalshi["kalshi_bet_pct_bankroll"] <= 0
+    kalshi.loc[zero_pct_mask, "kalshi_bet_pct_bankroll"] = kalshi.apply(
+        lambda row: (row["kalshi_recommended_bet"] / row["paper_bankroll_at_bet"] * 100.0)
+        if row["paper_bankroll_at_bet"] > 0
         else 0.0,
         axis=1,
     )
@@ -263,13 +313,19 @@ def build_kalshi_tracker(board_rows: pd.DataFrame) -> pd.DataFrame:
         "kalshi_side_model_prob",
         "kalshi_side_market_prob",
         "kalshi_side_market_price",
+        "kalshi_bankroll_used",
+        "kalshi_bet_pct_bankroll",
         "kalshi_recommended_bet",
+        "kalshi_contracts",
         "away_score",
         "home_score",
         "total_runs",
         "result",
         "profit_per_contract",
+        "pnl_dollars",
         "roi_pct",
+        "paper_bankroll_at_bet",
+        "paper_bankroll_after_day",
         "settled",
     ]].sort_values(["target_date", "game_id"]).reset_index(drop=True)
 

@@ -67,6 +67,56 @@ class GradePaperTrackingTests(unittest.TestCase):
         self.assertEqual(int(attached.loc[0, "home_score"]), 4)
         self.assertEqual(int(attached.loc[0, "total_runs"]), 9)
 
+    def test_build_kalshi_tracker_rolls_forward_daily_bankroll(self):
+        board_rows = pd.DataFrame(
+            [
+                {
+                    "target_date": "2026-04-14",
+                    "game_id": 1,
+                    "away_team": "A",
+                    "home_team": "B",
+                    "predicted_total": 8.9,
+                    "kalshi_line": 8.5,
+                    "kalshi_side": "OVER",
+                    "kalshi_edge_pct": 9.0,
+                    "kalshi_fair_price_pct": 59.0,
+                    "kalshi_side_model_prob": 59.0,
+                    "kalshi_side_market_prob": 50.0,
+                    "kalshi_over_pct": 50.0,
+                    "kalshi_recommended_bet": 100.0,
+                    "kalshi_bankroll_used": 10000.0,
+                    "kalshi_bet_pct_bankroll": 1.0,
+                    "total_runs": 10.0,
+                },
+                {
+                    "target_date": "2026-04-15",
+                    "game_id": 2,
+                    "away_team": "C",
+                    "home_team": "D",
+                    "predicted_total": 8.1,
+                    "kalshi_line": 8.5,
+                    "kalshi_side": "UNDER",
+                    "kalshi_edge_pct": 7.0,
+                    "kalshi_fair_price_pct": 57.0,
+                    "kalshi_side_model_prob": 57.0,
+                    "kalshi_side_market_prob": 50.0,
+                    "kalshi_over_pct": 52.0,
+                    "kalshi_recommended_bet": 101.0,
+                    "kalshi_bankroll_used": 0.0,
+                    "kalshi_bet_pct_bankroll": 0.0,
+                    "total_runs": 7.0,
+                },
+            ]
+        )
+
+        with patch.object(gpt, "load_starting_bankroll", return_value=10000.0):
+            tracker = gpt.build_kalshi_tracker(board_rows)
+
+        self.assertAlmostEqual(float(tracker.loc[0, "pnl_dollars"]), 100.0, places=2)
+        self.assertAlmostEqual(float(tracker.loc[0, "paper_bankroll_after_day"]), 10100.0, places=2)
+        self.assertAlmostEqual(float(tracker.loc[1, "paper_bankroll_at_bet"]), 10100.0, places=2)
+        self.assertAlmostEqual(float(tracker.loc[1, "kalshi_bet_pct_bankroll"]), 1.0, places=3)
+
 
 if __name__ == "__main__":
     unittest.main()
