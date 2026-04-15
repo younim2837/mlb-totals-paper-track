@@ -736,6 +736,42 @@ def render_dashboard(
     <section class="section">
       <div class="section-head">
         <div>
+          <h2>Kalshi Rules</h2>
+          <div class="section-subtitle">Current thresholds and sizing used for the Kalshi replay and live paper-tracked bets.</div>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Minimum Edge</div>
+          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_edge_pct)}</div>
+          <div class="metric-note">Absolute edge vs market price required to bet.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Minimum Confidence</div>
+          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_confidence_pct)}</div>
+          <div class="metric-note">Model win probability required on the chosen side.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Kelly Fraction</div>
+          <div class="metric-value">{kelly_label}</div>
+          <div class="metric-note">Portion of full Kelly used for staking.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Max Bet Cap</div>
+          <div class="metric-value">{html.escape(max_bet_label)}</div>
+          <div class="metric-note">Hard cap on bankroll risk per trade.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Minimum Bet</div>
+          <div class="metric-value">{html.escape(min_bet_label)}</div>
+          <div class="metric-note">Smallest rounded Kalshi bet the bot will place.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
           <h2>Historical Replay</h2>
           <div class="section-subtitle">Backfilled 2026 Kalshi results using historical 10 AM PT prices.</div>
         </div>
@@ -770,42 +806,6 @@ def render_dashboard(
           <div class="metric-label">Average Edge</div>
           <div class="metric-value">{_fmt_pct(historical_summary.avg_edge_pct)}</div>
           <div class="metric-note">Mean replay edge.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h2>Kalshi Rules</h2>
-          <div class="section-subtitle">Current thresholds and sizing used for the Kalshi replay and live paper-tracked bets.</div>
-        </div>
-      </div>
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-label">Minimum Edge</div>
-          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_edge_pct)}</div>
-          <div class="metric-note">Absolute edge vs market price required to bet.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Minimum Confidence</div>
-          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_confidence_pct)}</div>
-          <div class="metric-note">Model win probability required on the chosen side.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Kelly Fraction</div>
-          <div class="metric-value">{kelly_label}</div>
-          <div class="metric-note">Portion of full Kelly used for staking.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Max Bet Cap</div>
-          <div class="metric-value">{html.escape(max_bet_label)}</div>
-          <div class="metric-note">Hard cap on bankroll risk per trade.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Minimum Bet</div>
-          <div class="metric-value">{html.escape(min_bet_label)}</div>
-          <div class="metric-note">Smallest rounded Kalshi bet the bot will place.</div>
         </div>
       </div>
     </section>
