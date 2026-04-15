@@ -2,8 +2,9 @@ name: Daily Paper Track
 
 on:
   schedule:
-    # 17:00 UTC = 10:00 PT during daylight saving, 09:00 PT otherwise.
-    - cron: "0 17 * * *"
+    # 17:07 UTC = 10:07 PT during daylight saving, 09:07 PT otherwise.
+    # Offset from the top of the hour to avoid GitHub's heaviest scheduler load.
+    - cron: "7 17 * * *"
   workflow_dispatch:
     inputs:
       run_date:
