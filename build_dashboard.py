@@ -41,6 +41,10 @@ class DashboardSummary:
     average_edge_pct: float
     starting_bankroll: float
     current_bankroll: float
+    over_bets: int = 0
+    under_bets: int = 0
+    over_win_rate: float = 0.0
+    under_win_rate: float = 0.0
 
 
 @dataclass
@@ -60,6 +64,10 @@ class HistoricalSummary:
     min_bet: float
     min_kalshi_edge_pct: float
     min_kalshi_confidence_pct: float
+    over_bets: int = 0
+    under_bets: int = 0
+    over_win_rate: float = 0.0
+    under_win_rate: float = 0.0
 
 
 def current_season() -> int:
@@ -108,6 +116,17 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     avg_edge = float(pd.to_numeric(df["kalshi_edge_pct"], errors="coerce").dropna().mean()) if not df.empty else 0.0
     bankroll_after_series = pd.to_numeric(df.get("paper_bankroll_after_day"), errors="coerce").dropna()
     current_bankroll = float(bankroll_after_series.iloc[-1]) if not bankroll_after_series.empty else starting_bankroll
+
+    side_col = df.get("kalshi_side")
+    over_bets = int((side_col == "OVER").sum()) if side_col is not None else 0
+    under_bets = int((side_col == "UNDER").sum()) if side_col is not None else 0
+    over_settled = settled[settled.get("kalshi_side") == "OVER"] if "kalshi_side" in settled.columns else settled.iloc[:0]
+    under_settled = settled[settled.get("kalshi_side") == "UNDER"] if "kalshi_side" in settled.columns else settled.iloc[:0]
+    over_wins = int((over_settled["result"] == "win").sum()) if not over_settled.empty else 0
+    under_wins = int((under_settled["result"] == "win").sum()) if not under_settled.empty else 0
+    over_non_push = int(((over_settled["result"] == "win") | (over_settled["result"] == "loss")).sum()) if not over_settled.empty else 0
+    under_non_push = int(((under_settled["result"] == "win") | (under_settled["result"] == "loss")).sum()) if not under_settled.empty else 0
+
     return DashboardSummary(
         tracked=int(len(df)),
         settled=int(len(settled)),
@@ -120,10 +139,27 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
         average_edge_pct=avg_edge,
         starting_bankroll=starting_bankroll,
         current_bankroll=current_bankroll,
+        over_bets=over_bets,
+        under_bets=under_bets,
+        over_win_rate=(over_wins / over_non_push) if over_non_push else 0.0,
+        under_win_rate=(under_wins / under_non_push) if under_non_push else 0.0,
     )
 
 
-def summarize_historical(summary: dict) -> HistoricalSummary:
+def summarize_historical(summary: dict, sim_df: pd.DataFrame | None = None) -> HistoricalSummary:
+    over_bets = under_bets = 0
+    over_win_rate = under_win_rate = 0.0
+    if sim_df is not None and not sim_df.empty and "kalshi_side" in sim_df.columns:
+        bets_df = sim_df[pd.to_numeric(sim_df.get("bet_amount"), errors="coerce").fillna(0) > 0]
+        over = bets_df[bets_df["kalshi_side"] == "OVER"]
+        under = bets_df[bets_df["kalshi_side"] == "UNDER"]
+        over_bets = len(over)
+        under_bets = len(under)
+        over_won = over["result"].eq("won") | over["result"].eq("win") | over["won"].astype(str).eq("True") if not over.empty else pd.Series(dtype=bool)
+        under_won = under["result"].eq("won") | under["result"].eq("win") | under["won"].astype(str).eq("True") if not under.empty else pd.Series(dtype=bool)
+        over_win_rate = float(over_won.mean()) if len(over) > 0 else 0.0
+        under_win_rate = float(under_won.mean()) if len(under) > 0 else 0.0
+
     return HistoricalSummary(
         total_games=int(summary.get("total_games", 0) or 0),
         games_with_kalshi=int(summary.get("games_with_kalshi", 0) or 0),
@@ -140,6 +176,10 @@ def summarize_historical(summary: dict) -> HistoricalSummary:
         min_bet=float(summary.get("min_bet", 0.0) or 0.0),
         min_kalshi_edge_pct=float(summary.get("min_kalshi_edge_pct", 0.0) or 0.0),
         min_kalshi_confidence_pct=float(summary.get("min_kalshi_confidence_pct", 0.0) or 0.0),
+        over_bets=over_bets,
+        under_bets=under_bets,
+        over_win_rate=over_win_rate,
+        under_win_rate=under_win_rate,
     )
 
 
@@ -695,6 +735,16 @@ def render_dashboard(
           <div class="metric-value">{_fmt_money(summary.current_bankroll)}</div>
           <div class="metric-note">Started at {_fmt_money(summary.starting_bankroll)}.</div>
         </div>
+        <div class="metric">
+          <div class="metric-label">OVER Bets</div>
+          <div class="metric-value">{summary.over_bets}</div>
+          <div class="metric-note">Win rate: {summary.over_win_rate:.1%}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">UNDER Bets</div>
+          <div class="metric-value">{summary.under_bets}</div>
+          <div class="metric-note">Win rate: {summary.under_win_rate:.1%}</div>
+        </div>
       </div>
     </section>
 
@@ -804,6 +854,16 @@ def render_dashboard(
           <div class="metric-value">{_fmt_pct(historical_summary.avg_edge_pct)}</div>
           <div class="metric-note">Mean replay edge.</div>
         </div>
+        <div class="metric">
+          <div class="metric-label">OVER Bets</div>
+          <div class="metric-value">{historical_summary.over_bets}</div>
+          <div class="metric-note">Win rate: {historical_summary.over_win_rate:.1%}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">UNDER Bets</div>
+          <div class="metric-value">{historical_summary.under_bets}</div>
+          <div class="metric-note">Win rate: {historical_summary.under_win_rate:.1%}</div>
+        </div>
       </div>
     </section>
 
@@ -854,8 +914,8 @@ def build_dashboard(season: int) -> Path:
     ]
     kalshi_df = load_tracker(PAPER_TRACKING_DIR / f"kalshi_tracker_{season}.tsv", kalshi_columns)
     summary = summarize_kalshi(kalshi_df)
-    historical_summary = summarize_historical(load_json(DATA_DIR / "season_sim_summary.json"))
     historical_df = load_historical_sim(season)
+    historical_summary = summarize_historical(load_json(DATA_DIR / "season_sim_summary.json"), sim_df=historical_df)
     latest_date, latest_picks = load_latest_picks(season)
     recent = recent_results(kalshi_df)
     historical_recent = historical_df[historical_df["bet_amount"].fillna(0) > 0].sort_values(
