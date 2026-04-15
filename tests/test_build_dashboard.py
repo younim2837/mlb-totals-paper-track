@@ -108,7 +108,12 @@ class BuildDashboardTests(unittest.TestCase):
   "roi_pct": 12.3,
   "total_pnl": 431.2,
   "total_wagered": 3500.0,
-  "avg_edge_pct": 8.4
+  "avg_edge_pct": 8.4,
+  "kelly_fraction": 0.1,
+  "max_bet_pct": 0.0,
+  "min_bet": 1.0,
+  "min_kalshi_edge_pct": 6.0,
+  "min_kalshi_confidence_pct": 57.5
 }""",
             encoding="utf-8",
         )
@@ -126,6 +131,8 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Chicago Cubs", html_text)
         self.assertIn("Latest Daily Bets", html_text)
         self.assertIn("Historical Replay", html_text)
+        self.assertIn("Kalshi Rules", html_text)
+        self.assertIn("57.5%", html_text)
         self.assertIn("Boston Red Sox", html_text)
 
 

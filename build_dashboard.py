@@ -53,6 +53,11 @@ class HistoricalSummary:
     total_pnl: float
     total_wagered: float
     avg_edge_pct: float
+    kelly_fraction: float
+    max_bet_pct: float
+    min_bet: float
+    min_kalshi_edge_pct: float
+    min_kalshi_confidence_pct: float
 
 
 def current_season() -> int:
@@ -125,6 +130,11 @@ def summarize_historical(summary: dict) -> HistoricalSummary:
         total_pnl=float(summary.get("total_pnl", 0.0) or 0.0),
         total_wagered=float(summary.get("total_wagered", 0.0) or 0.0),
         avg_edge_pct=float(summary.get("avg_edge_pct", 0.0) or 0.0),
+        kelly_fraction=float(summary.get("kelly_fraction", 0.0) or 0.0),
+        max_bet_pct=float(summary.get("max_bet_pct", 0.0) or 0.0),
+        min_bet=float(summary.get("min_bet", 0.0) or 0.0),
+        min_kalshi_edge_pct=float(summary.get("min_kalshi_edge_pct", 0.0) or 0.0),
+        min_kalshi_confidence_pct=float(summary.get("min_kalshi_confidence_pct", 0.0) or 0.0),
     )
 
 
@@ -245,6 +255,10 @@ def _fmt_money(value: float, signed: bool = False) -> str:
     if abs(value) >= 1:
         return f"{prefix}${value:,.0f}"
     return f"{prefix}${value:,.2f}"
+
+
+def _fmt_plain_pct(value: float) -> str:
+    return f"{value:.1f}%"
 
 
 def _fmt_number(value) -> str:
@@ -372,6 +386,10 @@ def render_dashboard(
         historical_rows,
         "Historical replay results will appear here once the simulator has been run.",
     )
+
+    kelly_label = _fmt_plain_pct(historical_summary.kelly_fraction * 100.0)
+    max_bet_label = "No hard cap" if historical_summary.max_bet_pct <= 0 else _fmt_plain_pct(historical_summary.max_bet_pct)
+    min_bet_label = _fmt_money(historical_summary.min_bet)
 
     latest_heading = latest_date or "No daily run yet"
     generated_at = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -704,6 +722,42 @@ def render_dashboard(
           <div class="metric-label">Average Edge</div>
           <div class="metric-value">{_fmt_pct(historical_summary.avg_edge_pct)}</div>
           <div class="metric-note">Mean replay edge.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Kalshi Rules</h2>
+          <div class="section-subtitle">Current thresholds and sizing used for the Kalshi replay and live paper-tracked bets.</div>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Minimum Edge</div>
+          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_edge_pct)}</div>
+          <div class="metric-note">Absolute edge vs market price required to bet.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Minimum Confidence</div>
+          <div class="metric-value">{_fmt_plain_pct(historical_summary.min_kalshi_confidence_pct)}</div>
+          <div class="metric-note">Model win probability required on the chosen side.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Kelly Fraction</div>
+          <div class="metric-value">{kelly_label}</div>
+          <div class="metric-note">Portion of full Kelly used for staking.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Max Bet Cap</div>
+          <div class="metric-value">{html.escape(max_bet_label)}</div>
+          <div class="metric-note">Hard cap on bankroll risk per trade.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Minimum Bet</div>
+          <div class="metric-value">{html.escape(min_bet_label)}</div>
+          <div class="metric-note">Smallest rounded Kalshi bet the bot will place.</div>
         </div>
       </div>
     </section>
