@@ -68,8 +68,9 @@ class BuildDashboardTests(unittest.TestCase):
                     "kalshi_side": "UNDER",
                     "kalshi_line": 9.5,
                     "kalshi_side_market_prob": 45.0,
-                    "kalshi_fair_price_pct": 58.0,
-                    "kalshi_edge_pct": 13.0,
+                    "kalshi_side_model_prob": 61.2,
+                    "kalshi_fair_price_pct": 38.8,
+                    "kalshi_edge_pct": -13.2,
                     "kalshi_bet_pct_bankroll": 0.8,
                     "kalshi_recommended_bet": 80.0,
                 }
@@ -94,6 +95,7 @@ class BuildDashboardTests(unittest.TestCase):
                     "bet_pct_bankroll": 1.1,
                     "actual_total": 10,
                     "result": "win",
+                    "won": True,
                     "pnl_dollars": 119.17,
                     "roi_pct": 108.3,
                     "settled": True,
@@ -143,6 +145,8 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Boston Red Sox", html_text)
         self.assertIn("minmax(min(100%, 220px), 1fr)", html_text)
         self.assertIn("white-space: nowrap;", html_text)
+        self.assertIn("61.2%", html_text)
+        self.assertIn("+16.2%", html_text)
 
 
 

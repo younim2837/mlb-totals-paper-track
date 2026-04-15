@@ -322,6 +322,34 @@ def _num(value, default: float = 0.0) -> float:
         return default
 
 
+def _kalshi_side_display(row: pd.Series) -> tuple[float | None, float | None]:
+    side = str(row.get("kalshi_side") or "").upper()
+    side_market_prob = row.get("kalshi_side_market_prob")
+    side_model_prob = row.get("kalshi_side_model_prob")
+    over_fair_prob = row.get("kalshi_fair_price_pct")
+    over_edge_pct = row.get("kalshi_edge_pct")
+
+    if pd.notna(side_model_prob):
+        fair_prob = _num(side_model_prob)
+    elif pd.notna(over_fair_prob):
+        fair_prob = _num(over_fair_prob)
+        if side == "UNDER":
+            fair_prob = 100.0 - fair_prob
+    else:
+        fair_prob = None
+
+    if pd.notna(side_market_prob) and fair_prob is not None:
+        edge_pct = fair_prob - _num(side_market_prob)
+    elif pd.notna(over_edge_pct):
+        edge_pct = _num(over_edge_pct)
+        if side == "UNDER":
+            edge_pct = -edge_pct
+    else:
+        edge_pct = None
+
+    return fair_prob, edge_pct
+
+
 def _table(headers: list[str], rows: list[list[str]], empty_message: str, compact: bool = False) -> str:
     if not rows:
         return f'<div class="empty-state">{html.escape(empty_message)}</div>'
@@ -355,6 +383,7 @@ def render_dashboard(
             )
         for _, row in latest_picks.iterrows():
             matchup = f"{html.escape(str(row.get('away_team', '')))} @ {html.escape(str(row.get('home_team', '')))}"
+            side_fair_prob, side_edge_pct = _kalshi_side_display(row)
             latest_pick_rows.append(
                 [
                     matchup,
@@ -362,8 +391,8 @@ def render_dashboard(
                     html.escape(_fmt_number(row.get("kalshi_line"))),
                     html.escape(_fmt_number(row.get("predicted_total"))),
                     html.escape(f"{_num(row.get('kalshi_side_market_prob')):.1f}%") if pd.notna(row.get("kalshi_side_market_prob")) else "—",
-                    html.escape(f"{_num(row.get('kalshi_fair_price_pct')):.1f}%") if pd.notna(row.get("kalshi_fair_price_pct")) else "—",
-                    html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
+                    html.escape(f"{side_fair_prob:.1f}%") if side_fair_prob is not None else "—",
+                    html.escape(_fmt_pct(side_edge_pct)) if side_edge_pct is not None else "—",
                     html.escape(_fmt_money(_num(row.get("kalshi_recommended_bet")))),
                     html.escape(_fmt_plain_pct(_num(row.get("kalshi_bet_pct_bankroll")))),
                 ]
