@@ -19,6 +19,7 @@
 
 - `Daily Paper Track`
   - scheduled for `17:07 UTC` every day
+  - backup scheduled for `17:37 UTC` every day
   - runs `paper_track_daily.py`
   - refreshes season trackers afterward
 
@@ -34,6 +35,7 @@
 - The current `Daily Paper Track` schedule is `10:07 AM Pacific` during daylight saving time and `9:07 AM Pacific` during standard time.
 - This is intentionally earlier than first pitch so the run is less likely to miss unusual early slates.
 - It is offset from the top of the hour because GitHub Actions is more likely to delay or drop scheduled runs right at `:00`.
+- There is also a built-in backup schedule 30 minutes later; that second trigger checks for a successful run manifest first and exits without doing duplicate work if the primary run already landed.
 - If you want a different run time, edit the cron line in `.github/workflows/daily-paper-track.yml`.
 - The workflows commit generated `data/`, `predictions/`, and `paper_tracking/` updates back into the repo so state persists between runs.
 - Kalshi tracking works without `ODDS_API_KEY`.

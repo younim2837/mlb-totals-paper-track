@@ -5,6 +5,8 @@ on:
     # 17:07 UTC = 10:07 PT during daylight saving, 09:07 PT otherwise.
     # Offset from the top of the hour to avoid GitHub's heaviest scheduler load.
     - cron: "7 17 * * *"
+    # Backup trigger in case GitHub delays or skips the primary scheduled run.
+    - cron: "37 17 * * *"
   workflow_dispatch:
     inputs:
       run_date:
@@ -30,6 +32,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: daily-paper-track-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   run-paper-track:
     runs-on: ubuntu-latest
@@ -50,12 +56,48 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Resolve target date
+        id: target-date
+        shell: bash
+        run: |
+          target_date="${RUN_DATE}"
+          if [ -z "${target_date}" ]; then
+            target_date="$(TZ=America/Los_Angeles date +%F)"
+          fi
+          echo "target_date=${target_date}" >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing successful run
+        id: guard
+        if: ${{ github.event_name == 'schedule' }}
+        shell: bash
+        run: |
+          manifest="paper_tracking/runs/${{ steps.target-date.outputs.target_date }}.json"
+          if [ ! -f "${manifest}" ]; then
+            echo "skip_run=false" >> "$GITHUB_OUTPUT"
+            echo "No existing run manifest for ${manifest}; continuing."
+            exit 0
+          fi
+
+          if python -c "import json, sys; data = json.load(open(sys.argv[1], encoding='utf-8')); raise SystemExit(0 if int(data.get('return_code', 1)) == 0 else 1)" "${manifest}"; then
+            echo "skip_run=true" >> "$GITHUB_OUTPUT"
+            echo "Existing successful manifest found at ${manifest}; skipping duplicate scheduled run."
+          else
+            echo "skip_run=false" >> "$GITHUB_OUTPUT"
+            echo "Existing manifest indicates an unsuccessful run; continuing with backup schedule."
+          fi
+
+      - name: Skip duplicate scheduled run
+        if: ${{ steps.guard.outputs.skip_run == 'true' }}
+        run: echo "Skipping duplicate scheduled Daily Paper Track run for ${{ steps.target-date.outputs.target_date }}."
+
       - name: Install dependencies
+        if: ${{ steps.guard.outputs.skip_run != 'true' }}
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
       - name: Run daily paper test
+        if: ${{ steps.guard.outputs.skip_run != 'true' }}
         shell: bash
         run: |
           args=()
@@ -74,6 +116,7 @@ jobs:
           python paper_track_daily.py "${args[@]}"
 
       - name: Refresh season trackers
+        if: ${{ steps.guard.outputs.skip_run != 'true' }}
         shell: bash
         run: |
           season="$(TZ=America/Los_Angeles date +%Y)"
@@ -81,6 +124,7 @@ jobs:
           python build_dashboard.py --season "${season}"
 
       - name: Commit generated files
+        if: ${{ steps.guard.outputs.skip_run != 'true' }}
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -90,9 +134,6 @@ jobs:
             echo "No generated changes to commit."
             exit 0
           fi
-          target_date="${RUN_DATE}"
-          if [ -z "${target_date}" ]; then
-            target_date="$(TZ=America/Los_Angeles date +%F)"
-          fi
+          target_date="${{ steps.target-date.outputs.target_date }}"
           git commit -m "Automated paper-track run for ${target_date}"
           git push
