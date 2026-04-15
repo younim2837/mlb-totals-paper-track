@@ -7,180 +7,29 @@ Computing residual std for confidence intervals...
   High-tail probability model loaded
   Low-tail probability model loaded
 Building team rolling stats...
-  Bullpen stats matched for 24225/24758 team-games (97.8%)
+  Bullpen stats matched for 24225/24778 team-games (97.8%)
 Loading pitcher stats...
   Loaded stats for 842 pitchers
 Fetching games for 2026-04-14...
-  Found 4 upcoming regular season games
-  Skipped 11 games already underway/final (11 live, 0 final)
+  Found 0 upcoming regular season games
+  Skipped 15 games already underway/final (4 live, 11 final)
 No Odds API key found - run without lines (add key to config.json)
-Fetching Kalshi prediction market lines...
-  Kalshi lines found for 4/4 games
-  H2H history found for 4/4 matchups
-Fetching weather for 3 outdoor venues (1 dome/retractable skipped)...
-  Weather fetched for 3/3 venues
-Fetching confirmed lineups...
-  Lineups found for 4/4 games
 Loading team batting stats...
   Batting stats loaded for 30 teams
 Loading bullpen fatigue stats...
   Bullpen fatigue stats not available (run collect_bullpen_usage.py)
 Loading umpire stats...
-  Umpire history for 106 umpires
-  Today's umpires matched: 4/4
+  Umpire data not available (run collect_umpires.py)
 Loading Dixon-Coles priors...
   DC fit on 2427 games  (mu=1.491  home_adv=0.032)
 Generating predictions...
 
 ========================================================================
-  MLB TOTAL RUNS PREDICTIONS - Tuesday, April 14, 2026
+  MLB TOTAL RUNS PREDICTIONS - Wednesday, April 15, 2026
 ========================================================================
 
-  Colorado Rockies @ Houston Astros
-  Venue: Daikin Park
-  Pitchers: Michael Lorenzen (away) vs Colton Gordon (home)
-  DC model: 11.2 runs  (home lambda=6.22  away lambda=5.02)
-  Model sigma: 4.99 runs
-  High-tail risk (>9.5): 47.7%  |  Tail sigma: 4.99
-  Low-tail risk (<7.5): 39.6%  |  Tail sigma: 8.98
-  Team totals: away 4.81  |  home 5.48
-  Calibration: -0.13 runs
-  Why: DC baseline 11.2 + away residual -0.16 + home residual -0.67
-  Residual drivers: DC priors -1.30  |  Bullpen +1.14  |  Environment -0.36
-  Top features: home:dc_lambda_home -0.86, away:dc_expected_total -0.29, away:away_bullpen_top4_burned_score +0.27, home:away_lineup_avg_slg +0.26, home:away_bullpen_top4_burned_score +0.21
-  DC   ATK  DEF  |  Colorado Rockies: -0.185 / -0.102  |  Houston Astros: +0.203 / -0.308
-  Starter context: away rest 14d / 89 pitches avg | home rest 14d / 90 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.01
-  Umpire: Rob Drake  (8.5 avg runs/game)
-  First pitch local: 19:10  |  night game
-  Lineups: away OPS 0.684 (+0.052 vs team, platoon +7)  |  home OPS 0.763 (+0.050 vs team, platoon +2)
-  Predicted Total: 10.3
-  Kalshi line: 8.5  |  Market: 55.0% over  model edge: +9.1%
-  Kalshi fair price: 64.1%  |  edge: +9.1%  |  side: OVER
-  Kalshi Kelly: 20.2% full  ->  5.0% quarter-Kelly  ->  BUY $5  (edge: +9.1%)
+  No games found for today.
 
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         66.4%    33.6%     >> OVER
-  7.5         62.2%    37.8%     >> OVER
-  8.5         64.1%    35.9%     >> OVER
-  9.5         56.4%    43.6%            
-  10.5        48.4%    51.6%            
-  11.5        40.5%    59.5%    >> UNDER
-
-  ---------------------------------------------
-
-  Seattle Mariners @ San Diego Padres
-  Venue: Petco Park
-  Pitchers: Bryan Woo (away) vs Michael King (home)
-  DC model: 7.9 runs  (home lambda=4.06  away lambda=3.88)
-  Model sigma: 4.81 runs
-  High-tail risk (>9.5): 51.4%  |  Tail sigma: 4.81
-  Low-tail risk (<7.5): 38.4%  |  Tail sigma: 8.66
-  Team totals: away 4.96  |  home 5.32
-  Calibration: -0.13 runs
-  Why: DC baseline 7.9 + away residual +1.15 + home residual +1.33
-  Residual drivers: Bullpen +1.22  |  DC priors +0.84  |  Lineups +0.50
-  Top features: home:dc_lambda_home +0.39, home:away_bullpen_top4_burned_score +0.28, away:away_bullpen_top4_burned_score +0.20, away:away_bullpen_top4_used_yesterday +0.20, away:dc_expected_total +0.18
-  DC   ATK  DEF  |  Seattle Mariners: -0.069 / +0.138  |  San Diego Padres: +0.016 / +0.067
-  Starter context: away rest 14d / 93 pitches avg | home rest 14d / 63 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.10
-  Umpire: Chad Whitson  (9.1 avg runs/game)
-  Weather: 69F  wind 10mph  precip 0.0mm  humidity 65%  dew point 50F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.711 (+0.017 vs team, platoon +7)  |  home OPS 0.719 (+0.036 vs team, platoon +3)
-  Predicted Total: 10.3
-  Kalshi line: 7.5  |  Market: 49.0% over  model edge: +13.7%
-  Kalshi fair price: 62.7%  |  edge: +13.7%  |  side: OVER
-  Kalshi Kelly: 26.8% full  ->  6.7% quarter-Kelly  ->  BUY $7  (edge: +13.7%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         67.0%    33.0%     >> OVER
-  7.5         62.7%    37.3%     >> OVER
-  8.5         64.6%    35.4%     >> OVER
-  9.5         56.6%    43.4%            
-  10.5        48.3%    51.7%            
-  11.5        40.1%    59.9%    >> UNDER
-
-  ---------------------------------------------
-
-  Texas Rangers @ Athletics
-  Venue: Sutter Health Park
-  Pitchers: MacKenzie Gore (away) vs Jeffrey Springs (home)
-  DC model: 7.7 runs  (home lambda=3.83  away lambda=3.90)
-  Model sigma: 5.10 runs
-  High-tail risk (>9.5): 52.4%  |  Tail sigma: 5.10
-  Low-tail risk (<7.5): 38.0%  |  Tail sigma: 9.17
-  Team totals: away 4.57  |  home 6.09
-  Why: DC baseline 7.7 + away residual +0.69 + home residual +2.29
-  Residual drivers: Bullpen +1.50  |  Lineups +0.84  |  DC priors +0.78
-  Top features: home:dc_lambda_home +0.43, home:away_bullpen_top4_burned_score +0.39, home:away_bullpen_top4_quality_score +0.21, home:home_lineup_batters_with_sample +0.20, away:away_bullpen_top4_burned_score +0.18
-  DC   ATK  DEF  |  Texas Rangers: -0.091 / +0.113  |  Athletics: -0.069 / +0.039
-  Starter context: away rest 14d / 90 pitches avg | home rest 14d / 82 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Gabe Morales  (9.3 avg runs/game)
-  Weather: 66F  wind 9mph  precip 0.0mm  humidity 77%  dew point 49F
-  First pitch local: 18:40  |  day game
-  Lineups: away OPS 0.716 (+0.084 vs team, platoon +7)  |  home OPS 0.703 (+0.036 vs team, platoon +6)
-  Predicted Total: 10.7
-  Kalshi line: 8.5  |  Market: 53.0% over  model edge: +13.7%
-  Kalshi fair price: 66.7%  |  edge: +13.7%  |  side: OVER
-  Kalshi Kelly: 29.1% full  ->  7.3% quarter-Kelly  ->  BUY $7  (edge: +13.7%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         67.7%    32.3%     >> OVER
-  7.5         63.6%    36.4%     >> OVER
-  8.5         66.7%    33.3%     >> OVER
-  9.5         59.3%    40.7%     >> OVER
-  10.5        51.6%    48.4%            
-  11.5        43.8%    56.2%            
-
-  ---------------------------------------------
-
-  New York Mets @ Los Angeles Dodgers
-  Venue: UNIQLO Field at Dodger Stadium
-  Pitchers: Nolan McLean (away) vs Yoshinobu Yamamoto (home)
-  DC model: 9.4 runs  (home lambda=5.90  away lambda=3.46)
-  Model sigma: 4.97 runs
-  High-tail risk (>9.5): 46.9%  |  Tail sigma: 4.97
-  Low-tail risk (<7.5): 40.0%  |  Tail sigma: 8.94
-  Team totals: away 3.62  |  home 6.16
-  Calibration: -0.13 runs
-  Why: DC baseline 9.4 + away residual +0.21 + home residual +0.34
-  Residual drivers: Bullpen +1.32  |  DC priors -0.64  |  Lineups +0.40
-  Top features: home:dc_lambda_home -0.52, away:away_bullpen_top4_burned_score +0.31, away:away_bullpen_top4_used_yesterday +0.22, home:home_dc_attack -0.19, away:dc_lambda_away +0.19
-  DC   ATK  DEF  |  New York Mets: -0.088 / -0.028  |  Los Angeles Dodgers: +0.224 / +0.160
-  Starter context: away rest 14d / 92 pitches avg | home rest 14d / 104 pitches avg
-  Starter roles: away leash 0.00  |  home leash 0.00
-  Umpire: Hunter Wendelstedt  (8.7 avg runs/game)
-  Weather: 73F  wind 8mph  precip 0.0mm  humidity 63%  dew point 46F
-  First pitch local: 19:10  |  day game
-  Lineups: away OPS 0.684 (+0.004 vs team, platoon +4)  |  home OPS 0.755 (-0.054 vs team, platoon +6)
-  Predicted Total: 9.8
-  Kalshi line: 7.5  |  Market: 48.0% over  model edge: +12.2%
-  Kalshi fair price: 60.1%  |  edge: +12.1%  |  side: OVER
-  Kalshi Kelly: 23.4% full  ->  5.8% quarter-Kelly  ->  BUY $6  (edge: +12.1%)
-
-  Line       Over %  Under %      Signal
-  --------------------------------------
-  6.5         64.4%    35.6%     >> OVER
-  7.5         60.2%    39.8%     >> OVER
-  8.5         60.3%    39.7%     >> OVER
-  9.5         52.4%    47.6%            
-  10.5        44.4%    55.6%            
-  11.5        36.6%    63.4%    >> UNDER
-
-
-  KALSHI EDGE BOARD
-  ----------------------------------------------------------------
-  Matchup                   Line  Model%  Market%   Edge%   Side   Kelly$     Raw$
-  ----------------------------------------------------------------
-  Seattle Mariners@San Die   7.5    62.7     49.0    13.7   OVER        7     6.71
-  Texas Rangers@Athletics    8.5    66.7     53.0    13.7   OVER        7     7.28
-  New York Mets@Los Angele   7.5    60.1     48.0    12.1   OVER        6     5.84
-  Colorado Rockies@Houston   8.5    64.1     55.0     9.1   OVER        5     5.05
 
 Saved board export: predictions/2026-04-14-board.tsv
 Saved picks export: predictions/2026-04-14-picks.tsv
