@@ -46,13 +46,14 @@ jobs:
             season="$(TZ=America/Los_Angeles date +%Y)"
           fi
           python grade_paper_tracking.py --season "${season}"
+          python build_dashboard.py --season "${season}"
 
       - name: Commit graded outputs
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data paper_tracking
+          git add data paper_tracking docs
           if git diff --cached --quiet; then
             echo "No graded changes to commit."
             exit 0

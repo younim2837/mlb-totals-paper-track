@@ -1,0 +1,88 @@
+import shutil
+import unittest
+import uuid
+from pathlib import Path
+from unittest.mock import patch
+
+import pandas as pd
+
+import build_dashboard
+
+
+TEST_ROOT = Path(__file__).resolve().parents[1] / "test_artifacts"
+
+
+class BuildDashboardTests(unittest.TestCase):
+    def test_build_dashboard_renders_summary_and_latest_pick(self):
+        base = TEST_ROOT / f"dashboard-{uuid.uuid4().hex}"
+        predictions_dir = base / "predictions"
+        paper_tracking_dir = base / "paper_tracking"
+        docs_dir = base / "docs"
+        predictions_dir.mkdir(parents=True, exist_ok=True)
+        paper_tracking_dir.mkdir(parents=True, exist_ok=True)
+        docs_dir.mkdir(parents=True, exist_ok=True)
+        self.addCleanup(lambda: shutil.rmtree(base, ignore_errors=True))
+
+        kalshi_df = pd.DataFrame(
+            [
+                {
+                    "target_date": "2026-04-15",
+                    "month": "2026-04",
+                    "game_id": 1,
+                    "away_team": "Chicago Cubs",
+                    "home_team": "Philadelphia Phillies",
+                    "predicted_total": 9.1,
+                    "kalshi_line": 8.5,
+                    "kalshi_side": "OVER",
+                    "kalshi_edge_pct": 10.4,
+                    "kalshi_fair_price_pct": 60.4,
+                    "kalshi_side_model_prob": 60.4,
+                    "kalshi_side_market_prob": 50.0,
+                    "kalshi_side_market_price": 0.50,
+                    "kalshi_recommended_bet": 125.0,
+                    "away_score": 5,
+                    "home_score": 4,
+                    "total_runs": 9,
+                    "result": "win",
+                    "profit_per_contract": 0.50,
+                    "roi_pct": 100.0,
+                    "settled": True,
+                }
+            ]
+        )
+        kalshi_df.to_csv(paper_tracking_dir / "kalshi_tracker_2026.tsv", sep="\t", index=False)
+
+        picks_df = pd.DataFrame(
+            [
+                {
+                    "target_date": "2026-04-16",
+                    "game_id": 99,
+                    "commence_time": "2026-04-16T19:40:00Z",
+                    "away_team": "Seattle Mariners",
+                    "home_team": "San Diego Padres",
+                    "predicted_total": 8.7,
+                    "kalshi_side": "UNDER",
+                    "kalshi_line": 9.5,
+                    "kalshi_side_market_prob": 45.0,
+                    "kalshi_fair_price_pct": 58.0,
+                    "kalshi_edge_pct": 13.0,
+                    "kalshi_recommended_bet": 80.0,
+                }
+            ]
+        )
+        picks_df.to_csv(predictions_dir / "2026-04-16-picks.tsv", sep="\t", index=False)
+
+        with patch.object(build_dashboard, "PREDICTIONS_DIR", predictions_dir), patch.object(
+            build_dashboard, "PAPER_TRACKING_DIR", paper_tracking_dir
+        ), patch.object(build_dashboard, "DASHBOARD_DIR", docs_dir):
+            output_path = build_dashboard.build_dashboard(2026)
+
+        html_text = output_path.read_text(encoding="utf-8")
+        self.assertIn("Season Snapshot", html_text)
+        self.assertIn("Seattle Mariners", html_text)
+        self.assertIn("Chicago Cubs", html_text)
+        self.assertIn("Latest Daily Bets", html_text)
+
+
+if __name__ == "__main__":
+    unittest.main()

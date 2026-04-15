@@ -33,3 +33,6 @@ jobs:
 
       - name: Run smoke check
         run: python smoke_check.py
+
+      - name: Build dashboard
+        run: python build_dashboard.py --season 2026
