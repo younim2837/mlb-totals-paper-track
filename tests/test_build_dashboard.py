@@ -51,7 +51,29 @@ class BuildDashboardTests(unittest.TestCase):
                     "profit_per_contract": 0.50,
                     "roi_pct": 100.0,
                     "settled": True,
-                }
+                },
+                {
+                    "target_date": "2026-04-15",
+                    "month": "2026-04",
+                    "game_id": 2,
+                    "away_team": "Texas Rangers",
+                    "home_team": "Athletics",
+                    "predicted_total": 8.3,
+                    "kalshi_line": 9.5,
+                    "kalshi_side": "UNDER",
+                    "kalshi_edge_pct": -13.2,
+                    "kalshi_fair_price_pct": 38.8,
+                    "kalshi_side_model_prob": 61.2,
+                    "kalshi_side_market_prob": 48.0,
+                    "kalshi_side_market_price": 0.48,
+                    "kalshi_bet_pct_bankroll": 0.80,
+                    "kalshi_recommended_bet": 80.0,
+                    "paper_bankroll_after_day": 10125.0,
+                    "result": "pending",
+                    "profit_per_contract": 0.0,
+                    "roi_pct": 0.0,
+                    "settled": False,
+                },
             ]
         )
         kalshi_df.to_csv(paper_tracking_dir / "kalshi_tracker_2026.tsv", sep="\t", index=False)
@@ -99,6 +121,27 @@ class BuildDashboardTests(unittest.TestCase):
                     "pnl_dollars": 119.17,
                     "roi_pct": 108.3,
                     "settled": True,
+                },
+                {
+                    "date": "2026-04-11",
+                    "game_id": 78,
+                    "away_team": "Chicago White Sox",
+                    "home_team": "Kansas City Royals",
+                    "predicted_total": 8.1,
+                    "kalshi_line": 9.5,
+                    "kalshi_side": "UNDER",
+                    "kalshi_side_market_prob": 48.0,
+                    "kalshi_side_model_prob": 61.2,
+                    "kalshi_fair_price_pct": 38.8,
+                    "kalshi_edge_pct": -13.2,
+                    "bet_amount": 90.0,
+                    "bet_pct_bankroll": 0.9,
+                    "actual_total": 7,
+                    "result": "win",
+                    "won": True,
+                    "pnl_dollars": 95.0,
+                    "roi_pct": 105.6,
+                    "settled": True,
                 }
             ]
         )
@@ -145,6 +188,8 @@ class BuildDashboardTests(unittest.TestCase):
         self.assertIn("Boston Red Sox", html_text)
         self.assertIn("minmax(min(100%, 220px), 1fr)", html_text)
         self.assertIn("white-space: nowrap;", html_text)
+        self.assertIn("+11.8%", html_text)
+        self.assertIn("+12.6%", html_text)
         self.assertIn("61.2%", html_text)
         self.assertIn("+16.2%", html_text)
 

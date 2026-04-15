@@ -113,7 +113,8 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     total_cost = float(pd.to_numeric(settled["kalshi_side_market_price"], errors="coerce").fillna(0).sum())
     profit = float(pd.to_numeric(settled["profit_per_contract"], errors="coerce").fillna(0).sum())
     roi_pct = profit / total_cost * 100.0 if total_cost > 0 else 0.0
-    avg_edge = float(pd.to_numeric(df["kalshi_edge_pct"], errors="coerce").dropna().mean()) if not df.empty else 0.0
+    side_edges = df.apply(lambda row: _kalshi_side_display(row)[1], axis=1).dropna() if not df.empty else pd.Series(dtype=float)
+    avg_edge = float(side_edges.mean()) if not side_edges.empty else 0.0
     bankroll_after_series = pd.to_numeric(df.get("paper_bankroll_after_day"), errors="coerce").dropna()
     current_bankroll = float(bankroll_after_series.iloc[-1]) if not bankroll_after_series.empty else starting_bankroll
 
@@ -149,6 +150,7 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
 def summarize_historical(summary: dict, sim_df: pd.DataFrame | None = None) -> HistoricalSummary:
     over_bets = under_bets = 0
     over_win_rate = under_win_rate = 0.0
+    avg_edge_pct = float(summary.get("avg_edge_pct", 0.0) or 0.0)
     if sim_df is not None and not sim_df.empty and "kalshi_side" in sim_df.columns:
         bets_df = sim_df[pd.to_numeric(sim_df.get("bet_amount"), errors="coerce").fillna(0) > 0]
         over = bets_df[bets_df["kalshi_side"] == "OVER"]
@@ -159,6 +161,9 @@ def summarize_historical(summary: dict, sim_df: pd.DataFrame | None = None) -> H
         under_won = under["result"].eq("won") | under["result"].eq("win") | under["won"].astype(str).eq("True") if not under.empty else pd.Series(dtype=bool)
         over_win_rate = float(over_won.mean()) if len(over) > 0 else 0.0
         under_win_rate = float(under_won.mean()) if len(under) > 0 else 0.0
+        side_edges = bets_df.apply(lambda row: _kalshi_side_display(row)[1], axis=1).dropna()
+        if not side_edges.empty:
+            avg_edge_pct = float(side_edges.mean())
 
     return HistoricalSummary(
         total_games=int(summary.get("total_games", 0) or 0),
@@ -170,7 +175,7 @@ def summarize_historical(summary: dict, sim_df: pd.DataFrame | None = None) -> H
         roi_pct=float(summary.get("roi_pct", 0.0) or 0.0),
         total_pnl=float(summary.get("total_pnl", 0.0) or 0.0),
         total_wagered=float(summary.get("total_wagered", 0.0) or 0.0),
-        avg_edge_pct=float(summary.get("avg_edge_pct", 0.0) or 0.0),
+        avg_edge_pct=avg_edge_pct,
         kelly_fraction=float(summary.get("kelly_fraction", 0.0) or 0.0),
         max_bet_pct=float(summary.get("max_bet_pct", 0.0) or 0.0),
         min_bet=float(summary.get("min_bet", 0.0) or 0.0),
@@ -416,13 +421,14 @@ def render_dashboard(
 
     historical_rows = []
     for _, row in historical_recent.iterrows():
+        _, side_edge_pct = _kalshi_side_display(row)
         historical_rows.append(
             [
                 html.escape(str(row.get("date", ""))),
                 html.escape(f"{row.get('away_team', '')} @ {row.get('home_team', '')}"),
                 html.escape(_fmt_number(row.get("kalshi_side"))),
                 html.escape(_fmt_number(row.get("kalshi_line"))),
-                html.escape(_fmt_pct(_num(row.get("kalshi_edge_pct")))),
+                html.escape(_fmt_pct(side_edge_pct)) if side_edge_pct is not None else "—",
                 html.escape(_fmt_money(_num(row.get("bet_amount")))),
                 html.escape(_fmt_plain_pct(_num(row.get("bet_pct_bankroll")))),
                 html.escape(str(row.get("result", "")).upper()),
