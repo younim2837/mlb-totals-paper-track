@@ -71,6 +71,15 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
         shell: bash
         run: |
+          # Abort if GitHub delayed the cron past noon PT — live Kalshi prices
+          # replace pre-game 10am prices after games start, corrupting predictions.
+          current_hour_pt="$(TZ=America/Los_Angeles date +%H)"
+          if [ "${current_hour_pt}" -ge 12 ]; then
+            echo "skip_run=true" >> "$GITHUB_OUTPUT"
+            echo "Scheduled run fired at $(TZ=America/Los_Angeles date +%H:%M) PT — past noon cutoff. Skipping to avoid live-price contamination."
+            exit 0
+          fi
+
           manifest="paper_tracking/runs/${{ steps.target-date.outputs.target_date }}.json"
           if [ ! -f "${manifest}" ]; then
             echo "skip_run=false" >> "$GITHUB_OUTPUT"
