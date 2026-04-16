@@ -307,7 +307,7 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                       f"(yes_ask ${p['kalshi_yes_ask']:.2f})")
                 if p.get("kalshi_fair_price_pct") is not None:
                     print(f"  Kalshi fair price: {p['kalshi_fair_price_pct']}%  |  "
-                          f"edge: {p.get('kalshi_edge_pct', 0):+.1f}%  |  side: {p.get('kalshi_side', 'OVER')}")
+                          f"edge: {abs(float(p.get('kalshi_edge_pct', 0))):+.1f}%  |  side: {p.get('kalshi_side', 'OVER')}")
                 if p.get("kalshi_kelly"):
                     kk = p["kalshi_kelly"]
                     if kk["recommended_bet"] > 0:
@@ -337,7 +337,7 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                 print(f"  Kalshi line: {k_line}  |  Market: {k_pct}% over{k_edge}")
                 if p.get("kalshi_fair_price_pct") is not None:
                     print(f"  Kalshi fair price: {p['kalshi_fair_price_pct']}%  |  "
-                          f"edge: {p.get('kalshi_edge_pct', 0):+.1f}%  |  side: {p.get('kalshi_side', 'OVER')}")
+                          f"edge: {abs(float(p.get('kalshi_edge_pct', 0))):+.1f}%  |  side: {p.get('kalshi_side', 'OVER')}")
                 if p.get("kalshi_kelly"):
                     kk = p["kalshi_kelly"]
                     if kk["recommended_bet"] > 0:
@@ -390,7 +390,7 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
                 f"  {matchup:<24.24} {p['kalshi_line']:>5} "
                 f"{p.get('kalshi_fair_price_pct', 0.0):>7.1f} "
                 f"{p.get('kalshi_over_pct', 0.0):>8.1f} "
-                f"{p.get('kalshi_edge_pct', 0.0):>7.1f} "
+                f"{abs(float(p.get('kalshi_edge_pct', 0.0))):>7.1f} "
                 f"{p.get('kalshi_side', ''):>6} "
                 f"{kelly_amt:>8.0f} "
                 f"{raw_amt:>8.2f}"
