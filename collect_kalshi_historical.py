@@ -313,9 +313,9 @@ def main() -> None:
         print("No game dates found.")
         return
 
-    # Load existing data if resuming or fixing
+    # Load existing data if resuming, fixing, or adding a single date (always merge to avoid overwrite).
     existing: pd.DataFrame = pd.DataFrame()
-    if (args.resume or args.fix_missing) and OUT_PATH.exists():
+    if (args.resume or args.fix_missing or args.date) and OUT_PATH.exists():
         existing = pd.read_csv(OUT_PATH, sep="\t")
         # Back-fill api_failed column if missing (rows collected before this feature)
         if "api_failed" not in existing.columns:
