@@ -836,7 +836,7 @@ def render_dashboard(
         <div class="metric">
           <div class="metric-label">Kelly Fraction</div>
           <div class="metric-value">{kelly_label}</div>
-          <div class="metric-note">Portion of full Kelly used for staking.</div>
+          <div class="metric-note">Reduced from 25% through May 2026 (early-season edge calibration).</div>
         </div>
         <div class="metric">
           <div class="metric-label">Max Bet Cap</div>

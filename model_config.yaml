@@ -49,8 +49,9 @@ feature_weights:
 #
 bankroll:
   total: 10000         # Your current bankroll in dollars
-  kelly_fraction: 0.25  # 0.25 = quarter-Kelly sizing
-                        # 0.5 = half-Kelly, 1.0 = full Kelly (aggressive)
+  kelly_fraction: 0.15  # Reduced from 0.25 through end of May 2026
+                        # to account for early-season OVER bias in edge estimates.
+                        # Review after 2026-06-01 when features are fully populated.
   max_bet_pct: 0        # 0 = no hard cap; show true quarter-Kelly sizing
   min_bet: 1            # Minimum bet size in dollars (rounds up to this)
   round_to: 1           # Round bet size to nearest $1 (cleaner sizing)
