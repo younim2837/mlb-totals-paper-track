@@ -3226,3 +3226,55 @@ date	away_team	home_team	strike	yes_price	trade_time	has_10am_price	api_failed
 2026-04-15	Washington Nationals	Pittsburgh Pirates	11.5	0.3	2026-04-15T15:11:32.687332Z	True	False
 2026-04-15	Washington Nationals	Pittsburgh Pirates	12.5	0.23	2026-04-15T12:46:56.742497Z	True	False
 2026-04-15	Washington Nationals	Pittsburgh Pirates	13.5	0.18	2026-04-15T13:11:39.690516Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	3.5	0.97	2026-04-16T14:35:30.525455Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	4.5	0.89	2026-04-16T16:59:57.819719Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	5.5	0.84	2026-04-16T16:59:49.807983Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	6.5	0.77	2026-04-16T16:59:41.267569Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	7.5	0.69	2026-04-16T16:59:32.748832Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	8.5	0.61	2026-04-16T16:59:24.163085Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	9.5	0.52	2026-04-16T16:59:46.611544Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	10.5	0.46	2026-04-16T16:59:08.807858Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	11.5	0.35	2026-04-16T16:21:55.54106Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	12.5	0.28	2026-04-16T15:13:28.745381Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	13.5	0.22	2026-04-16T16:51:36.807815Z	True	False
+2026-04-16	Los Angeles Angels	New York Yankees	14.5			False	False
+2026-04-16	Los Angeles Angels	New York Yankees	15.5			False	False
+2026-04-16	Los Angeles Angels	New York Yankees	16.5			False	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	2.5	0.98	2026-04-16T16:39:19.115452Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	3.5	0.85	2026-04-16T16:58:26.025389Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	4.5	0.78	2026-04-16T16:57:18.078558Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	5.5	0.62	2026-04-16T16:59:14.311152Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	6.5	0.54	2026-04-16T16:59:51.287108Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	7.5	0.45	2026-04-16T16:59:39.719733Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	8.5	0.36	2026-04-16T16:59:53.622948Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	9.5	0.24	2026-04-16T16:59:20.094948Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	10.5	0.2	2026-04-16T16:59:28.975731Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	11.5	0.14	2026-04-16T16:58:45.266421Z	True	False
+2026-04-16	San Francisco Giants	Cincinnati Reds	12.5	0.11	2026-04-16T16:55:31.345489Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	2.5			False	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	3.5	0.89	2026-04-16T16:07:38.668857Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	4.5	0.88	2026-04-16T16:50:43.912405Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	5.5	0.78	2026-04-16T16:53:17.962587Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	6.5	0.69	2026-04-16T16:50:43.91234Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	7.5	0.6	2026-04-16T16:59:27.38649Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	8.5	0.51	2026-04-16T16:59:08.805485Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	9.5	0.42	2026-04-16T16:54:20.904891Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	10.5	0.34	2026-04-16T16:51:52.802181Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	11.5	0.24	2026-04-16T16:19:29.161696Z	True	False
+2026-04-16	Toronto Blue Jays	Milwaukee Brewers	12.5	0.21	2026-04-16T16:52:54.366498Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	3.5	0.88	2026-04-16T16:59:42.434216Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	4.5	0.77	2026-04-16T16:59:59.645854Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	5.5	0.63	2026-04-16T16:59:55.59824Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	6.5	0.56	2026-04-16T16:59:36.573396Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	7.5	0.39	2026-04-16T16:59:03.661143Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	8.5	0.36	2026-04-16T16:59:10.31396Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	9.5	0.24	2026-04-16T16:59:56.696494Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	10.5	0.25	2026-04-16T16:58:48.894596Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	11.5	0.18	2026-04-16T16:56:37.792361Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	12.5	0.11	2026-04-16T16:58:33.839915Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	13.5	0.08	2026-04-16T16:56:30.118011Z	True	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	14.5			False	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	15.5			False	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	16.5			False	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	17.5			False	False
+2026-04-16	Washington Nationals	Pittsburgh Pirates	18.5			False	False

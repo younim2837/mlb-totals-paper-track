@@ -2,22 +2,22 @@
   "target_date": "2026-04-16",
   "include_all_games": false,
   "return_code": 0,
-  "ran_at_utc": "2026-04-16T10:07:40Z",
+  "ran_at_utc": "2026-04-16T21:09:31Z",
   "outputs": {
     "report_txt": {
       "path": "predictions\\2026-04-16.txt",
       "exists": true,
-      "size_bytes": 16891
+      "size_bytes": 7430
     },
     "board_tsv": {
       "path": "predictions\\2026-04-16-board.tsv",
       "exists": true,
-      "size_bytes": 4075
+      "size_bytes": 1833
     },
     "picks_tsv": {
       "path": "predictions\\2026-04-16-picks.tsv",
       "exists": true,
-      "size_bytes": 2090
+      "size_bytes": 1131
     }
   }
 }
