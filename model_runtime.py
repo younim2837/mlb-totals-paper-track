@@ -296,6 +296,24 @@ def predict_point_outputs(model, meta: dict, feature_source: pd.DataFrame):
     }
 
 
+def get_side_residual_distribution(meta: dict) -> dict:
+    cfg = dict(meta.get("side_residual_distribution") or {})
+    if not cfg:
+        return {
+            "enabled": False,
+            "source": "missing",
+            "samples": 0,
+            "rho": 0.0,
+        }
+
+    rho = float(cfg.get("rho", 0.0))
+    cfg["rho"] = float(np.clip(rho, -0.999, 0.999))
+    cfg.setdefault("enabled", True)
+    cfg.setdefault("source", "metadata")
+    cfg.setdefault("samples", 0)
+    return cfg
+
+
 def compute_residual_std(model, meta, data_dir: str = DATA_DIR) -> float:
     path = os.path.join(data_dir, "mlb_model_data.tsv")
     df = pd.read_csv(path, sep="\t", parse_dates=["date"])

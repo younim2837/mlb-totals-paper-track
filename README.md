@@ -146,7 +146,7 @@ Bet sizing uses the final model probabilities, so it does incorporate the Bayesi
 - [collect_bullpen_usage.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_bullpen_usage.py): reliever appearance logs
 - [collect_umpires.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_umpires.py): historical home-plate umpires
 - [collect_lines.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_lines.py): historical / live sportsbook totals
-- [collect_lines_historical_oddsapi.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_lines_historical_oddsapi.py): prepared historical Odds API backfill for 2022+
+- [collect_lines_historical_oddsapi.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_lines_historical_oddsapi.py): historical Odds API backfill for featured MLB markets (`h2h`, `spreads`, `totals`)
 
 ### Shared feature helpers
 
@@ -176,7 +176,8 @@ Bet sizing uses the final model probabilities, so it does incorporate the Bayesi
 - `data/bullpen_appearance_logs.tsv`: reliever usage history
 - `data/umpire_game_log.tsv`: umpire history
 - `data/lines_historical_oddsapi_snapshots.tsv`: raw historical sportsbook snapshots from The Odds API
-- `data/lines_historical_oddsapi.tsv`: deduped historical sportsbook totals from The Odds API
+- `data/lines_historical_oddsapi.tsv`: deduped historical sportsbook featured markets from The Odds API
+- `data/lines_historical_oddsapi_requests.tsv`: request-level success / failure log for resumable backfills
 - `models/home_runs_xgb.json`
 - `models/away_runs_xgb.json`
 - `models/total_runs_uncertainty_xgb.json`
@@ -210,12 +211,14 @@ The repo is prepared for a future historical sportsbook backfill via The Odds AP
 Before buying a plan or adding a key, you can estimate the size of the job:
 
 ```powershell
-python collect_lines_historical_oddsapi.py --years 2022-2025 --estimate-only
+python collect_lines_historical_oddsapi.py --years 2021-2024 --estimate-only
 ```
 
 Once an `ODDS_API_KEY` is available, the same script can fetch historical totals
-snapshots and build a deduped `lines_historical_oddsapi.tsv` file for later
-betting backtests and market-aware calibration work.
+snapshots for moneyline, spread, and totals markets, then build a deduped
+`lines_historical_oddsapi.tsv` file for later betting backtests and
+market-aware calibration work. The request log lets `--resume` retry only the
+timestamps that still failed.
 
 More setup detail lives in [HISTORICAL_ODDS_SETUP.txt](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/HISTORICAL_ODDS_SETUP.txt).
 

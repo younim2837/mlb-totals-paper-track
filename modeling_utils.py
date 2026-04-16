@@ -139,3 +139,149 @@ def probability_over_line(
         low_tail_cfg=low_tail_cfg,
     )
     return float(1 - stats.norm.cdf(line, loc=mean_total, scale=sigma))
+
+
+def infer_side_sigmas_from_total(
+    total_sigma: float,
+    side_distribution: dict | None = None,
+    sigma_home: float | None = None,
+    sigma_away: float | None = None,
+    rho: float | None = None,
+) -> dict:
+    total_sigma = max(float(total_sigma), 1e-6)
+
+    if sigma_home is not None and sigma_away is not None:
+        resolved_home = max(float(sigma_home), 1e-6)
+        resolved_away = max(float(sigma_away), 1e-6)
+        resolved_rho = float(np.clip(0.0 if rho is None else rho, -0.999, 0.999))
+    elif side_distribution and side_distribution.get("enabled"):
+        base_home = max(float(side_distribution.get("home_sigma", 0.0) or 0.0), 1e-6)
+        base_away = max(float(side_distribution.get("away_sigma", 0.0) or 0.0), 1e-6)
+        resolved_rho = float(np.clip(
+            float(side_distribution.get("rho", 0.0) or 0.0) if rho is None else rho,
+            -0.999,
+            0.999,
+        ))
+        base_total_var = base_home ** 2 + base_away ** 2 + 2.0 * resolved_rho * base_home * base_away
+        base_total_sigma = np.sqrt(max(base_total_var, 1e-12))
+        scale = total_sigma / base_total_sigma if base_total_sigma > 0 else 1.0
+        resolved_home = max(base_home * scale, 1e-6)
+        resolved_away = max(base_away * scale, 1e-6)
+    else:
+        resolved_rho = float(np.clip(0.0 if rho is None else rho, -0.999, 0.999))
+        symmetric_sigma = total_sigma / np.sqrt(2.0)
+        resolved_home = max(float(symmetric_sigma), 1e-6)
+        resolved_away = max(float(symmetric_sigma), 1e-6)
+
+    covariance = resolved_rho * resolved_home * resolved_away
+    resolved_total_sigma = float(np.sqrt(max(
+        resolved_home ** 2 + resolved_away ** 2 + 2.0 * covariance,
+        1e-12,
+    )))
+    margin_sigma = float(np.sqrt(max(
+        resolved_home ** 2 + resolved_away ** 2 - 2.0 * covariance,
+        1e-12,
+    )))
+
+    return {
+        "sigma_home": float(resolved_home),
+        "sigma_away": float(resolved_away),
+        "rho": resolved_rho,
+        "covariance": float(covariance),
+        "total_sigma": resolved_total_sigma,
+        "margin_sigma": margin_sigma,
+    }
+
+
+def margin_distribution(
+    mean_home_runs: float,
+    mean_away_runs: float,
+    total_sigma: float,
+    side_distribution: dict | None = None,
+    sigma_home: float | None = None,
+    sigma_away: float | None = None,
+    rho: float | None = None,
+) -> dict:
+    sigmas = infer_side_sigmas_from_total(
+        total_sigma=total_sigma,
+        side_distribution=side_distribution,
+        sigma_home=sigma_home,
+        sigma_away=sigma_away,
+        rho=rho,
+    )
+    mean_home_runs = float(mean_home_runs)
+    mean_away_runs = float(mean_away_runs)
+    return {
+        "mean_home_runs": mean_home_runs,
+        "mean_away_runs": mean_away_runs,
+        "mean_total": mean_home_runs + mean_away_runs,
+        "mean_margin": mean_home_runs - mean_away_runs,
+        **sigmas,
+    }
+
+
+def probability_margin_over(
+    mean_home_runs: float,
+    mean_away_runs: float,
+    total_sigma: float,
+    line: float,
+    side_distribution: dict | None = None,
+    sigma_home: float | None = None,
+    sigma_away: float | None = None,
+    rho: float | None = None,
+) -> float:
+    dist = margin_distribution(
+        mean_home_runs=mean_home_runs,
+        mean_away_runs=mean_away_runs,
+        total_sigma=total_sigma,
+        side_distribution=side_distribution,
+        sigma_home=sigma_home,
+        sigma_away=sigma_away,
+        rho=rho,
+    )
+    return float(1 - stats.norm.cdf(float(line), loc=dist["mean_margin"], scale=dist["margin_sigma"]))
+
+
+def probability_home_win(
+    mean_home_runs: float,
+    mean_away_runs: float,
+    total_sigma: float,
+    side_distribution: dict | None = None,
+    sigma_home: float | None = None,
+    sigma_away: float | None = None,
+    rho: float | None = None,
+) -> float:
+    return probability_margin_over(
+        mean_home_runs=mean_home_runs,
+        mean_away_runs=mean_away_runs,
+        total_sigma=total_sigma,
+        line=0.0,
+        side_distribution=side_distribution,
+        sigma_home=sigma_home,
+        sigma_away=sigma_away,
+        rho=rho,
+    )
+
+
+def probability_home_covering_spread(
+    mean_home_runs: float,
+    mean_away_runs: float,
+    total_sigma: float,
+    home_spread_line: float,
+    side_distribution: dict | None = None,
+    sigma_home: float | None = None,
+    sigma_away: float | None = None,
+    rho: float | None = None,
+) -> float:
+    # Sportsbook convention: home -1.5 means home must win by 2+, so
+    # P(home covers) = P(home - away > 1.5) = P(margin > -home_spread_line).
+    return probability_margin_over(
+        mean_home_runs=mean_home_runs,
+        mean_away_runs=mean_away_runs,
+        total_sigma=total_sigma,
+        line=-float(home_spread_line),
+        side_distribution=side_distribution,
+        sigma_home=sigma_home,
+        sigma_away=sigma_away,
+        rho=rho,
+    )

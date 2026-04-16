@@ -85,6 +85,8 @@ MARKET_SHRINK_BASE_CFG = {
     "fallback_probability_shrink": 0.60,
     "fallback_confidence_cap": 0.62,
 }
+TRAIN_START_YEAR = 2021
+BACKTEST_YEAR = 2025
 
 SIDE_SPECS = {
     "home": {
@@ -184,8 +186,8 @@ def get_feature_cols(df):
     return feature_cols
 
 
-def train_test_split_by_time(df, test_year=2025):
-    train = df[df["date"].dt.year < test_year].copy()
+def train_test_split_by_time(df, train_start_year=TRAIN_START_YEAR, test_year=BACKTEST_YEAR):
+    train = df[(df["date"].dt.year >= train_start_year) & (df["date"].dt.year < test_year)].copy()
     test = df[df["date"].dt.year == test_year].copy()
     return train, test
 
@@ -223,6 +225,22 @@ def predict_team_split(models: dict, X: pd.DataFrame, df: pd.DataFrame, side_met
         total += preds
 
     return outputs, total
+
+
+def apply_total_calibration_to_team_split(side_predictions: dict, total_predictions, calibration_cfg: dict | None):
+    raw_total = np.asarray(total_predictions, dtype=float)
+    calibrated_total = np.asarray(apply_total_calibration(raw_total, calibration_cfg), dtype=float)
+    scale = np.divide(
+        calibrated_total,
+        raw_total,
+        out=np.ones_like(calibrated_total),
+        where=np.abs(raw_total) > 1e-9,
+    )
+    calibrated_sides = {
+        side: np.asarray(preds, dtype=float) * scale
+        for side, preds in side_predictions.items()
+    }
+    return calibrated_sides, calibrated_total
 
 
 def fit_total_calibration(train: pd.DataFrame, feature_cols: list[str], side_meta: dict, point_oof_raw=None):
@@ -340,6 +358,10 @@ def build_point_oof_artifacts(train: pd.DataFrame, feature_cols: list[str], side
     X_train = train[feature_cols]
     tscv = TimeSeriesSplit(n_splits=5)
     oof_total = pd.Series(np.nan, index=train.index, dtype=float)
+    oof_sides = {
+        side: pd.Series(np.nan, index=train.index, dtype=float)
+        for side in SIDE_SPECS
+    }
     folds = []
 
     for train_idx, val_idx in tscv.split(X_train):
@@ -376,23 +398,33 @@ def build_point_oof_artifacts(train: pd.DataFrame, feature_cols: list[str], side
         fold_val_X_filled = _fill_oof_missing_features(
             fold_val[feature_cols].copy(), fold_train, feature_cols,
         )
-        fold_train_point_raw = predict_team_split(
+        fold_train_side_raw, fold_train_point_raw = predict_team_split(
             fold_models,
             fold_train_X_filled,
             fold_train,
             side_meta,
-        )[1]
-        fold_val_point_raw = predict_team_split(
+        )
+        fold_val_side_raw, fold_val_point_raw = predict_team_split(
             fold_models,
             fold_val_X_filled,
             fold_val,
             side_meta,
-        )[1]
+        )
         oof_total.iloc[val_idx] = fold_val_point_raw
+        for side in SIDE_SPECS:
+            oof_sides[side].iloc[val_idx] = np.asarray(fold_val_side_raw[side], dtype=float)
         folds.append(
             {
                 "train_idx": train_idx,
                 "val_idx": val_idx,
+                "train_side_raw": {
+                    side: np.asarray(preds, dtype=float)
+                    for side, preds in fold_train_side_raw.items()
+                },
+                "val_side_raw": {
+                    side: np.asarray(preds, dtype=float)
+                    for side, preds in fold_val_side_raw.items()
+                },
                 "train_point_raw": np.asarray(fold_train_point_raw, dtype=float),
                 "val_point_raw": np.asarray(fold_val_point_raw, dtype=float),
             }
@@ -400,7 +432,65 @@ def build_point_oof_artifacts(train: pd.DataFrame, feature_cols: list[str], side
 
     return {
         "oof_total_raw": oof_total,
+        "oof_side_raw": oof_sides,
         "folds": folds,
+    }
+
+
+def estimate_side_residual_distribution(
+    train: pd.DataFrame,
+    point_oof_artifacts: dict,
+    calibration_cfg: dict | None = None,
+) -> dict:
+    oof_total = pd.Series(point_oof_artifacts["oof_total_raw"], index=train.index, dtype=float)
+    oof_side_raw = {
+        side: pd.Series(point_oof_artifacts["oof_side_raw"][side], index=train.index, dtype=float)
+        for side in SIDE_SPECS
+    }
+    valid = oof_total.notna()
+    for side in SIDE_SPECS:
+        valid &= oof_side_raw[side].notna()
+
+    samples = int(valid.sum())
+    if samples < 2:
+        return {
+            "enabled": False,
+            "samples": samples,
+            "source": "oof",
+        }
+
+    side_preds, calibrated_total = apply_total_calibration_to_team_split(
+        {side: oof_side_raw[side].loc[valid].to_numpy(dtype=float) for side in SIDE_SPECS},
+        oof_total.loc[valid].to_numpy(dtype=float),
+        calibration_cfg,
+    )
+    actual_home = train.loc[valid, SIDE_SPECS["home"]["target"]].to_numpy(dtype=float)
+    actual_away = train.loc[valid, SIDE_SPECS["away"]["target"]].to_numpy(dtype=float)
+    residual_home = actual_home - side_preds["home"]
+    residual_away = actual_away - side_preds["away"]
+
+    home_sigma = float(np.std(residual_home, ddof=1))
+    away_sigma = float(np.std(residual_away, ddof=1))
+    covariance = float(np.cov(residual_home, residual_away, ddof=1)[0, 1])
+    denom = home_sigma * away_sigma
+    rho = covariance / denom if denom > 0 else 0.0
+    rho = float(np.clip(rho, -0.999, 0.999))
+
+    return {
+        "enabled": True,
+        "source": "oof",
+        "samples": samples,
+        "calibration_applied": bool(calibration_cfg and calibration_cfg.get("enabled")),
+        "home_sigma": home_sigma,
+        "away_sigma": away_sigma,
+        "home_bias": float(np.mean(residual_home)),
+        "away_bias": float(np.mean(residual_away)),
+        "home_mae": float(np.mean(np.abs(residual_home))),
+        "away_mae": float(np.mean(np.abs(residual_away))),
+        "covariance": covariance,
+        "rho": rho,
+        "margin_sigma": float(np.std(residual_home - residual_away, ddof=1)),
+        "total_sigma": float(np.std((actual_home + actual_away) - calibrated_total, ddof=1)),
     }
 
 
@@ -914,7 +1004,7 @@ def main():
     print(f"  {len(df)} games, {len(feature_cols)} features")
     print(f"  Features: {feature_cols}")
 
-    train, test = train_test_split_by_time(df, test_year=2025)
+    train, test = train_test_split_by_time(df, train_start_year=TRAIN_START_YEAR, test_year=BACKTEST_YEAR)
     print(f"\nTrain: {len(train)} games ({train['date'].dt.year.min()}-{train['date'].dt.year.max()})")
     print(f"Test:  {len(test)} games ({test['date'].dt.year.min()}-{test['date'].dt.year.max()})")
 
@@ -951,6 +1041,23 @@ def main():
         )
     else:
         print("  Calibration disabled - insufficient OOF samples")
+
+    print("\n--- Estimating Side Residual Distribution ---")
+    side_residual_distribution = estimate_side_residual_distribution(
+        train,
+        point_oof_artifacts,
+        calibration_cfg=calibration_cfg,
+    )
+    if side_residual_distribution.get("enabled"):
+        print(
+            f"  OOF side residuals on {side_residual_distribution['samples']} games: "
+            f"rho={side_residual_distribution['rho']:+.3f}, "
+            f"home sigma={side_residual_distribution['home_sigma']:.3f}, "
+            f"away sigma={side_residual_distribution['away_sigma']:.3f}, "
+            f"margin sigma={side_residual_distribution['margin_sigma']:.3f}"
+        )
+    else:
+        print("  Side residual distribution unavailable - insufficient OOF samples")
 
     print("\n--- Test Set Performance (2025 season) ---")
     test_X = test[feature_cols]
@@ -1063,6 +1170,49 @@ def main():
         print("  Market shrinkage disabled - insufficient matched historical lines")
 
     train_snapshot_matched = merge_predictions_with_snapshots(train_market_frame, historical_snapshots)
+
+    # Augment with Kalshi historical lines so the edge model is calibrated for
+    # the Kalshi-line-as-market-reference inference path (no sportsbook key needed).
+    kalshi_lines_path = os.path.join(DATA_DIR, "kalshi_historical_lines.tsv")
+    if os.path.exists(kalshi_lines_path):
+        kalshi_hist = pd.read_csv(kalshi_lines_path, sep="\t", parse_dates=["date"])
+        # Pick the 10am price for each game; prefer strikes close to 8.5 (typical MLB total)
+        kalshi_hist = kalshi_hist[kalshi_hist["has_10am_price"].astype(str).str.lower() == "true"].copy()
+        kalshi_hist["_strike_dist"] = (kalshi_hist["strike"] - 8.5).abs()
+        kalshi_anchor = (
+            kalshi_hist.sort_values("_strike_dist")
+            .groupby(["date", "away_team", "home_team"], as_index=False)
+            .first()
+            .drop(columns=["_strike_dist"])
+        )
+        kalshi_anchor = kalshi_anchor.rename(columns={"strike": "close_total_line"})
+        kalshi_anchor["consensus_total_line"] = kalshi_anchor["close_total_line"]
+        kalshi_anchor["line_source"] = "kalshi"
+        kalshi_anchor["num_books"] = 1
+
+        # Build a market frame for all years in df (including 2026 which is outside train/test)
+        all_years_frame = df[["date", "away_team", "home_team", TOTAL_TARGET]].copy()
+        all_years_frame = all_years_frame.rename(columns={TOTAL_TARGET: "total_runs"})
+        _, all_preds_raw = predict_team_split(side_models, df[feature_cols], df, side_meta)
+        all_preds = apply_total_calibration(all_preds_raw, calibration_cfg)
+        all_years_frame["predicted_total"] = all_preds
+        all_sigmas = predict_sigmas(uncertainty_model, uncertainty_cfg, df[feature_cols], all_preds)
+        all_years_frame["prediction_std"] = all_sigmas
+        all_tail_probs = predict_high_tail_probs(high_tail_model, high_tail_cfg, df[feature_cols], all_preds)
+        all_years_frame["high_tail_prob_9p5"] = all_tail_probs
+        all_low_tail_probs = predict_low_tail_probs(low_tail_model, low_tail_cfg, df[feature_cols], all_preds)
+        all_years_frame["low_tail_prob_7p5"] = all_low_tail_probs
+
+        kalshi_matched = merge_predictions_with_lines(all_years_frame, kalshi_anchor)
+        if not kalshi_matched.empty:
+            # Add snapshot timestamp columns so fit_market_edge_model doesn't skip rows
+            kalshi_matched["snapshot_ts"] = pd.NaT
+            kalshi_matched["commence_time"] = pd.NaT
+            train_snapshot_matched = pd.concat(
+                [train_snapshot_matched, kalshi_matched], ignore_index=True, sort=False
+            )
+            print(f"  Augmented edge model training with {len(kalshi_matched)} Kalshi-matched rows")
+
     market_edge_model, market_edge_cfg = fit_market_edge_model(
         train_snapshot_matched,
         high_tail_cfg=high_tail_cfg,
@@ -1153,9 +1303,10 @@ def main():
         "monthly_feature_medians": monthly_medians,
         "target": TOTAL_TARGET,
         "side_models": side_meta,
+        "side_residual_distribution": side_residual_distribution,
         "total_calibration": calibration_cfg,
-        "train_years": "2021-2024",
-        "test_year": "2025",
+        "train_years": f"{TRAIN_START_YEAR}-{BACKTEST_YEAR - 1}",
+        "test_year": str(BACKTEST_YEAR),
         "metrics": total_metrics,
         "side_metrics": side_metrics,
         "uncertainty_model": uncertainty_cfg,

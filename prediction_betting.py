@@ -4,11 +4,17 @@ Betting and market-side helpers for daily prediction output.
 
 from __future__ import annotations
 
-from modeling_utils import probability_over_line
+from modeling_utils import (
+    margin_distribution,
+    probability_home_covering_spread,
+    probability_home_win,
+    probability_over_line,
+)
 from market_adjustment import apply_market_context
 
 
 STANDARD_TOTAL_LINES = [6.5, 7.5, 8.5, 9.5, 10.5, 11.5]
+DEFAULT_HOME_RUN_LINE = -1.5
 
 
 def american_to_decimal(american: float) -> float:
@@ -191,6 +197,49 @@ def suppress_kalshi_bet(pred: dict, reason: str) -> dict:
         muted = dict(kelly)
         muted["recommended_bet"] = 0.0
         pred["kalshi_kelly"] = muted
+    return pred
+
+
+def add_team_side_metrics(
+    pred: dict,
+    side_distribution: dict | None,
+    home_run_line: float = DEFAULT_HOME_RUN_LINE,
+) -> dict:
+    home_runs = pred.get("predicted_home_runs")
+    away_runs = pred.get("predicted_away_runs")
+    total_sigma = pred.get("prediction_std")
+    if home_runs is None or away_runs is None or total_sigma is None:
+        return pred
+
+    dist = margin_distribution(
+        mean_home_runs=float(home_runs),
+        mean_away_runs=float(away_runs),
+        total_sigma=float(total_sigma),
+        side_distribution=side_distribution,
+    )
+    home_win_prob = probability_home_win(
+        mean_home_runs=float(home_runs),
+        mean_away_runs=float(away_runs),
+        total_sigma=float(total_sigma),
+        side_distribution=side_distribution,
+    )
+    home_cover_prob = probability_home_covering_spread(
+        mean_home_runs=float(home_runs),
+        mean_away_runs=float(away_runs),
+        total_sigma=float(total_sigma),
+        home_spread_line=float(home_run_line),
+        side_distribution=side_distribution,
+    )
+
+    pred["predicted_margin"] = round(float(dist["mean_margin"]), 2)
+    pred["margin_sigma"] = round(float(dist["margin_sigma"]), 2)
+    pred["side_sigma_home"] = round(float(dist["sigma_home"]), 2)
+    pred["side_sigma_away"] = round(float(dist["sigma_away"]), 2)
+    pred["side_rho"] = round(float(dist["rho"]), 3)
+    pred["home_win_pct"] = round(float(home_win_prob) * 100, 1)
+    pred["away_win_pct"] = round((1.0 - float(home_win_prob)) * 100, 1)
+    pred["home_cover_minus_1p5_pct"] = round(float(home_cover_prob) * 100, 1)
+    pred["away_cover_plus_1p5_pct"] = round((1.0 - float(home_cover_prob)) * 100, 1)
     return pred
 
 

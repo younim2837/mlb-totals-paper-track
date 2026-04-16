@@ -22,6 +22,7 @@ from modeling_utils import (
 from model_runtime import (
     compute_residual_std,
     estimate_prediction_std,
+    get_side_residual_distribution,
     load_model_bundle,
     load_historical_data,
     predict_high_tail_prob,
@@ -31,6 +32,7 @@ from model_runtime import (
 from prediction_betting import (
     add_edge_to_prediction,
     add_kalshi_metrics,
+    add_team_side_metrics,
     apply_market_adjustment_to_prediction,
     apply_overrides,
     get_kalshi_betting_thresholds,
@@ -1151,6 +1153,11 @@ def predict_game(game, team_stats, park_factors, model, meta, residual_std,
         "is_dome":            features.get("is_dome", 0),
     }
 
+    result = add_team_side_metrics(
+        result,
+        side_distribution=get_side_residual_distribution(meta),
+    )
+
     # Over/under probabilities for common lines
     for line in [6.5, 7.5, 8.5, 9.5, 10.5, 11.5]:
         p_over = probability_over_line(
@@ -1400,6 +1407,12 @@ def main():
                 pred["kalshi_anchor_strike"] = kd.get("anchor_strike")
                 pred["kalshi_over_pct"]  = kd["implied_over_pct"]
                 pred["kalshi_yes_ask"]   = kd["yes_ask"]
+                # Use Kalshi line as market reference for edge model when no
+                # sportsbook line is available. Kalshi strikes track sportsbook
+                # totals closely enough to keep edge-model features in range.
+                if "posted_line" not in pred:
+                    pred["posted_line"] = float(kd["kalshi_line"])
+                    pred["posted_odds"] = -110  # standard vig placeholder
             pred["_bankroll_cfg"] = bankroll_cfg
             pred["_high_tail_cfg"] = high_tail_cfg
             pred["_low_tail_cfg"] = low_tail_cfg

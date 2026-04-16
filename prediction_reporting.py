@@ -44,6 +44,15 @@ def export_daily_prediction_reports(predictions: list[dict], target_date: str, i
         "market_shrink_fraction",
         "market_num_books",
         "prediction_std",
+        "predicted_margin",
+        "margin_sigma",
+        "home_win_pct",
+        "away_win_pct",
+        "home_cover_minus_1p5_pct",
+        "away_cover_plus_1p5_pct",
+        "side_sigma_home",
+        "side_sigma_away",
+        "side_rho",
         "high_tail_prob_9p5",
         "low_tail_prob_7p5",
         "recommended_bet",
@@ -133,6 +142,13 @@ def display_predictions(predictions, has_lines=False, line_source="The Odds API"
             )
         if p.get("predicted_away_runs") is not None and p.get("predicted_home_runs") is not None:
             print(f"  Team totals: away {p['predicted_away_runs']:.2f}  |  home {p['predicted_home_runs']:.2f}")
+        if p.get("home_win_pct") is not None:
+            print(
+                f"  Side view: margin {float(p.get('predicted_margin', 0.0)):+.2f}"
+                f"  |  home win {float(p['home_win_pct']):.1f}%"
+                f"  |  home -1.5 {float(p.get('home_cover_minus_1p5_pct', 0.0)):.1f}%"
+                f"  |  margin sigma {float(p.get('margin_sigma', 0.0)):.2f}"
+            )
         if abs(float(p.get("calibration_adjustment", 0.0))) >= 0.05:
             print(f"  Calibration: {p['calibration_adjustment']:+.2f} runs")
         if abs(float(p.get("market_shrink_delta", 0.0))) >= 0.05:

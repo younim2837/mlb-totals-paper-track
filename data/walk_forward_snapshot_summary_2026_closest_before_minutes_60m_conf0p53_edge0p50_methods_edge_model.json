@@ -1,0 +1,49 @@
+{
+  "year": 2026,
+  "min_train_games": 250,
+  "entry_rule": "closest_before_minutes",
+  "minutes_before": 60,
+  "min_confidence": 0.53,
+  "min_edge": 0.5,
+  "allowed_methods": [
+    "edge_model"
+  ],
+  "games": 149,
+  "weighted_mae": 3.5781486487256107,
+  "weighted_rmse": 4.467880310579699,
+  "weighted_bias": -0.11556951740370822,
+  "weighted_mean_sigma": 4.684408187866211,
+  "weighted_within_1sigma": 0.6442953020134228,
+  "weighted_within_2sigma": 0.9731543624161074,
+  "months": [
+    {
+      "month": "2026-04",
+      "games": 149,
+      "mae": 3.5781486487256107,
+      "rmse": 4.467880310579699,
+      "r2": -0.037521775078074304,
+      "bias": -0.11556951740370822,
+      "mean_predicted": 8.672616497269479,
+      "mean_actual": 8.557046979865772,
+      "mean_sigma": 4.684408187866211,
+      "within_1sigma": 0.6442953020134228,
+      "within_2sigma": 0.9731543624161074,
+      "mean_high_tail_prob": 0.39331020318263443,
+      "mean_low_tail_prob": 0.44729779660602714,
+      "bets": 0,
+      "win_rate": NaN,
+      "roi": NaN,
+      "brier": NaN,
+      "log_loss": NaN,
+      "avg_confidence": NaN,
+      "avg_edge": NaN,
+      "avg_hours_to_first_pitch": NaN,
+      "matched_closing_lines": 0,
+      "beat_close_rate": NaN,
+      "mean_clv_runs": NaN,
+      "median_clv_runs": NaN,
+      "train_games": 11714,
+      "snapshot_candidates": 0
+    }
+  ]
+}

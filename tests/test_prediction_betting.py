@@ -58,6 +58,33 @@ class PredictionBettingTests(unittest.TestCase):
         self.assertEqual(updated["kalshi_kelly"]["recommended_bet"], 0.0)
         self.assertEqual(updated["kalshi_kelly"]["raw_bet"], 43.25)
 
+    def test_add_team_side_metrics_adds_moneyline_and_runline_fields(self):
+        pred = {
+            "predicted_home_runs": 4.8,
+            "predicted_away_runs": 4.1,
+            "prediction_std": 4.52,
+        }
+
+        updated = prediction_betting.add_team_side_metrics(
+            pred,
+            side_distribution={
+                "enabled": True,
+                "home_sigma": 3.225,
+                "away_sigma": 3.228,
+                "rho": 0.018,
+            },
+        )
+
+        self.assertIn("home_win_pct", updated)
+        self.assertIn("home_cover_minus_1p5_pct", updated)
+        self.assertAlmostEqual(updated["home_win_pct"] + updated["away_win_pct"], 100.0, places=1)
+        self.assertAlmostEqual(
+            updated["home_cover_minus_1p5_pct"] + updated["away_cover_plus_1p5_pct"],
+            100.0,
+            places=1,
+        )
+        self.assertGreater(updated["margin_sigma"], 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()

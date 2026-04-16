@@ -1,0 +1,2 @@
+month	games	mae	rmse	r2	bias	mean_predicted	mean_actual	mean_sigma	within_1sigma	within_2sigma	mean_high_tail_prob	mean_low_tail_prob	bets	win_rate	roi	brier	log_loss	avg_confidence	avg_edge	avg_hours_to_first_pitch	matched_closing_lines	beat_close_rate	mean_clv_runs	median_clv_runs	train_games	snapshot_candidates
+2026-04	149	3.5781486487256107	4.467880310579699	-0.037521775078074304	-0.11556951740370822	8.672616497269479	8.557046979865772	4.684408187866211	0.6442953020134228	0.9731543624161074	0.39331020318263443	0.44729779660602714	0								0				11714	0
