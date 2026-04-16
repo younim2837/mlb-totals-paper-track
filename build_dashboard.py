@@ -385,7 +385,9 @@ def render_dashboard(
     if not latest_picks.empty:
         latest_picks = latest_picks.copy()
         if "kalshi_recommended_bet" in latest_picks.columns:
-            latest_picks = latest_picks.sort_values(
+            latest_picks = latest_picks[
+                pd.to_numeric(latest_picks["kalshi_recommended_bet"], errors="coerce").fillna(0) > 0
+            ].sort_values(
                 by=["kalshi_recommended_bet", "kalshi_edge_pct"],
                 ascending=[False, False],
             )
