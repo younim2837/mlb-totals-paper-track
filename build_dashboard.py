@@ -118,7 +118,10 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     bankroll_after_series = pd.to_numeric(df.get("paper_bankroll_after_day"), errors="coerce").dropna()
     current_bankroll = float(bankroll_after_series.iloc[-1]) if not bankroll_after_series.empty else starting_bankroll
 
-    side_col = df.get("kalshi_side")
+    # Only count rows where a bet was actually placed (recommended_bet > 0)
+    bet_placed = pd.to_numeric(df.get("kalshi_recommended_bet"), errors="coerce").fillna(0) > 0
+    bets_df = df[bet_placed]
+    side_col = bets_df.get("kalshi_side") if not bets_df.empty else None
     over_bets = int((side_col == "OVER").sum()) if side_col is not None else 0
     under_bets = int((side_col == "UNDER").sum()) if side_col is not None else 0
     over_settled = settled[settled.get("kalshi_side") == "OVER"] if "kalshi_side" in settled.columns else settled.iloc[:0]
@@ -129,7 +132,7 @@ def summarize_kalshi(df: pd.DataFrame) -> DashboardSummary:
     under_non_push = int(((under_settled["result"] == "win") | (under_settled["result"] == "loss")).sum()) if not under_settled.empty else 0
 
     return DashboardSummary(
-        tracked=int(len(df)),
+        tracked=int(bet_placed.sum()),
         settled=int(len(settled)),
         wins=wins,
         losses=losses,
@@ -742,8 +745,8 @@ def render_dashboard(
         </div>
         <div class="metric">
           <div class="metric-label">Record</div>
-          <div class="metric-value">{summary.wins}-{summary.losses}-{summary.pushes}</div>
-          <div class="metric-note">Wins, losses, pushes.</div>
+          <div class="metric-value">{summary.wins}-{summary.losses}</div>
+          <div class="metric-note">Wins - Losses (settled bets).</div>
         </div>
         <div class="metric">
           <div class="metric-label">Win Rate</div>
