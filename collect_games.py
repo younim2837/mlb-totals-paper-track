@@ -139,12 +139,13 @@ def main():
     if since_date:
         today = datetime.now().strftime("%Y-%m-%d")
         yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-        if since_date > yesterday:
-            print(f"Data already up to date (last game: {since_date}, yesterday: {yesterday})")
+        if since_date > today:
+            print(f"Data already up to date (last game: {since_date}, today: {today})")
             return
-        print(f"Incremental fetch: {since_date} to {yesterday}")
+        end_fetch = today  # include today's completed games
+        print(f"Incremental fetch: {since_date} to {end_fetch}")
         try:
-            raw = statsapi.schedule(start_date=since_date, end_date=yesterday, sportId=1)
+            raw = statsapi.schedule(start_date=since_date, end_date=end_fetch, sportId=1)
         except Exception as e:
             print(f"  ERROR fetching games: {e}")
             return

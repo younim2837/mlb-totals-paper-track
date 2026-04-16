@@ -169,17 +169,24 @@ date	game_id	away_team	home_team	predicted_total	prediction_std	kalshi_line	kals
 2026-04-14	824853	Arizona Diamondbacks	Baltimore Orioles	8.4	4.491	8.5	0.55		45.0	49.1	-5.9	0.0	0.0	0.0	0.0	7.0		no_bet	0.0	0.0	19857.29	19857.29	confidence_below_threshold	False
 2026-04-14	824935	Miami Marlins	Atlanta Braves	8.9	4.052	8.5	0.52		52.0	53.9	1.9	0.0	0.0	0.0	0.0	11.0		no_bet	0.0	0.0	19857.29	19857.29	edge_below_threshold	False
 2026-04-15	823071	Cleveland Guardians	St. Louis Cardinals	9.05	4.418	9.5	0.46		54.0	45.9	-0.1	0.0	0.0	0.0	0.0	8.0		no_bet	0.0	0.0	19857.29	19857.29	edge_below_threshold	False
-2026-04-15	823314	Seattle Mariners	San Diego Padres	8.14	4.462	7.5	0.53		53.0	55.7	2.7	0.0	0.0	0.0	0.0	13.0		no_bet	0.0	0.0	19857.29	19857.29	edge_below_threshold	False
+2026-04-15	823314	Seattle Mariners	San Diego Padres	8.04	4.55	7.5	0.53		53.0	54.8	1.8	0.0	0.0	0.0	0.0	13.0		no_bet	0.0	0.0	19857.29	19857.29	edge_below_threshold	False
 2026-04-15	823399	Washington Nationals	Pittsburgh Pirates	7.88	4.592	9.5	0.47	UNDER	53.0	36.2	-10.8	344.0	649.0566	344.0	1.732	2.0	True	win	305.06	88.68	19857.29	20162.35		True
 2026-04-15	823477	Chicago Cubs	Philadelphia Phillies	8.64	4.619	8.5	0.54		46.0	51.2	-2.8	0.0	0.0	0.0	0.0	13.0		no_bet	0.0	0.0	20162.35	20162.35	edge_below_threshold	False
 2026-04-15	823561	Los Angeles Angels	New York Yankees	8.16	4.147	10.5	0.51	UNDER	49.0	28.7	-22.3	657.0	1340.8163	657.0	3.259	9.0	True	win	683.82	104.08	20162.35	20846.16		True
 2026-04-15	823722	Boston Red Sox	Minnesota Twins	8.51	4.441	8.5	0.46		46.0	50.1	4.1	0.0	0.0	0.0	0.0	14.0		no_bet	0.0	0.0	20846.16	20846.16	edge_below_threshold	False
-2026-04-15	823803	Toronto Blue Jays	Milwaukee Brewers	8.12	4.248	7.5	0.5		50.0	55.8	5.8	0.0	0.0	0.0	0.0	3.0		no_bet	0.0	0.0	20846.16	20846.16	confidence_below_threshold	False
-2026-04-15	823963	New York Mets	Los Angeles Dodgers	8.81	4.405	7.5	0.53	OVER	53.0	61.7	8.7	277.0	522.6415	277.0	1.329	10.0	True	win	245.64	88.68	20846.16	21091.8		True
-2026-04-15	824209	Colorado Rockies	Houston Astros	9.67	5.025	8.5	0.54	OVER	54.0	59.2	5.2	170.0	314.8148	170.0	0.806	4.0	False	loss	-170.0	-100.0	21091.8	20921.8		True
-2026-04-15	824291	Kansas City Royals	Detroit Tigers	8.26	4.386	8.5	0.51		49.0	47.8	-3.2	0.0	0.0	0.0	0.0	3.0		no_bet	0.0	0.0	20921.8	20921.8	edge_below_threshold	False
-2026-04-15	824532	San Francisco Giants	Cincinnati Reds	7.98	4.336	9.5	0.48	UNDER	52.0	36.3	-11.7	367.0	705.7692	367.0	1.754	11.0	False	loss	-367.0	-100.0	20921.8	20554.8		True
-2026-04-15	824615	Tampa Bay Rays	Chicago White Sox	8.04	4.491	8.5	0.47		53.0	45.9	-1.1	0.0	0.0	0.0	0.0	11.0		no_bet	0.0	0.0	20554.8	20554.8	edge_below_threshold	False
-2026-04-15	824855	Arizona Diamondbacks	Baltimore Orioles	8.35	4.358	7.5	0.49	OVER	49.0	57.7	8.7	257.0	524.4898	257.0	1.25	13.0	True	win	267.49	104.08	20554.8	20822.29		True
-2026-04-15	824936	Miami Marlins	Atlanta Braves	8.83	4.028	8.5	0.53		53.0	53.3	0.3	0.0	0.0	0.0	0.0	9.0		no_bet	0.0	0.0	20822.29	20822.29	edge_below_threshold	False
-2026-04-15	825021	Texas Rangers	Athletics	8.67	4.476	9.5	0.52		48.0	42.6	-9.4	0.0	0.0	0.0	0.0	11.0		no_bet	0.0	0.0	20822.29	20822.29	confidence_below_threshold	False
+2026-04-15	823803	Toronto Blue Jays	Milwaukee Brewers	8.19	4.561	7.5	0.5		50.0	56.0	6.0	0.0	0.0	0.0	0.0	3.0		no_bet	0.0	0.0	20846.16	20846.16	confidence_below_threshold	False
+2026-04-15	823963	New York Mets	Los Angeles Dodgers	8.76	4.549	7.5	0.53	OVER	53.0	60.9	7.9	253.0	477.3585	253.0	1.214	10.0	True	win	224.36	88.68	20846.16	21070.52		True
+2026-04-15	824209	Colorado Rockies	Houston Astros	9.5	4.87	8.5	0.54		54.0	58.2	4.2	0.0	0.0	0.0	0.0	4.0		no_bet	0.0	0.0	21070.52	21070.52	edge_below_threshold	False
+2026-04-15	824291	Kansas City Royals	Detroit Tigers	8.26	4.386	8.5	0.51		49.0	47.8	-3.2	0.0	0.0	0.0	0.0	3.0		no_bet	0.0	0.0	21070.52	21070.52	edge_below_threshold	False
+2026-04-15	824532	San Francisco Giants	Cincinnati Reds	7.98	4.336	9.5	0.48	UNDER	52.0	36.3	-11.7	367.0	705.7692	367.0	1.742	11.0	False	loss	-367.0	-100.0	21070.52	20703.52		True
+2026-04-15	824615	Tampa Bay Rays	Chicago White Sox	8.04	4.491	8.5	0.47		53.0	45.9	-1.1	0.0	0.0	0.0	0.0	11.0		no_bet	0.0	0.0	20703.52	20703.52	edge_below_threshold	False
+2026-04-15	824855	Arizona Diamondbacks	Baltimore Orioles	8.35	4.358	7.5	0.49	OVER	49.0	57.7	8.7	257.0	524.4898	257.0	1.241	13.0	True	win	267.49	104.08	20703.52	20971.01		True
+2026-04-15	824936	Miami Marlins	Atlanta Braves	8.83	4.028	8.5	0.53		53.0	53.3	0.3	0.0	0.0	0.0	0.0	9.0		no_bet	0.0	0.0	20971.01	20971.01	edge_below_threshold	False
+2026-04-15	825021	Texas Rangers	Athletics	8.66	4.53	9.5	0.52		48.0	42.7	-9.3	0.0	0.0	0.0	0.0	11.0		no_bet	0.0	0.0	20971.01	20971.01	confidence_below_threshold	False
+2026-04-16	823396	Washington Nationals	Pittsburgh Pirates	8.36	4.47	6.5	0.56	OVER	56.0	66.1	10.1	346.0	617.8571	346.0	1.65	15.0	True	win	271.86	78.57	20971.01	21242.87		True
+2026-04-16	823560	Los Angeles Angels	New York Yankees	8.1	4.101	9.5	0.52	UNDER	48.0	36.6	-15.4	443.0	922.9167	443.0	2.085	15.0	False	loss	-443.0	-100.0	21242.87	20799.87		True
+2026-04-16	823801	Toronto Blue Jays	Milwaukee Brewers	8.0	4.176	8.5	0.51		49.0	45.2	-5.8	0.0	0.0	0.0	0.0	3.0		no_bet	0.0	0.0	20799.87	20799.87	confidence_below_threshold	False
+2026-04-16	824289	Kansas City Royals	Detroit Tigers	7.82	4.212	8.5	0.49		51.0	43.6	-5.4	0.0	0.0	0.0	0.0	19.0		no_bet	0.0	0.0	20799.87	20799.87	confidence_below_threshold	False
+2026-04-16	824530	San Francisco Giants	Cincinnati Reds	8.42	4.452	6.5	0.54	OVER	54.0	66.7	12.7	413.0	764.8148	413.0	1.986	3.0	False	loss	-413.0	-100.0	20799.87	20386.87		True
+2026-04-16	824614	Tampa Bay Rays	Chicago White Sox	8.34	4.735	8.5	0.48		48.0	48.7	0.7	0.0	0.0	0.0	0.0	8.0		no_bet	0.0	0.0	20386.87	20386.87	edge_below_threshold	False
+2026-04-16	825023	Texas Rangers	Athletics	8.9	4.625	8.5	0.48		48.0	53.4	5.4	0.0	0.0	0.0	0.0	15.0		no_bet	0.0	0.0	20386.87	20386.87	confidence_below_threshold	False

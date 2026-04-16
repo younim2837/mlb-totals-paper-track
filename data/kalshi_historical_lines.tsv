@@ -3226,6 +3226,22 @@ date	away_team	home_team	strike	yes_price	trade_time	has_10am_price	api_failed
 2026-04-15	Washington Nationals	Pittsburgh Pirates	11.5	0.3	2026-04-15T15:11:32.687332Z	True	False
 2026-04-15	Washington Nationals	Pittsburgh Pirates	12.5	0.23	2026-04-15T12:46:56.742497Z	True	False
 2026-04-15	Washington Nationals	Pittsburgh Pirates	13.5	0.18	2026-04-15T13:11:39.690516Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	2.5			False	False
+2026-04-16	Kansas City Royals	Detroit Tigers	3.5	0.91	2026-04-16T16:44:25.653464Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	4.5	0.86	2026-04-16T16:23:21.275873Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	5.5	0.76	2026-04-16T16:51:14.706381Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	6.5	0.68	2026-04-16T16:43:41.446427Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	7.5	0.58	2026-04-16T16:57:36.082645Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	8.5	0.49	2026-04-16T16:59:44.104739Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	9.5	0.38	2026-04-16T16:55:44.945462Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	10.5	0.33	2026-04-16T16:37:56.790253Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	11.5	0.23	2026-04-16T16:57:43.660005Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	12.5	0.18	2026-04-16T16:58:21.795592Z	True	False
+2026-04-16	Kansas City Royals	Detroit Tigers	13.5			False	False
+2026-04-16	Kansas City Royals	Detroit Tigers	14.5			False	False
+2026-04-16	Kansas City Royals	Detroit Tigers	15.5			False	False
+2026-04-16	Kansas City Royals	Detroit Tigers	16.5			False	False
+2026-04-16	Kansas City Royals	Detroit Tigers	17.5			False	False
 2026-04-16	Los Angeles Angels	New York Yankees	3.5	0.97	2026-04-16T14:35:30.525455Z	True	False
 2026-04-16	Los Angeles Angels	New York Yankees	4.5	0.89	2026-04-16T16:59:57.819719Z	True	False
 2026-04-16	Los Angeles Angels	New York Yankees	5.5	0.84	2026-04-16T16:59:49.807983Z	True	False
@@ -3251,6 +3267,28 @@ date	away_team	home_team	strike	yes_price	trade_time	has_10am_price	api_failed
 2026-04-16	San Francisco Giants	Cincinnati Reds	10.5	0.2	2026-04-16T16:59:28.975731Z	True	False
 2026-04-16	San Francisco Giants	Cincinnati Reds	11.5	0.14	2026-04-16T16:58:45.266421Z	True	False
 2026-04-16	San Francisco Giants	Cincinnati Reds	12.5	0.11	2026-04-16T16:55:31.345489Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	3.5	0.92	2026-04-16T16:50:43.790284Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	4.5	0.87	2026-04-16T16:50:43.790797Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	5.5	0.75	2026-04-16T16:50:43.789673Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	6.5	0.68	2026-04-16T15:49:45.896419Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	7.5	0.57	2026-04-16T16:58:23.199535Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	8.5	0.48	2026-04-16T16:57:10.507317Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	9.5	0.37	2026-04-16T16:28:44.868249Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	10.5	0.3	2026-04-16T16:56:49.829359Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	11.5	0.23	2026-04-16T15:42:59.661807Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	12.5	0.19	2026-04-16T16:29:02.08671Z	True	False
+2026-04-16	Tampa Bay Rays	Chicago White Sox	13.5	0.13	2026-04-16T13:18:24.34615Z	True	False
+2026-04-16	Texas Rangers	Athletics	3.5	0.94	2026-04-16T14:38:19.640465Z	True	False
+2026-04-16	Texas Rangers	Athletics	4.5	0.87	2026-04-16T16:38:13.732638Z	True	False
+2026-04-16	Texas Rangers	Athletics	5.5	0.78	2026-04-16T16:38:06.655777Z	True	False
+2026-04-16	Texas Rangers	Athletics	6.5	0.69	2026-04-16T16:45:36.154554Z	True	False
+2026-04-16	Texas Rangers	Athletics	7.5	0.59	2026-04-16T16:58:36.861468Z	True	False
+2026-04-16	Texas Rangers	Athletics	8.5	0.48	2026-04-16T16:58:57.489075Z	True	False
+2026-04-16	Texas Rangers	Athletics	9.5	0.39	2026-04-16T16:47:15.821722Z	True	False
+2026-04-16	Texas Rangers	Athletics	10.5	0.33	2026-04-16T16:38:04.595411Z	True	False
+2026-04-16	Texas Rangers	Athletics	11.5	0.23	2026-04-16T16:46:46.401754Z	True	False
+2026-04-16	Texas Rangers	Athletics	12.5	0.21	2026-04-16T16:32:00.215048Z	True	False
+2026-04-16	Texas Rangers	Athletics	13.5	0.14	2026-04-16T16:15:08.260784Z	True	False
 2026-04-16	Toronto Blue Jays	Milwaukee Brewers	2.5			False	False
 2026-04-16	Toronto Blue Jays	Milwaukee Brewers	3.5	0.89	2026-04-16T16:07:38.668857Z	True	False
 2026-04-16	Toronto Blue Jays	Milwaukee Brewers	4.5	0.88	2026-04-16T16:50:43.912405Z	True	False
