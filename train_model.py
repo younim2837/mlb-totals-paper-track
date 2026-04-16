@@ -313,6 +313,25 @@ def fit_total_calibration(train: pd.DataFrame, feature_cols: list[str], side_met
     }
 
 
+def _fill_oof_missing_features(X: pd.DataFrame, fold_train: pd.DataFrame,
+                               feature_cols: list[str], month: pd.Series | None = None) -> pd.DataFrame:
+    """Fill NaN features with fold-train medians, matching inference-time behaviour."""
+    medians = fold_train[feature_cols].median()
+    fill_map = {}
+    null_mask = X.isnull()
+    if not null_mask.any().any():
+        return X
+    for col in X.columns:
+        if not null_mask[col].any():
+            continue
+        val = medians.get(col)
+        if pd.notna(val):
+            fill_map[col] = float(val)
+    if fill_map:
+        X = X.fillna(fill_map)
+    return X
+
+
 def build_point_oof_artifacts(train: pd.DataFrame, feature_cols: list[str], side_meta: dict) -> dict:
     """
     Train the fold point models once and reuse their predictions across the
@@ -350,15 +369,22 @@ def build_point_oof_artifacts(train: pd.DataFrame, feature_cols: list[str], side
             )
             fold_models[side] = model
 
+        # Apply median fill before predicting, matching inference-time pipeline.
+        fold_train_X_filled = _fill_oof_missing_features(
+            fold_train[feature_cols].copy(), fold_train, feature_cols,
+        )
+        fold_val_X_filled = _fill_oof_missing_features(
+            fold_val[feature_cols].copy(), fold_train, feature_cols,
+        )
         fold_train_point_raw = predict_team_split(
             fold_models,
-            fold_train[feature_cols],
+            fold_train_X_filled,
             fold_train,
             side_meta,
         )[1]
         fold_val_point_raw = predict_team_split(
             fold_models,
-            fold_val[feature_cols],
+            fold_val_X_filled,
             fold_val,
             side_meta,
         )[1]
@@ -1100,17 +1126,31 @@ def main():
     # Features that are rarely null in training but often missing at prediction
     # time (e.g. lineup, bullpen fatigue) cause XGBoost to follow its learned
     # default branch, which can introduce a systematic scoring bias.
+    # Global medians are used as fallback; month-specific medians reduce
+    # early-season bias (April bullpen/weather stats differ from mid-season).
     train_medians = train[feature_cols].median()
     feature_medians = {
         col: round(float(val), 6)
         for col, val in train_medians.items()
         if pd.notna(val)
     }
+    monthly_medians = {}
+    for month in sorted(train["date"].dt.month.unique()):
+        month_data = train[train["date"].dt.month == month]
+        if len(month_data) < 50:
+            continue
+        month_med = month_data[feature_cols].median()
+        monthly_medians[str(int(month))] = {
+            col: round(float(val), 6)
+            for col, val in month_med.items()
+            if pd.notna(val)
+        }
 
     meta = {
         "model_family": MODEL_FAMILY,
         "features": feature_cols,
         "feature_medians": feature_medians,
+        "monthly_feature_medians": monthly_medians,
         "target": TOTAL_TARGET,
         "side_models": side_meta,
         "total_calibration": calibration_cfg,
