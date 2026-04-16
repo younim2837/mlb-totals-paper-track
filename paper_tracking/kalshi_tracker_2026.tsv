@@ -1,1 +1,11 @@
 target_date	month	game_id	away_team	home_team	predicted_total	kalshi_line	kalshi_side	kalshi_edge_pct	kalshi_fair_price_pct	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_side_market_price	kalshi_bankroll_used	kalshi_bet_pct_bankroll	kalshi_recommended_bet	kalshi_contracts	away_score	home_score	total_runs	result	profit_per_contract	pnl_dollars	roi_pct	paper_bankroll_at_bet	paper_bankroll_after_day	settled
+2026-04-16	2026-04	823313	Seattle Mariners	San Diego Padres	8.4	8.5	OVER	0.1	49.1	49.1	49.0	0.49	10000.0	0.02	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	823396	Washington Nationals	Pittsburgh Pirates	7.3	8.5	UNDER	-15.1	38.9	61.1	46.0	0.45999999999999996	10000.0	4.18	418.0	908.6956521739131				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	823560	Los Angeles Angels	New York Yankees	9.4	9.5	UNDER	-0.9	49.1	50.9	50.0	0.5	10000.0	0.2799999999999999	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	823801	Toronto Blue Jays	Milwaukee Brewers	8.4	8.5	UNDER	-2.0	49.0	51.0	49.0	0.49	10000.0	0.58	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	824208	Colorado Rockies	Houston Astros	10.2	8.5	OVER	10.0	64.0	64.0	54.0	0.54	10000.0	3.25	325.0	601.8518518518518				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	824289	Kansas City Royals	Detroit Tigers	6.3	7.5	UNDER	-15.3	38.7	61.3	46.0	0.45999999999999996	10000.0	4.24	424.0	921.7391304347826				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	824453	Baltimore Orioles	Cleveland Guardians	7.9	8.5	UNDER	-2.6	44.4	55.6	53.0	0.53	10000.0	0.83	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	824530	San Francisco Giants	Cincinnati Reds	8.0	8.5	UNDER	-2.8	45.2	54.8	52.0	0.52	10000.0	0.88	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	824614	Tampa Bay Rays	Chicago White Sox	7.9	8.5	UNDER	-3.5	44.5	55.5	52.0	0.52	10000.0	1.09	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-16	2026-04	825023	Texas Rangers	Athletics	8.9	8.5	OVER	0.6	53.6	53.6	53.0	0.53	10000.0	0.2	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
