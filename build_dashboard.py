@@ -370,6 +370,25 @@ def _table(headers: list[str], rows: list[list[str]], empty_message: str, compac
     return f'<table class="{class_name}"><thead><tr>{head_html}</tr></thead><tbody>{body_html}</tbody></table>'
 
 
+def load_pregame_hit_rate(season: int) -> dict:
+    """Return season-level pregame scheduler hit rate from the timing log."""
+    path = PAPER_TRACKING_DIR / f"pregame_log_{season}.tsv"
+    if not path.exists():
+        return {"hits": 0, "misses": 0, "failed": 0, "decided": 0, "rate": None}
+    df = pd.read_csv(path, sep="\t", dtype=str)
+    hits = int((df["status"] == "hit").sum())
+    misses = int((df["status"] == "missed").sum())
+    failed = int((df["status"] == "failed").sum())
+    decided = hits + misses + failed
+    return {
+        "hits": hits,
+        "misses": misses,
+        "failed": failed,
+        "decided": decided,
+        "rate": hits / decided if decided > 0 else None,
+    }
+
+
 def render_dashboard(
     season: int,
     updated_at: str,
@@ -380,6 +399,7 @@ def render_dashboard(
     recent_settled: pd.DataFrame,
     monthly: list[dict],
     historical_recent: pd.DataFrame,
+    pregame_hit_rate: dict | None = None,
 ) -> str:
     latest_pick_rows = []
     if not latest_picks.empty:
@@ -917,6 +937,32 @@ def render_dashboard(
       {historical_table_html}
     </section>
 
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Scheduler Health</h2>
+          <div class="section-subtitle">Pregame prediction hit rate — how often the bot predicts within 5–35 min of first pitch. Target ≥90%. Below 70% → switch to external cron.</div>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">Season Hit Rate</div>
+          <div class="metric-value">{_fmt_plain_pct(round((pregame_hit_rate.get("rate") or 0.0) * 100, 1)) if pregame_hit_rate and pregame_hit_rate.get("decided", 0) > 0 else "—"}</div>
+          <div class="metric-note">{pregame_hit_rate.get("hits", 0)}/{pregame_hit_rate.get("decided", 0)} games in window.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Missed</div>
+          <div class="metric-value">{pregame_hit_rate.get("misses", 0) if pregame_hit_rate else "—"}</div>
+          <div class="metric-note">Games where scheduler fired too late.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Failed</div>
+          <div class="metric-value">{pregame_hit_rate.get("failed", 0) if pregame_hit_rate else "—"}</div>
+          <div class="metric-note">Prediction errors.</div>
+        </div>
+      </div>
+    </section>
+
     <div class="footer-note">
       Generated at {html.escape(generated_at)}.
     </div>
@@ -962,6 +1008,7 @@ def build_dashboard(season: int) -> Path:
         by=["date", "bet_amount"], ascending=[False, False]
     ).head(12).reset_index(drop=True) if not historical_df.empty else pd.DataFrame()
     monthly = monthly_rows(kalshi_df)
+    pregame_hit_rate = load_pregame_hit_rate(season)
     DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
     dashboard_path = DASHBOARD_DIR / "index.html"
     updated_at = datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -976,6 +1023,7 @@ def build_dashboard(season: int) -> Path:
             recent_settled=recent,
             monthly=monthly,
             historical_recent=historical_recent,
+            pregame_hit_rate=pregame_hit_rate,
         ),
         encoding="utf-8",
     )

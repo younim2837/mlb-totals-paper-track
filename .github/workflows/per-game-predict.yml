@@ -1,0 +1,76 @@
+name: Per-Game Pregame Predictor
+
+on:
+  schedule:
+    # Every 20 minutes, all day. The Python script guards itself — it only
+    # predicts games starting 5–35 minutes from now, and skips everything else.
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: "Target date YYYY-MM-DD (default: today PT)"
+        required: false
+        type: string
+      dry_run:
+        description: "Log timing only, skip predictions"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: per-game-predict-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pregame-predict:
+    runs-on: ubuntu-latest
+    env:
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+      RUN_DATE: ${{ inputs.run_date }}
+      DRY_RUN: ${{ inputs.dry_run }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run pregame poller
+        shell: bash
+        run: |
+          args=()
+          if [ -n "${RUN_DATE}" ]; then
+            args+=("--date" "${RUN_DATE}")
+          fi
+          if [ "${DRY_RUN}" = "true" ]; then
+            args+=("--dry-run")
+          fi
+          python predict_pregame.py "${args[@]}"
+
+      - name: Commit pregame predictions and timing log
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add predictions/ paper_tracking/pregame_log_*.tsv
+          if git diff --cached --quiet; then
+            echo "Nothing new to commit."
+            exit 0
+          fi
+          run_at="$(TZ=America/Los_Angeles date '+%H:%M PT')"
+          git commit -m "Pregame predictions logged at ${run_at}"
+          git push
