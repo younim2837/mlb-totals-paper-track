@@ -83,10 +83,10 @@ def already_done(game_id: str | int, log: pd.DataFrame) -> bool:
 
 
 def run_predictions(date_str: str) -> pd.DataFrame | None:
-    """Run predict_today.py --all-games and return the board as a DataFrame."""
+    """Run predict_today.py (pregame-only, no --all-games) and return the board."""
     print(f"  Running predict_today.py for {date_str}...")
     result = subprocess.run(
-        [sys.executable, str(PROJECT_DIR / "predict_today.py"), date_str, "--all-games"],
+        [sys.executable, str(PROJECT_DIR / "predict_today.py"), date_str],
         capture_output=True,
         text=True,
         cwd=PROJECT_DIR,
@@ -96,16 +96,17 @@ def run_predictions(date_str: str) -> pd.DataFrame | None:
         print(result.stderr[-500:] if result.stderr else "")
         return None
 
-    # prefer all-games board, fall back to standard board
-    for candidate in [
-        PREDICTIONS_DIR / f"{date_str}-all-games-board.tsv",
-        PREDICTIONS_DIR / f"{date_str}-board.tsv",
-    ]:
-        if candidate.exists():
-            return pd.read_csv(candidate, sep="\t", dtype=str)
+    board_path = PREDICTIONS_DIR / f"{date_str}-board.tsv"
+    if not board_path.exists():
+        print(f"  ERROR: {board_path.name} not found after running predict_today.py")
+        return None
 
-    print(f"  ERROR: board TSV not found after running predict_today.py")
-    return None
+    df = pd.read_csv(board_path, sep="\t", dtype=str)
+    if df.empty:
+        print(f"  WARNING: board is empty (all games may have started already)")
+        return None
+
+    return df
 
 
 def save_game_prediction(board: pd.DataFrame, game_id: str | int, date_str: str) -> bool:
