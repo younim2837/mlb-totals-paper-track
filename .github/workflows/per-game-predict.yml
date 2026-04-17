@@ -63,10 +63,13 @@ jobs:
       - name: Refresh tracker and dashboard if new predictions
         shell: bash
         run: |
-          # Only rebuild if a pregame board was written this run
-          season="$(TZ=America/Los_Angeles date +%Y)"
-          today="$(TZ=America/Los_Angeles date +%F)"
-          if ls predictions/${today}-pregame-board.tsv 2>/dev/null; then
+          # Use overridden date if provided, otherwise today PT
+          target_date="${RUN_DATE}"
+          if [ -z "${target_date}" ]; then
+            target_date="$(TZ=America/Los_Angeles date +%F)"
+          fi
+          season="${target_date:0:4}"
+          if test -f "predictions/${target_date}-pregame-board.tsv"; then
             python grade_paper_tracking.py --season "${season}"
             python build_dashboard.py --season "${season}"
           else
