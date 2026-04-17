@@ -110,10 +110,30 @@ def run_predictions(date_str: str) -> pd.DataFrame | None:
 
 
 def save_game_prediction(board: pd.DataFrame, game_id: str | int, date_str: str) -> bool:
-    """Extract a single game from the board and save as a per-game JSON."""
+    """
+    Extract a game row from the board and:
+    - Append to the date's pregame-board.tsv (used by grade_paper_tracking.py)
+    - Save a per-game JSON archive
+
+    The pregame board accumulates throughout the day as games are caught.
+    grade_paper_tracking.py prefers this over the morning board.
+    """
     row = board[board["game_id"].astype(str) == str(game_id)]
     if row.empty:
         return False
+
+    # Append to pregame board (authoritative for grading)
+    pregame_board_path = PREDICTIONS_DIR / f"{date_str}-pregame-board.tsv"
+    if pregame_board_path.exists():
+        existing = pd.read_csv(pregame_board_path, sep="\t", dtype=str)
+        # Deduplicate: replace any existing row for this game_id
+        existing = existing[existing["game_id"].astype(str) != str(game_id)]
+        combined = pd.concat([existing, row], ignore_index=True)
+    else:
+        combined = row
+    combined.to_csv(pregame_board_path, sep="\t", index=False)
+
+    # Per-game JSON archive
     out = PREDICTIONS_DIR / f"{date_str}-pregame-{game_id}.json"
     row.to_json(out, orient="records", indent=2)
     return True

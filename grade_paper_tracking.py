@@ -52,28 +52,37 @@ def _board_data_row_count(path: Path) -> int:
 
 
 def list_board_files(season: int) -> list[Path]:
+    # Pregame boards (written by predict_pregame.py with confirmed lineups +
+    # closing Kalshi prices) take precedence over morning boards when available.
+    pregame_by_date: dict[str, Path] = {
+        path.name[:10]: path
+        for path in sorted(PREDICTIONS_DIR.glob(f"{season}-*-pregame-board.tsv"))
+    }
+
     pattern = f"{season}-*-board.tsv"
-    chosen_by_date: dict[str, Path] = {}
+    morning_by_date: dict[str, Path] = {}
     row_counts: dict[Path, int] = {}
 
     for path in sorted(PREDICTIONS_DIR.glob(pattern)):
+        if "-pregame-board" in path.name:
+            continue  # handled separately above
         target_date = path.name[:10]
-        current = chosen_by_date.get(target_date)
+        current = morning_by_date.get(target_date)
         if current is None:
-            chosen_by_date[target_date] = path
+            morning_by_date[target_date] = path
             continue
-
         current_rows = row_counts.setdefault(current, _board_data_row_count(current))
         candidate_rows = row_counts.setdefault(path, _board_data_row_count(path))
         current_is_all_games = current.name.endswith("-all-games-board.tsv")
         candidate_is_all_games = path.name.endswith("-all-games-board.tsv")
-
         if candidate_rows > current_rows:
-            chosen_by_date[target_date] = path
+            morning_by_date[target_date] = path
         elif candidate_rows == current_rows and candidate_is_all_games and not current_is_all_games:
-            chosen_by_date[target_date] = path
+            morning_by_date[target_date] = path
 
-    return [chosen_by_date[date_key] for date_key in sorted(chosen_by_date)]
+    # Merge: prefer pregame board; fall back to morning board for dates without one
+    all_dates = sorted(set(pregame_by_date) | set(morning_by_date))
+    return [pregame_by_date.get(d) or morning_by_date[d] for d in all_dates]
 
 
 def load_results_lookup() -> pd.DataFrame:
