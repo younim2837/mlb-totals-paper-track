@@ -86,7 +86,8 @@ MARKET_SHRINK_BASE_CFG = {
     "fallback_confidence_cap": 0.62,
 }
 TRAIN_START_YEAR = 2021
-BACKTEST_YEAR = 2025
+BACKTEST_YEAR = 2025   # fold 2 test year — kept for saved metrics
+FINAL_TRAIN_YEAR = 2025  # final model trains on all data through this year
 
 SIDE_SPECS = {
     "home": {
@@ -190,6 +191,31 @@ def train_test_split_by_time(df, train_start_year=TRAIN_START_YEAR, test_year=BA
     train = df[(df["date"].dt.year >= train_start_year) & (df["date"].dt.year < test_year)].copy()
     test = df[df["date"].dt.year == test_year].copy()
     return train, test
+
+
+def run_fold_validation(df: pd.DataFrame, feature_cols: list[str],
+                        train_end_year: int, test_year: int) -> dict:
+    """
+    Train point models on [TRAIN_START_YEAR, train_end_year] and evaluate on test_year.
+    Returns a dict of MAE, RMSE, R² for the total-runs prediction.
+    Skips ancillary models (uncertainty, tail, market) for speed.
+    """
+    train = df[(df["date"].dt.year >= TRAIN_START_YEAR) & (df["date"].dt.year <= train_end_year)].copy()
+    test = df[df["date"].dt.year == test_year].copy()
+
+    side_models, side_meta = {}, {}
+    for side in ["home", "away"]:
+        model, meta = train_side_model(train, feature_cols, side)
+        side_models[side] = model
+        side_meta[side] = meta
+
+    point_oof_artifacts = build_point_oof_artifacts(train, feature_cols, side_meta)
+    calibration_cfg = fit_total_calibration(train, feature_cols, side_meta,
+                                            point_oof_raw=point_oof_artifacts["oof_total_raw"])
+
+    _, test_preds_raw = predict_team_split(side_models, test[feature_cols], test, side_meta)
+    test_preds = apply_total_calibration(test_preds_raw, calibration_cfg)
+    return evaluate(test[TOTAL_TARGET].values, test_preds)
 
 
 def get_side_prediction_mode(df: pd.DataFrame, base_feature: str):
@@ -1004,9 +1030,29 @@ def main():
     print(f"  {len(df)} games, {len(feature_cols)} features")
     print(f"  Features: {feature_cols}")
 
-    train, test = train_test_split_by_time(df, train_start_year=TRAIN_START_YEAR, test_year=BACKTEST_YEAR)
-    print(f"\nTrain: {len(train)} games ({train['date'].dt.year.min()}-{train['date'].dt.year.max()})")
-    print(f"Test:  {len(test)} games ({test['date'].dt.year.min()}-{test['date'].dt.year.max()})")
+    # --- Walk-Forward Fold Validation ---
+    # Fold 1: train 2021-2023 → test 2024
+    # Fold 2: train 2021-2024 → test 2025
+    # These are the honest out-of-sample metrics. Final model uses all data through FINAL_TRAIN_YEAR.
+    print("\n--- Walk-Forward Fold Validation ---")
+    fold1 = run_fold_validation(df, feature_cols, train_end_year=BACKTEST_YEAR - 2, test_year=BACKTEST_YEAR - 1)
+    fold2 = run_fold_validation(df, feature_cols, train_end_year=BACKTEST_YEAR - 1, test_year=BACKTEST_YEAR)
+    print(f"  Fold 1 (train 2021-{BACKTEST_YEAR-2}, test {BACKTEST_YEAR-1}): "
+          f"MAE={fold1['mae']:.3f}  RMSE={fold1['rmse']:.3f}  R²={fold1['r2']:.3f}")
+    print(f"  Fold 2 (train 2021-{BACKTEST_YEAR-1}, test {BACKTEST_YEAR}):   "
+          f"MAE={fold2['mae']:.3f}  RMSE={fold2['rmse']:.3f}  R²={fold2['r2']:.3f}")
+    avg_mae  = (fold1['mae']  + fold2['mae'])  / 2
+    avg_rmse = (fold1['rmse'] + fold2['rmse']) / 2
+    avg_r2   = (fold1['r2']   + fold2['r2'])   / 2
+    print(f"  Average across folds:                       "
+          f"MAE={avg_mae:.3f}  RMSE={avg_rmse:.3f}  R²={avg_r2:.3f}")
+
+    # Final model: train on all data through FINAL_TRAIN_YEAR.
+    # Test set kept as BACKTEST_YEAR for reporting continuity (fold 2 metrics are the valid estimate).
+    train = df[(df["date"].dt.year >= TRAIN_START_YEAR) & (df["date"].dt.year <= FINAL_TRAIN_YEAR)].copy()
+    test  = df[df["date"].dt.year == BACKTEST_YEAR].copy()
+    print(f"\nFinal model train: {len(train)} games ({train['date'].dt.year.min()}-{train['date'].dt.year.max()})")
+    print(f"Metrics reference: fold 2 test set ({len(test)} games, {BACKTEST_YEAR})")
 
     print("\n--- Cross-Validation (on training data) ---")
     cross_validate_team_split(train, feature_cols)
@@ -1190,17 +1236,19 @@ def main():
         kalshi_anchor["line_source"] = "kalshi"
         kalshi_anchor["num_books"] = 1
 
-        # Build a market frame for all years in df (including 2026 which is outside train/test)
-        all_years_frame = df[["date", "away_team", "home_team", TOTAL_TARGET]].copy()
+        # Build a market frame scoped to training data only — avoid using future results
+        # (2026 games with known outcomes) to train the edge model.
+        train_years_df = df[df["date"].dt.year <= FINAL_TRAIN_YEAR].copy()
+        all_years_frame = train_years_df[["date", "away_team", "home_team", TOTAL_TARGET]].copy()
         all_years_frame = all_years_frame.rename(columns={TOTAL_TARGET: "total_runs"})
-        _, all_preds_raw = predict_team_split(side_models, df[feature_cols], df, side_meta)
+        _, all_preds_raw = predict_team_split(side_models, train_years_df[feature_cols], train_years_df, side_meta)
         all_preds = apply_total_calibration(all_preds_raw, calibration_cfg)
         all_years_frame["predicted_total"] = all_preds
-        all_sigmas = predict_sigmas(uncertainty_model, uncertainty_cfg, df[feature_cols], all_preds)
+        all_sigmas = predict_sigmas(uncertainty_model, uncertainty_cfg, train_years_df[feature_cols], all_preds)
         all_years_frame["prediction_std"] = all_sigmas
-        all_tail_probs = predict_high_tail_probs(high_tail_model, high_tail_cfg, df[feature_cols], all_preds)
+        all_tail_probs = predict_high_tail_probs(high_tail_model, high_tail_cfg, train_years_df[feature_cols], all_preds)
         all_years_frame["high_tail_prob_9p5"] = all_tail_probs
-        all_low_tail_probs = predict_low_tail_probs(low_tail_model, low_tail_cfg, df[feature_cols], all_preds)
+        all_low_tail_probs = predict_low_tail_probs(low_tail_model, low_tail_cfg, train_years_df[feature_cols], all_preds)
         all_years_frame["low_tail_prob_7p5"] = all_low_tail_probs
 
         kalshi_matched = merge_predictions_with_lines(all_years_frame, kalshi_anchor)
@@ -1305,8 +1353,13 @@ def main():
         "side_models": side_meta,
         "side_residual_distribution": side_residual_distribution,
         "total_calibration": calibration_cfg,
-        "train_years": f"{TRAIN_START_YEAR}-{BACKTEST_YEAR - 1}",
+        "train_years": f"{TRAIN_START_YEAR}-{FINAL_TRAIN_YEAR}",
         "test_year": str(BACKTEST_YEAR),
+        "fold_validation": {
+            "fold1": {"train": f"{TRAIN_START_YEAR}-{BACKTEST_YEAR-2}", "test": BACKTEST_YEAR-1, "metrics": fold1},
+            "fold2": {"train": f"{TRAIN_START_YEAR}-{BACKTEST_YEAR-1}", "test": BACKTEST_YEAR,   "metrics": fold2},
+            "avg_mae": avg_mae, "avg_rmse": avg_rmse, "avg_r2": avg_r2,
+        },
         "metrics": total_metrics,
         "side_metrics": side_metrics,
         "uncertainty_model": uncertainty_cfg,
