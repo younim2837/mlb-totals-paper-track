@@ -98,7 +98,7 @@ class BuildDashboardTests(unittest.TestCase):
                 }
             ]
         )
-        picks_df.to_csv(predictions_dir / "2026-04-16-picks.tsv", sep="\t", index=False)
+        picks_df.to_csv(predictions_dir / "2026-04-16-pregame-board.tsv", sep="\t", index=False)
 
         historical_df = pd.DataFrame(
             [
