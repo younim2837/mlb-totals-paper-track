@@ -1,289 +1,261 @@
 # MLB Totals Betting Model
 
-This project builds an MLB game-total model for betting workflows.
+A production MLB game-total prediction system built on Dixon-Coles Bayesian priors, XGBoost team-split models, and Kalshi binary market integration. The model paper-trades on Kalshi's run-total markets with fractional Kelly sizing.
 
-The current production pipeline is:
+**Live dashboard:** https://younim2837.github.io/mlb-totals-paper-track/
 
-1. Collect historical game, pitcher, weather, bullpen, lineup, umpire, and market data
-2. Fit Dixon-Coles team priors from historical scores
-3. Build leakage-safe pregame features for every historical game
-4. Train XGBoost models for home runs and away runs
-5. Calibrate the total prediction and its uncertainty
-6. Compare model probabilities to sportsbook and Kalshi lines
-7. Size bets with quarter-Kelly on a configurable bankroll
+---
 
-The model is built around totals, not moneylines or sides.
+## Architecture overview
 
-## Current methodology
+The pipeline has four layers, each building on the one before:
 
-### 1. Bayesian prior layer
+```
+Raw game data → Feature engineering → XGBoost models → Calibration/Betting
+```
 
-The project no longer uses Elo as the main prior.
+### Layer 1: Bayesian prior (Dixon-Coles)
 
-The active prior engine is [dixon_coles.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/dixon_coles.py), which fits:
+[dixon_coles.py](dixon_coles.py) fits a bivariate Poisson model to historical scores:
 
-- team attack strength
-- team defense strength
-- global scoring level
-- home-field effect
+- **Parameters:** team attack strength, team defense strength, global scoring level, home-field advantage
+- **Time decay:** exponential weighting so recent games dominate
+- **Regularization:** L2 penalty prevents unstable team ratings with small samples
+- **Leakage safety:** priors are fit using only data available before each game
 
-Important details:
+Key outputs:
 
-- fits are time-decayed, so recent games matter more than old games
-- fits use a rolling historical window
-- fits are regularized with an L2 penalty to prevent unstable team parameters
-- historical priors are generated pregame only, so the training set does not leak future information
+| Feature | Meaning |
+|---|---|
+| `home_dc_attack` / `away_dc_attack` | Offensive strength parameter |
+| `home_dc_defense` / `away_dc_defense` | Defensive strength parameter |
+| `dc_lambda_home` / `dc_lambda_away` | Expected runs per team |
+| `dc_expected_total` | Sum of Poisson means |
 
-Outputs:
+Artifacts: `data/dc_params_current.json`, `data/dc_ratings_history.tsv`
 
-- `data/dc_params_current.json`
-- `data/dc_ratings_history.tsv`
+### Layer 2: Feature engineering
 
-Those priors become model features such as:
+[build_features.py](build_features.py) assembles the full training matrix into `data/mlb_model_data.tsv`.
 
-- `home_dc_attack`
-- `home_dc_defense`
-- `away_dc_attack`
-- `away_dc_defense`
-- `dc_lambda_home`
-- `dc_lambda_away`
-- `dc_expected_total`
+**Feature families:**
 
-### 2. Feature engineering
+| Family | Source script | Key features |
+|---|---|---|
+| Dixon-Coles priors | `dixon_coles.py` | `dc_expected_total`, `dc_lambda_*` |
+| Team rolling form | `collect_games.py` | Runs scored/allowed over 10- and 30-game windows |
+| Team batting quality | `collect_team_batting.py` | OPS, wOBA, ISO (7-/30-/90-game rolling) |
+| Park factors | `venue_metadata.py` | `park_factor` (run environment scalar) |
+| Weather | `collect_weather.py` | Temperature, wind speed/direction, precipitation |
+| Umpire tendency | `collect_umpires.py` | `ump_era_adj`, `ump_runs_per_game_above_avg` |
+| Pitching quality | `collect_pitcher_stats.py` | Starter ERA, K/9, BB/9, IP/start (rolling) |
+| Bullpen availability | `collect_bullpen_usage.py` | Reliever usage tiers, rest, quality score |
+| Lineup strength | `collect_team_lineups.py` | Actual starting-nine OPS, wRC+, handedness splits |
+| Head-to-head | `collect_games.py` | Recent series total history |
 
-[build_features.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/build_features.py) converts raw historical game data into `data/mlb_model_data.tsv`.
+All rolling features are shifted one period forward — no future leakage into training.
 
-The feature set currently includes:
+### Layer 3: XGBoost team-split model
 
-- recent team scoring and prevention form over 10- and 30-game windows
-- season-to-date team scoring and prevention
-- park factor
-- weather for outdoor games
-- umpire historical scoring tendency
-- head-to-head recent total history
-- Dixon-Coles priors
-- rolling team batting quality
-- same-day lineup strength features
-- bullpen quality-tier and availability features
-- starting pitcher recent form
-- starter workload / leash / opener-style context
+[train_model.py](train_model.py) trains two separate regressors:
 
-Key design choices:
+- **Home model** predicts `home_score` as a residual on top of `dc_lambda_home`
+- **Away model** predicts `away_score` as a residual on top of `dc_lambda_away`
+- **Total** = home prediction + away prediction
 
-- all rolling features are shifted to remain pregame and leakage-safe
-- indoor/retractable-roof venues suppress weather effects
-- same-day lineup features are built from actual starting nines when available
-- lineup stats are shrunk toward league-average priors so tiny early-season samples do not dominate
+Two auxiliary models:
 
-### 3. Point model
+- **Uncertainty model**: second XGBoost predicts per-game absolute error → `prediction_std`
+- **Market edge model**: XGBoost classifier trained on historical Kalshi outcomes to filter for true edge
 
-[train_model.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/train_model.py) trains a team-split XGBoost model family:
+**Training data:** 2021–2025 seasons (~11,700 games)
 
-- one model predicts `home_score`
-- one model predicts `away_score`
-- both are trained as residuals on top of Dixon-Coles expected runs
-- the two team predictions are summed into the final total
+**Walk-forward fold validation** (no leakage):
 
-This means the model is not learning totals from scratch. It starts from the Bayesian prior and learns where that prior is wrong.
+| Fold | Train | Test | MAE |
+|---|---|---|---|
+| Fold 1 | 2021–2023 | 2024 | 3.364 |
+| Fold 2 | 2021–2024 | 2025 | 3.552 |
 
-### 4. Calibration and uncertainty
+### Layer 4: Calibration, tail classifiers, and betting
 
-The raw point prediction is not used directly as the final betting probability layer.
+After the raw point prediction:
 
-The project adds three post-point-model layers:
+1. **Isotonic calibration** — blended mapping fit on out-of-fold training predictions with tail expansion
+2. **High-tail classifier** — `P(total ≥ 9.5)` from a separate XGBoost binary model
+3. **Low-tail classifier** — `P(total ≤ 7.5)` from a separate XGBoost binary model
+4. **Heteroscedastic sigma** — per-game uncertainty estimate (not one global spread)
 
-1. Total calibration
-- a blended isotonic mapping is fit on out-of-fold training predictions
-- an additional tail-expansion step helps keep the distribution from collapsing too tightly into the middle
+Betting:
 
-2. Dynamic uncertainty model
-- a second XGBoost model predicts game-specific absolute error
-- that becomes `prediction_std`, a per-game sigma instead of one global spread for every matchup
+- **Kelly criterion**: fractional Kelly (15% of full Kelly) applied to `P(over)` vs Kalshi ask price
+- **Edge filter**: market edge model must confirm the bet before sizing
+- **Bankroll**: configurable in `model_config.yaml`
 
-3. Tail models
-- a high-tail classifier estimates `P(total > 9.5)`
-- a low-tail classifier estimates `P(total < 7.5)`
-- these do not replace the point total
-- instead, they improve probability estimates in tail scenarios without forcing every point prediction wider
+---
 
-This is important because MLB totals are noisy. A model can have a reasonable expected total while still needing help describing shootout and dud-game risk.
-
-### 5. Market comparison
-
-The model compares its probabilities to:
-
-- sportsbook totals from The Odds API when an API key is configured
-- Kalshi total-run markets via the public Kalshi API
-
-Kalshi support lives in [collect_kalshi_lines.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_kalshi_lines.py).
-
-Important note:
-
-- the displayed Kalshi line is the actual tradable strike
-- the code also estimates a crossover level internally, but the report shows the real half-run contract line
-
-### 6. Bet sizing
-
-Bet sizing is Kelly-based and configured in [model_config.yaml](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/model_config.yaml).
-
-Current behavior:
-
-- bankroll is configurable
-- quarter-Kelly is the default
-- hard caps can be disabled
-- both sportsbook-style and Kalshi-style Kelly sizing are supported
-
-Bet sizing uses the final model probabilities, so it does incorporate the Bayesian prior layer indirectly through the full model stack.
-
-## Project structure
+## Repository structure
 
 ### Data collection
 
-- [collect_games.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_games.py): historical MLB game results
-- [collect_pitcher_stats.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_pitcher_stats.py): per-start pitcher game logs
-- [collect_weather.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_weather.py): historical venue weather
-- [collect_team_lineups.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_team_lineups.py): historical starting lineup features
-- [collect_bullpen_usage.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_bullpen_usage.py): reliever appearance logs
-- [collect_umpires.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_umpires.py): historical home-plate umpires
-- [collect_lines.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_lines.py): historical / live sportsbook totals
-- [collect_lines_historical_oddsapi.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/collect_lines_historical_oddsapi.py): historical Odds API backfill for featured MLB markets (`h2h`, `spreads`, `totals`)
+| Script | Purpose | Update mode |
+|---|---|---|
+| [collect_games.py](collect_games.py) | Historical MLB game results | `--update` |
+| [collect_pitcher_stats.py](collect_pitcher_stats.py) | Per-start pitcher game logs | `--update-current` |
+| [collect_team_batting.py](collect_team_batting.py) | Team batting logs by game | `--update-current` |
+| [collect_team_lineups.py](collect_team_lineups.py) | Starting lineup features | `--update-current` |
+| [collect_bullpen_usage.py](collect_bullpen_usage.py) | Reliever appearance logs | `--update-current` |
+| [collect_umpires.py](collect_umpires.py) | Home-plate umpire history | `--update` |
+| [collect_weather.py](collect_weather.py) | Historical venue weather | (batch) |
+| [collect_kalshi_lines.py](collect_kalshi_lines.py) | Live Kalshi run-total market | (live) |
+| [collect_kalshi_historical.py](collect_kalshi_historical.py) | Historical Kalshi snapshots | (backfill) |
 
-### Shared feature helpers
+### Modeling
 
-- [lineup_features.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/lineup_features.py)
-- [bullpen_usage.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/bullpen_usage.py)
+| Script | Purpose |
+|---|---|
+| [dixon_coles.py](dixon_coles.py) | Fit Bayesian team attack/defense priors |
+| [build_features.py](build_features.py) | Assemble full training matrix |
+| [train_model.py](train_model.py) | Train XGBoost suite + calibration + edge model |
 
-### Priors and modeling
+### Prediction
 
-- [dixon_coles.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/dixon_coles.py)
-- [build_features.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/build_features.py)
-- [train_model.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/train_model.py)
+| Script | Purpose |
+|---|---|
+| [predict_pregame.py](predict_pregame.py) | Pregame per-game predictions with Kalshi sizing |
+| [predict_today.py](predict_today.py) | Full-day prediction report |
+| [run_today.py](run_today.py) | Daily entry point (collects, then predicts) |
 
-### Prediction and evaluation
+### Evaluation
 
-- [predict_today.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/predict_today.py): live prediction report
-- [run_today.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/run_today.py): daily entry point
-- [backtest.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/backtest.py): holdout and line-based evaluation
-- [walk_forward_backtest.py](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/walk_forward_backtest.py): month-by-month walk-forward evaluation
+| Script | Purpose |
+|---|---|
+| [backtest.py](backtest.py) | Holdout and line-based evaluation |
+| [walk_forward_backtest.py](walk_forward_backtest.py) | Month-by-month walk-forward evaluation |
+| [walk_forward_betting_backtest.py](walk_forward_betting_backtest.py) | Walk-forward with Kelly sizing |
+| [sweep_kalshi_2026.py](sweep_kalshi_2026.py) | Kalshi market simulation for 2026 |
 
-## Main artifacts
+### Paper trading
 
-- `data/mlb_games_raw.tsv`: completed game history
-- `data/mlb_model_data.tsv`: training matrix
-- `data/dc_ratings_history.tsv`: historical Dixon-Coles priors
-- `data/dc_params_current.json`: current live Dixon-Coles fit
-- `data/team_lineup_features.tsv`: historical lineup features
-- `data/bullpen_appearance_logs.tsv`: reliever usage history
-- `data/umpire_game_log.tsv`: umpire history
-- `data/lines_historical_oddsapi_snapshots.tsv`: raw historical sportsbook snapshots from The Odds API
-- `data/lines_historical_oddsapi.tsv`: deduped historical sportsbook featured markets from The Odds API
-- `data/lines_historical_oddsapi_requests.tsv`: request-level success / failure log for resumable backfills
-- `models/home_runs_xgb.json`
-- `models/away_runs_xgb.json`
-- `models/total_runs_uncertainty_xgb.json`
-- `models/total_runs_high_tail_xgb.json`
-- `models/total_runs_low_tail_xgb.json`
-- `models/model_meta.json`
+| Script | Purpose |
+|---|---|
+| [paper_track_daily.py](paper_track_daily.py) | Grade each day's predictions against results |
+| [grade_paper_tracking.py](grade_paper_tracking.py) | Aggregate paper P&L across all graded days |
+| [paper_bankroll.py](paper_bankroll.py) | Track running bankroll history |
+| [build_dashboard.py](build_dashboard.py) | Regenerate GitHub Pages dashboard |
 
-## Daily workflow
+---
 
-The normal entry point is:
+## Automated workflows
 
-```powershell
-python run_today.py
-```
+Two GitHub Actions workflows keep the pipeline current:
 
-Useful variants:
+### 1. Daily grader (`.github/workflows/daily-paper-grade.yml`)
 
-```powershell
-python run_today.py 2026-04-11
-python run_today.py --no-update
-python run_today.py --quick
-python run_today.py 2026-04-11 --no-update --all-games
-```
+Runs at **12:00 UTC** every day. Sequence:
 
-Default behavior is pregame-only. `--all-games` includes live and final games for inspection and writes a separate output file like `predictions/YYYY-MM-DD-all-games.txt`.
+1. Refresh completed games (`collect_games.py`)
+2. Refresh team batting stats (`collect_team_batting.py --update-current`)
+3. Refresh pitcher stats (`collect_pitcher_stats.py --update-current`)
+4. Refresh bullpen usage (`collect_bullpen_usage.py --update-current`)
+5. Refresh umpire log (`collect_umpires.py --update`)
+6. Refresh lineup features (`collect_team_lineups.py --update-current`)
+7. Replay historical Kalshi snapshots (`collect_kalshi_historical.py`)
+8. Grade yesterday's predictions (`paper_track_daily.py`)
+9. Rebuild dashboard (`build_dashboard.py`)
+10. Commit and push updated data + dashboard
 
-## Historical odds prep
+### 2. Pregame predictor (`.github/workflows/predict-pregame.yml`)
 
-The repo is prepared for a future historical sportsbook backfill via The Odds API.
+Runs **every 20 minutes** during game hours. For each game starting 5–35 minutes from now:
 
-Before buying a plan or adding a key, you can estimate the size of the job:
+1. Fetch current Kalshi market data
+2. Run `predict_pregame.py` for that game
+3. Append to today's picks file
+4. Rebuild dashboard
+5. Commit and push
 
-```powershell
-python collect_lines_historical_oddsapi.py --years 2021-2024 --estimate-only
-```
+---
 
-Once an `ODDS_API_KEY` is available, the same script can fetch historical totals
-snapshots for moneyline, spread, and totals markets, then build a deduped
-`lines_historical_oddsapi.tsv` file for later betting backtests and
-market-aware calibration work. The request log lets `--resume` retry only the
-timestamps that still failed.
+## Data artifacts
 
-More setup detail lives in [HISTORICAL_ODDS_SETUP.txt](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/HISTORICAL_ODDS_SETUP.txt).
+| File | Description |
+|---|---|
+| `data/mlb_games_raw.tsv` | Completed game results (2021–present) |
+| `data/mlb_model_data.tsv` | Full training matrix with all features |
+| `data/dc_params_current.json` | Current live Dixon-Coles fit |
+| `data/dc_ratings_history.tsv` | Historical Dixon-Coles priors per game |
+| `data/pitcher_game_logs.tsv` | Per-start stats for all tracked starters |
+| `data/team_batting_logs.tsv` | Team batting stats per game |
+| `data/team_lineup_features.tsv` | Daily starting lineup features |
+| `data/bullpen_appearance_logs.tsv` | Reliever usage history |
+| `data/umpire_game_log.tsv` | Home-plate umpire per game |
+| `models/home_runs_xgb.json` | Home score regressor |
+| `models/away_runs_xgb.json` | Away score regressor |
+| `models/total_runs_uncertainty_xgb.json` | Heteroscedastic sigma model |
+| `models/total_runs_high_tail_xgb.json` | P(total ≥ 9.5) classifier |
+| `models/total_runs_low_tail_xgb.json` | P(total ≤ 7.5) classifier |
+| `models/model_meta.json` | Feature list, calibration config, fold metrics |
 
-## Model evaluation philosophy
+---
 
-This repo uses more than one success metric.
+## Dashboard
 
-### Point prediction quality
+The GitHub Pages dashboard at https://younim2837.github.io/mlb-totals-paper-track/ shows:
 
-- MAE
-- RMSE
-- R²
+- **Latest Daily Bets**: today's Kalshi picks with confidence and sizing
+- **Recent Performance**: last 7 days of paper trade outcomes
+- **Season Totals**: cumulative P&L, win rate, ROI
 
-### Probability quality
+Rebuilt automatically by `build_dashboard.py` after each grading run.
 
-- Brier score
-- log loss
-- 1-sigma / 2-sigma coverage
-- line-specific probability checks at common totals such as `7.5`, `8.5`, and `9.5`
-
-### Betting quality
-
-- win rate versus historical lines
-- ROI by edge bucket
-- side-by-side comparison with sportsbook and Kalshi prices
-
-This matters because a betting model can be useful even if raw total-run MAE is still noisy, as long as the probability layer is calibrated well at the actual betting line.
-
-## Current design choices and caveats
-
-- Dixon-Coles is the active prior engine; Elo remains in the repo as a legacy component and fallback for older model variants.
-- Kalshi is currently a useful market-context feed, but sportsbook consensus is still preferable when available.
-- Point totals are intentionally less volatile than realized MLB scores. The tail classifiers are there to improve betting probabilities without forcing unrealistic point estimates.
-- Same-day lineups, bullpens, weather, and umpires can materially change a live projection, so late refreshes are more informative than early-morning runs.
-- The project is optimized for MLB totals only.
+---
 
 ## Rebuilding from scratch
 
-If you want to rebuild the whole pipeline manually, the rough order is:
-
-```powershell
+```bash
+# 1. Collect all historical data
 python collect_games.py
-python collect_pitcher_stats.py --update-current
-python collect_weather.py
 python collect_team_batting.py
+python collect_pitcher_stats.py
 python collect_team_lineups.py --update-current
 python collect_bullpen_usage.py --update-current
 python collect_umpires.py --update
-python dixon_coles.py --date 2026-04-11 --cache-only
+python collect_weather.py
+
+# 2. Fit priors and build features
+python dixon_coles.py --cache-only
 python build_features.py
+
+# 3. Train
 python train_model.py
+
+# 4. Evaluate
 python backtest.py
 python walk_forward_backtest.py
-python predict_today.py 2026-04-11
+
+# 5. Predict
+python predict_today.py
 ```
+
+---
 
 ## Configuration
 
-[model_config.yaml](/c:/Users/Dakota/Sports%20Betting%20Project%20Folder/model_config.yaml) controls:
+[model_config.yaml](model_config.yaml) controls:
 
-- bankroll and Kelly sizing
-- manual day-level overrides
-- Dixon-Coles fit settings
-- betting signal thresholds
-- display behavior
-- prepared future market-line settings under `market_lines`
+- Bankroll and Kelly fraction
+- Edge and confidence thresholds
+- Dixon-Coles decay and regularization settings
+- Display behavior and manual overrides
 
-The comments in that file are meant to be edited directly.
+---
+
+## Design decisions
+
+- **No ELO.** Dixon-Coles replaced ELO entirely. All model features are DC-derived or rolling empirical stats.
+- **Team-split residuals.** The model learns home-score and away-score residuals on top of DC expected runs, not raw totals. This keeps the model grounded in the Bayesian prior.
+- **No 2026 model leakage.** Model weights are trained on 2021–2025. The 2026 season contributes only live feature values (DC params, rolling stats, lineup, bullpen, umpire).
+- **Monthly median imputation.** Feature medians are computed per-month to avoid early-season bias from global medians.
+- **Pregame only.** The production scheduler targets games 5–35 minutes before first pitch, after lineups and umpires are posted.
+- **Paper trading until June 2026.** The model paper-trades to accumulate real out-of-sample signal before any live capital is risked.
