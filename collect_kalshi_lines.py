@@ -218,34 +218,53 @@ def _get_consensus_market(markets: list) -> dict | None:
     return _estimate_consensus_line(markets)
 
 
-def _api_get(url: str, params: dict, max_retries: int = 3) -> requests.Response | None:
-    """GET with retry + exponential backoff. Returns Response or None."""
+def _api_get(url: str, params: dict, max_retries: int = 5) -> requests.Response | None:
+    """GET with retry, exponential backoff, and jitter. Returns Response or None."""
+    import random
     for attempt in range(max_retries):
         try:
-            r = requests.get(url, params=params, timeout=15)
+            r = requests.get(url, params=params, timeout=20)
             if r.status_code == 200:
+                # Validate the response is real JSON, not an empty/corrupt body
+                try:
+                    r.json()
+                except ValueError:
+                    wait = 2 ** attempt + random.random()
+                    if attempt < max_retries - 1:
+                        print(f"  Kalshi bad JSON (attempt {attempt+1}), retrying in {wait:.1f}s...")
+                        time.sleep(wait)
+                        continue
+                    print(f"  Kalshi returned non-JSON after {max_retries} attempts")
+                    return None
                 return r
-            if r.status_code == 429:  # rate limited
-                wait = 2 ** attempt
-                print(f"  Kalshi rate limited, retrying in {wait}s...")
+            if r.status_code == 429:
+                wait = 2 ** attempt + random.random() * 2
+                print(f"  Kalshi rate limited (attempt {attempt+1}), retrying in {wait:.1f}s...")
                 time.sleep(wait)
                 continue
-            if r.status_code >= 500:  # server error, retry
-                wait = 2 ** attempt
+            if r.status_code >= 500:
+                wait = 2 ** attempt + random.random()
+                print(f"  Kalshi server error {r.status_code} (attempt {attempt+1}), retrying in {wait:.1f}s...")
                 time.sleep(wait)
                 continue
-            # 4xx other than 429: don't retry
             print(f"  Kalshi API error: HTTP {r.status_code} for {url}")
             return None
         except requests.exceptions.Timeout:
-            wait = 2 ** attempt
+            wait = 2 ** attempt + random.random()
             if attempt < max_retries - 1:
-                print(f"  Kalshi timeout, retrying in {wait}s...")
+                print(f"  Kalshi timeout (attempt {attempt+1}), retrying in {wait:.1f}s...")
                 time.sleep(wait)
-        except Exception as e:
-            wait = 2 ** attempt
+        except requests.exceptions.ConnectionError as e:
+            wait = 2 ** attempt + random.random()
             if attempt < max_retries - 1:
-                print(f"  Kalshi request error ({e}), retrying in {wait}s...")
+                print(f"  Kalshi connection error (attempt {attempt+1}), retrying in {wait:.1f}s...")
+                time.sleep(wait)
+            else:
+                print(f"  Kalshi connection failed after {max_retries} attempts: {e}")
+        except Exception as e:
+            wait = 2 ** attempt + random.random()
+            if attempt < max_retries - 1:
+                print(f"  Kalshi request error ({e}), retrying in {wait:.1f}s...")
                 time.sleep(wait)
             else:
                 print(f"  Kalshi request failed after {max_retries} attempts: {e}")
@@ -335,15 +354,27 @@ def fetch_kalshi_lines(target_date: str | None = None) -> dict:
             skipped.append(f"no-consensus: {away_full} @ {home_full}")
             continue
 
+        # Build full strike ladder: {strike: yes_ask} for all valid markets
+        all_strikes = {}
+        for m in markets:
+            try:
+                s = float(m["floor_strike"])
+                ask = float(m["yes_ask_dollars"])
+                if 0 < ask < 1:  # sanity: valid probability
+                    all_strikes[s] = ask
+            except (TypeError, ValueError, KeyError):
+                continue
+
         results[(away_full, home_full)] = {
-            "kalshi_line":      consensus["kalshi_line"],
+            "kalshi_line":        consensus["kalshi_line"],
             "consensus_estimate": consensus["consensus_estimate"],
-            "anchor_strike":    consensus["anchor_strike"],
-            "yes_ask":          consensus["yes_ask"],
-            "yes_bid":          consensus["yes_bid"],
-            "midpoint":         consensus["midpoint"],
-            "implied_over_pct": consensus["implied_over_pct"],
-            "volume":           consensus["volume"],
+            "anchor_strike":      consensus["anchor_strike"],
+            "yes_ask":            consensus["yes_ask"],
+            "yes_bid":            consensus["yes_bid"],
+            "midpoint":           consensus["midpoint"],
+            "implied_over_pct":   consensus["implied_over_pct"],
+            "volume":             consensus["volume"],
+            "all_strikes":        all_strikes,
         }
 
     if skipped:
