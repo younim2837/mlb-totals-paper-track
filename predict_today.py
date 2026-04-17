@@ -72,9 +72,8 @@ def load_model_config() -> dict:
     is missing or yaml is not installed.
     """
     defaults = {
-        "elo": {"k_factor": 8, "home_advantage": 0.15, "offseason_carry": 0.75},
         "feature_weights": {
-            "elo_ratings": 1.0, "recent_form": 1.0, "season_form": 1.0,
+            "recent_form": 1.0, "season_form": 1.0,
             "pitcher": 1.0, "bullpen": 1.0, "park_factor": 1.0,
             "weather": 1.0, "umpire": 1.0, "h2h": 1.0,
         },
@@ -93,7 +92,7 @@ def load_model_config() -> dict:
         },
         "overrides": {},
         "display": {
-            "show_elo_ratings": True, "show_umpire": True, "show_weather": True,
+            "show_umpire": True, "show_weather": True,
             "min_kalshi_confidence": 40, "kalshi_max_line_diff": 2.5,
         },
         "market_lines": {
@@ -399,25 +398,6 @@ def get_pitcher_stats(pitcher_name: str, game_date, pitcher_stats_df: pd.DataFra
     stats["pitcher_bulk_flag"] = 1.0 if (avg_ip >= 4.5 and avg_pitches >= 65.0 and avg_bf >= 18.0) else 0.0
     return stats
 
-
-def load_current_elo_ratings(games_df: pd.DataFrame, predict_date: str) -> dict:
-    """
-    Load or recompute current Elo ratings for all teams as of predict_date.
-    Returns {team_id: {"off_elo": float, "def_elo": float}}.
-    """
-    import json
-    snapshot_path = os.path.join(DATA_DIR, "team_elo_current.json")
-
-    # Use pre-built snapshot if it exists and game data is up to date
-    if os.path.exists(snapshot_path):
-        with open(snapshot_path) as f:
-            raw = json.load(f)
-        # Keys are strings in JSON — convert to int
-        return {int(k): v for k, v in raw.items()}
-
-    # Fallback: recompute on the fly (slower, ~2s)
-    from team_elo import get_current_ratings
-    return get_current_ratings(games_df)
 
 
 def load_current_dc_params(games_df: pd.DataFrame, predict_date: str, dc_cfg: dict | None = None) -> dict | None:
@@ -760,7 +740,7 @@ def predict_game(game, team_stats, park_factors, model, meta, residual_std,
                  pitcher_stats_df=None, pitcher_ids=None, weather_by_venue=None,
                  h2h_by_matchup=None, team_batting_stats=None,
                  umpire_stats=None, todays_umpires=None,
-                 elo_ratings=None, dc_params=None,
+                 dc_params=None,
                  league_environment=None,
                  todays_lineups=None, bullpen_fatigue_stats=None,
                  uncertainty_model=None, uncertainty_cfg=None,
@@ -834,29 +814,6 @@ def predict_game(game, team_stats, park_factors, model, meta, residual_std,
         h2h = h2h_by_matchup.get((home, away), {})
         if h2h:
             features["h2h_avg_total_runs"] = h2h["h2h_avg_total_runs"]
-
-    # Elo ratings (schedule-adjusted team strength)
-    if elo_ratings:
-        home_id = game["home_id"]
-        away_id = game["away_id"]
-        h_elo = elo_ratings.get(home_id, {})
-        a_elo = elo_ratings.get(away_id, {})
-        if h_elo and a_elo:
-            from team_elo import LEAGUE_AVG_RUNS, INIT_ELO, ELO_SCALE, HOME_ADVANTAGE
-            h_off = h_elo["off_elo"]
-            h_def = h_elo["def_elo"]
-            a_off = a_elo["off_elo"]
-            a_def = a_elo["def_elo"]
-            features["home_off_elo"] = h_off
-            features["home_def_elo"] = h_def
-            features["away_off_elo"] = a_off
-            features["away_def_elo"] = a_def
-            exp_home = LEAGUE_AVG_RUNS + HOME_ADVANTAGE + (h_off - INIT_ELO) * ELO_SCALE - (a_def - INIT_ELO) * ELO_SCALE
-            exp_away = LEAGUE_AVG_RUNS + (a_off - INIT_ELO) * ELO_SCALE - (h_def - INIT_ELO) * ELO_SCALE
-            features["elo_expected_total"] = round(exp_home + exp_away, 3)
-            features["elo_offense_sum"]    = round(h_off + a_off, 2)
-            features["elo_matchup_score"]  = round((h_off + a_off) - (h_def + a_def), 2)
-            features["elo_home_edge"]      = round((h_off - a_def) - (a_off - h_def), 2)
 
     # Dixon-Coles priors
     if dc_params:
@@ -1098,10 +1055,6 @@ def predict_game(game, team_stats, park_factors, model, meta, residual_std,
         "predicted_away_runs": round(side_predictions.get("away"), 2) if "away" in side_predictions else None,
         "dc_baseline_total": round(baseline_total, 3) if baseline_total else None,
         # Carry through display values
-        "home_off_elo":       features.get("home_off_elo"),
-        "home_def_elo":       features.get("home_def_elo"),
-        "away_off_elo":       features.get("away_off_elo"),
-        "away_def_elo":       features.get("away_def_elo"),
         "home_dc_attack":     features.get("home_dc_attack"),
         "home_dc_defense":    features.get("home_dc_defense"),
         "away_dc_attack":     features.get("away_dc_attack"),
@@ -1327,18 +1280,10 @@ def main():
         print("  Bullpen fatigue stats not available (run collect_bullpen_usage.py)")
 
     feature_names = set(meta.get("features", []))
-    needs_elo = any("elo" in f for f in feature_names)
     needs_dc_features = any(
         f.startswith("home_dc_") or f.startswith("away_dc_") or f.startswith("dc_")
         for f in feature_names
     )
-
-    # Elo ratings (legacy fallback for older models)
-    elo_ratings = {}
-    if needs_elo:
-        print("Loading Elo ratings...")
-        elo_ratings = load_current_elo_ratings(games_df, date_str)
-        print(f"  Elo ratings loaded for {len(elo_ratings)} teams")
 
     # Umpire stats
     print("Loading umpire stats...")
@@ -1379,7 +1324,6 @@ def main():
                             team_batting_stats=team_batting_stats,
                             umpire_stats=umpire_stats,
                             todays_umpires=todays_umpires,
-                            elo_ratings=elo_ratings,
                             dc_params=dc_params,
                             league_environment=league_environment,
                             todays_lineups=todays_lineups,
