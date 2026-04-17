@@ -220,7 +220,7 @@ def _choose_best_daily_file(paths: list[Path]) -> list[Path]:
 
 
 def latest_picks_file(season: int) -> Path | None:
-    pattern = f"{season}-*-picks.tsv"
+    pattern = f"{season}-*-pregame-board.tsv"
     candidates = _choose_best_daily_file(list(PREDICTIONS_DIR.glob(pattern)))
     return candidates[-1] if candidates else None
 
