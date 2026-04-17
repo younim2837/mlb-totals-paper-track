@@ -100,6 +100,8 @@ def process_games(raw_games: list[dict]) -> pd.DataFrame:
             "game_num": g["game_num"],
         })
 
+    if not records:
+        return pd.DataFrame()
     df = pd.DataFrame(records)
     df["date"] = pd.to_datetime(df["date"])
     df["game_datetime"] = pd.to_datetime(df["game_datetime"], errors="coerce", utc=True)
