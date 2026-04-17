@@ -38,6 +38,21 @@ jobs:
       - name: Refresh completed games
         run: python collect_games.py
 
+      - name: Refresh team batting stats
+        run: python collect_team_batting.py --update-current
+
+      - name: Refresh pitcher stats
+        run: python collect_pitcher_stats.py --update-current
+
+      - name: Refresh bullpen usage logs
+        run: python collect_bullpen_usage.py --update-current
+
+      - name: Refresh umpire game log
+        run: python collect_umpires.py --update
+
+      - name: Refresh lineup features
+        run: python collect_team_lineups.py --update-current
+
       - name: Refresh historical Kalshi replay
         shell: bash
         run: |

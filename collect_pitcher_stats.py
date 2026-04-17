@@ -254,6 +254,7 @@ def main():
         new_df["innings_pitched_dec"] = new_df["inningsPitched"].apply(compute_innings_float)
         new_df["date"] = parse_pitcher_log_dates(new_df["date"])
         combined = pd.concat([existing_logs, new_df], ignore_index=True) if not existing_logs.empty else new_df
+        combined["date"] = pd.to_datetime(combined["date"], errors="coerce")
         combined = combined.sort_values(["player_id", "date"]).reset_index(drop=True)
         combined.to_csv(logs_path, sep="\t", index=False)
         print(f"\nSaved {len(combined)} total starts to {logs_path}")
