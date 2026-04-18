@@ -1,1 +1,7 @@
 target_date	month	game_id	away_team	home_team	predicted_total	kalshi_line	kalshi_side	kalshi_edge_pct	kalshi_fair_price_pct	kalshi_side_model_prob	kalshi_side_market_prob	kalshi_side_market_price	kalshi_bankroll_used	kalshi_bet_pct_bankroll	kalshi_recommended_bet	kalshi_contracts	away_score	home_score	total_runs	result	profit_per_contract	pnl_dollars	roi_pct	paper_bankroll_at_bet	paper_bankroll_after_day	settled
+2026-04-17	2026-04	823152	Texas Rangers	Seattle Mariners	6.2	6.5	OVER	11.2	63.2	63.2	52.0	0.52	10000.0	3.4799999999999995	348.0	669.2307692307692				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-17	2026-04	824048	San Diego Padres	Los Angeles Angels	9.3	8.5	OVER	15.4	63.4	63.4	48.0	0.48	10000.0	4.44	444.0	925.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-17	2026-04	824373	Los Angeles Dodgers	Colorado Rockies	8.7	9.5	UNDER	-11.4	38.6	61.4	50.0	0.5	10000.0	3.41	341.0	682.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-17	2026-04	824693	New York Mets	Chicago Cubs	9.3	10.5	UNDER	-7.5	39.5	60.5	53.0	0.53	10000.0	2.3800000000000003	238.0	449.05660377358487				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-17	2026-04	825019	Chicago White Sox	Athletics	8.2	8.5	UNDER	-7.8	48.2	51.8	44.0	0.43999999999999995	10000.0	2.09	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False
+2026-04-17	2026-04	825101	Toronto Blue Jays	Arizona Diamondbacks	7.7	8.5	UNDER	-5.6	46.4	53.6	48.0	0.48	10000.0	1.62	0.0	0.0				pending	0.0	0.0	0.0	10000.0	10000.0	False

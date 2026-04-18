@@ -1,2 +1,16 @@
 date	game_id	away_team	home_team	scheduled_pt	polled_at_pt	minutes_before	status	notes
-2026-04-17	824693	New York Mets	Chicago Cubs	11:20	11:02	17.2	hit
+2026-04-17	824693	New York Mets	Chicago Cubs	11:20	11:02	17.2	hit	
+2026-04-17	824454	Baltimore Orioles	Cleveland Guardians	15:10	17:17	-128	missed	already live when polled
+2026-04-17	823476	Atlanta Braves	Philadelphia Phillies	15:40	17:17	-98	missed	already live when polled
+2026-04-17	822752	San Francisco Giants	Washington Nationals	15:45	17:17	-93	missed	already live when polled
+2026-04-17	823397	Tampa Bay Rays	Pittsburgh Pirates	15:45	17:17	-93	missed	already live when polled
+2026-04-17	823559	Kansas City Royals	New York Yankees	16:05	17:17	-73	missed	already live when polled
+2026-04-17	823883	Milwaukee Brewers	Miami Marlins	16:10	17:17	-68	missed	already live when polled
+2026-04-17	824778	Detroit Tigers	Boston Red Sox	16:15	17:17	-63	missed	already live when polled
+2026-04-17	824207	St. Louis Cardinals	Houston Astros	17:10	17:17	-8	missed	already live when polled
+2026-04-17	823720	Cincinnati Reds	Minnesota Twins	17:10	17:17	-8	missed	already live when polled
+2026-04-17	824373	Los Angeles Dodgers	Colorado Rockies	17:40	17:17	22.2	hit	
+2026-04-17	824048	San Diego Padres	Los Angeles Angels	18:38	17:17	80.2	hit	
+2026-04-17	823152	Texas Rangers	Seattle Mariners	18:40	17:17	82.2	hit	
+2026-04-17	825101	Toronto Blue Jays	Arizona Diamondbacks	18:40	17:17	82.2	hit	
+2026-04-17	825019	Chicago White Sox	Athletics	18:40	17:17	82.2	hit	
