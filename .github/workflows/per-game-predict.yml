@@ -16,6 +16,11 @@ on:
         required: false
         default: false
         type: boolean
+      force_all:
+        description: "Predict all unpredicted games for the date, ignoring timing window"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -31,6 +36,7 @@ jobs:
       ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
       RUN_DATE: ${{ inputs.run_date }}
       DRY_RUN: ${{ inputs.dry_run }}
+      FORCE_ALL: ${{ inputs.force_all }}
 
     steps:
       - name: Check out repository
@@ -58,6 +64,9 @@ jobs:
           if [ "${DRY_RUN}" = "true" ]; then
             args+=("--dry-run")
           fi
+          if [ "${FORCE_ALL}" = "true" ]; then
+            args+=("--force-all")
+          fi
           python predict_pregame.py "${args[@]}"
 
       - name: Refresh tracker and dashboard if new predictions
@@ -81,8 +90,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
           git add predictions/ paper_tracking/ docs/
+          git pull --rebase origin main
           if git diff --cached --quiet; then
             echo "Nothing new to commit."
             exit 0

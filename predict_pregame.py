@@ -144,7 +144,11 @@ def main() -> None:
     parser.add_argument("--date", default=None, help="Override date YYYY-MM-DD")
     parser.add_argument("--dry-run", action="store_true",
                         help="Log timing only, skip predictions")
+    parser.add_argument("--force-all", action="store_true",
+                        help="Predict all unpredicted games for the date, ignoring the timing window")
     args = parser.parse_args()
+
+    window_close = 999 if args.force_all else WINDOW_CLOSE_MIN
 
     now_utc = datetime.now(UTC)
     now_pt = now_utc.astimezone(PACIFIC_TZ)
@@ -152,7 +156,8 @@ def main() -> None:
     polled_at_pt = now_pt.strftime("%H:%M")
 
     print(f"Pregame poller — {now_pt.strftime('%Y-%m-%d %H:%M %Z')}")
-    print(f"Target date: {date_str}  |  Window: {WINDOW_OPEN_MIN}–{WINDOW_CLOSE_MIN} min before first pitch")
+    mode = "FORCE-ALL" if args.force_all else f"{WINDOW_OPEN_MIN}–{window_close} min before first pitch"
+    print(f"Target date: {date_str}  |  Window: {mode}")
     print()
 
     log = load_log(date_str)
@@ -206,7 +211,7 @@ def main() -> None:
             any_changes = True
             continue
 
-        if mins > WINDOW_CLOSE_MIN:
+        if mins > window_close:
             print(f"  {matchup} ({game_pt} PT): {mins:.0f} min away — too early")
             continue
 
