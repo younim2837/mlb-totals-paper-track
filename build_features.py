@@ -204,9 +204,10 @@ def add_bullpen_stats_to_game_log(games: pd.DataFrame,
 def add_rolling_features(team_log: pd.DataFrame) -> pd.DataFrame:
     """Add rolling averages per team for runs scored and runs allowed."""
     team_log = team_log.copy()
+    team_log["_season"] = team_log["date"].dt.year
 
     for window in WINDOWS:
-        grp = team_log.groupby("team")
+        grp = team_log.groupby(["team", "_season"])
 
         # Rolling average runs scored (offensive strength)
         team_log[f"avg_runs_scored_{window}g"] = (
@@ -232,13 +233,13 @@ def add_rolling_features(team_log: pd.DataFrame) -> pd.DataFrame:
                 lambda g: (g["runs_scored"] > g["runs_allowed"]).shift(1).rolling(window, min_periods=5).mean(),
                 include_groups=False,
             )
-            .reset_index(level=0, drop=True)
+            .reset_index(level=[0, 1], drop=True)
         )
 
     # Rolling bullpen ERA: (bullpen_runs / bullpen_ip) * 9 over last N games
     if "bullpen_runs" in team_log.columns and team_log["bullpen_runs"].notna().any():
         for window in WINDOWS:
-            grp = team_log.groupby("team")
+            grp = team_log.groupby(["team", "_season"])
             rolling_bp_runs = grp["bullpen_runs"].transform(
                 lambda x: x.shift(1).rolling(window, min_periods=5).sum()
             )
@@ -262,7 +263,7 @@ def add_rolling_features(team_log: pd.DataFrame) -> pd.DataFrame:
         ) * 9
 
     # Season-long averages (shift to avoid leakage)
-    grp = team_log.groupby(["team", team_log["date"].dt.year])
+    grp = team_log.groupby(["team", "_season"])
     team_log["season_avg_scored"] = (
         grp["runs_scored"]
         .transform(lambda x: x.shift(1).expanding(min_periods=5).mean())
@@ -272,6 +273,7 @@ def add_rolling_features(team_log: pd.DataFrame) -> pd.DataFrame:
         .transform(lambda x: x.shift(1).expanding(min_periods=5).mean())
     )
 
+    team_log.drop(columns=["_season"], inplace=True)
     return team_log
 
 
@@ -769,8 +771,9 @@ def merge_team_batting_features(matchups: pd.DataFrame) -> pd.DataFrame:
     logs = pd.read_csv(path, sep="\t")
     logs["date"] = pd.to_datetime(logs["date"])
     logs = logs.sort_values(["team_id", "date"]).reset_index(drop=True)
+    logs["_season"] = logs["date"].dt.year
 
-    grp = logs.groupby("team_id")
+    grp = logs.groupby(["team_id", "_season"])
 
     for w in [10, 30]:
         logs[f"rolling_ops_{w}g"] = grp["ops"].transform(
@@ -782,6 +785,7 @@ def merge_team_batting_features(matchups: pd.DataFrame) -> pd.DataFrame:
         logs[f"rolling_k_pct_{w}g"] = grp["k_pct"].transform(
             lambda x: x.shift(1).rolling(w, min_periods=5).mean()
         )
+    logs.drop(columns=["_season"], inplace=True)
 
     bat_cols = [f"rolling_ops_{w}g" for w in [10, 30]] + \
                [f"rolling_bb_pct_{w}g" for w in [10, 30]] + \
