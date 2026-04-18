@@ -74,8 +74,7 @@ betting:
   allowed_market_adjustment_methods:
     - edge_model          # Only allow live bets when the learned edge-model path
                           # is active. Remove this list to allow all methods.
-  max_bets_per_day: 5     # Cap on flagged bets shown per day (sorted by edge size).
-                          # Set to 0 for no cap.
+  max_bets_per_day: 0     # No cap — bet all qualifying games each day.
 
 
 # ── Manual Game Overrides ────────────────────────────────────
