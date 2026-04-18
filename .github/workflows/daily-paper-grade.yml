@@ -1,9 +1,6 @@
 name: Daily Paper Grade
 
 on:
-  schedule:
-    # 13:15 UTC = 06:15 PT during daylight saving, 05:15 PT otherwise.
-    - cron: "15 13 * * *"
   workflow_dispatch:
     inputs:
       season:
