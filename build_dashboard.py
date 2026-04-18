@@ -879,67 +879,6 @@ def render_dashboard(
     <section class="section">
       <div class="section-head">
         <div>
-          <h2>Historical Replay</h2>
-          <div class="section-subtitle">Backfilled 2026 Kalshi results using historical 10 AM PT prices.</div>
-        </div>
-      </div>
-      <div class="metrics">
-        <div class="metric">
-          <div class="metric-label">Replay Bets</div>
-          <div class="metric-value">{historical_summary.bets_placed}</div>
-          <div class="metric-note">Historical bets identified.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Replay Record</div>
-          <div class="metric-value">{historical_summary.wins}-{historical_summary.losses}</div>
-          <div class="metric-note">Settled historical wins and losses.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Replay ROI</div>
-          <div class="metric-value">{_fmt_pct(historical_summary.roi_pct)}</div>
-          <div class="metric-note">Historical Kalshi replay ROI.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Replay P&amp;L</div>
-          <div class="metric-value">{_fmt_money(historical_summary.total_pnl, signed=True)}</div>
-          <div class="metric-note">Historical replay profit.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Kalshi Games</div>
-          <div class="metric-value">{historical_summary.games_with_kalshi}</div>
-          <div class="metric-note">Games with historical Kalshi coverage.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">Average Edge</div>
-          <div class="metric-value">{_fmt_pct(historical_summary.avg_edge_pct)}</div>
-          <div class="metric-note">Mean replay edge.</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">OVER Bets</div>
-          <div class="metric-value">{historical_summary.over_bets}</div>
-          <div class="metric-note">Win rate: {historical_summary.over_win_rate:.1%}</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">UNDER Bets</div>
-          <div class="metric-value">{historical_summary.under_bets}</div>
-          <div class="metric-note">Win rate: {historical_summary.under_win_rate:.1%}</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h2>Recent Historical Replay Bets</h2>
-          <div class="section-subtitle">Most recent settled bets from the historical 2026 Kalshi backfill.</div>
-        </div>
-      </div>
-      {historical_table_html}
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
           <h2>Scheduler Health</h2>
           <div class="section-subtitle">Pregame prediction hit rate — how often the bot predicts within 5–35 min of first pitch. Target ≥90%. Below 70% → switch to external cron.</div>
         </div>
