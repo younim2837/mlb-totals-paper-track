@@ -121,13 +121,7 @@ def add_kalshi_metrics(pred: dict, residual_std: float) -> dict:
     market_p = float(pred.get("kalshi_over_pct", 0.0)) / 100.0
     sigma = float(pred.get("prediction_std", residual_std))
 
-    # Use the pre-edge-model prediction for Kalshi probability.
-    # The edge model adjusts predicted_total using the market line as a reference,
-    # then computing P(over/under that same line) from the adjusted total creates
-    # a circular dependency that amplifies disagreement into inflated edges.
-    # market_total_before_shrink is set by apply_market_adjustment_to_prediction;
-    # fall back to predicted_total in the simulation path (no edge model runs there).
-    raw_total = float(pred.get("market_total_before_shrink") or pred["predicted_total"])
+    raw_total = float(pred["predicted_total"])
 
     model_p = probability_over_line(
         raw_total,
