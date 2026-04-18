@@ -68,7 +68,7 @@ betting:
   min_kalshi_edge_pct: 5.0
                           # Minimum absolute edge vs Kalshi market price before betting.
                           # Example: model fair 61%, market 54% = 7.0% edge.
-  min_kalshi_confidence_pct: 57.5
+  min_kalshi_confidence_pct: 60.0
                           # Minimum model win probability on the chosen Kalshi side.
                           # Helps filter thin edges that still produce tiny Kelly bets.
   allowed_market_adjustment_methods:
@@ -121,8 +121,8 @@ display:
   show_weather: true        # Show weather conditions for outdoor games
   min_kalshi_confidence: 20 # Only show Kalshi market data if market has >= this
                             # implied probability range (filters garbage markets)
-  kalshi_max_line_diff: 4.5 # Hide Kalshi line if it differs from model by more
-                            # than this many runs (filters thin/bad markets)
+  kalshi_max_line_diff: 2.5 # Skip bet if model differs from Kalshi line by more
+                            # than this many runs (filters mispriced markets)
 
 
 # -- Market Lines / Future Odds API Integration -----------------
