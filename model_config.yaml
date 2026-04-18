@@ -52,7 +52,7 @@ bankroll:
   kelly_fraction: 0.15  # Reduced from 0.25 through end of May 2026
                         # to account for early-season OVER bias in edge estimates.
                         # Review after 2026-06-01 when features are fully populated.
-  max_bet_pct: 0        # 0 = no hard cap; show true quarter-Kelly sizing
+  max_bet_pct: 5        # Hard cap per game at 5% of bankroll
   min_bet: 1            # Minimum bet size in dollars (rounds up to this)
   round_to: 1           # Round bet size to nearest $1 (cleaner sizing)
 
