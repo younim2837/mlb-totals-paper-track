@@ -1,17 +1,17 @@
 # Latest Status (2026)
 
-- Updated: 2026-04-18T00:19:56Z
-- Daily board files found: 3
+- Updated: 2026-04-18T07:05:37Z
+- Daily board files found: 2
 
 ## Kalshi
-- Tracked: 6
+- Tracked: 0
 - Settled: 0
 - Record: 0-0-0
 - Win rate: 0.0%
 - ROI: +0.0%
 
 ## Sportsbook (Optional)
-- Tracked: 8
+- Tracked: 5
 - Settled: 5
 - Record: 2-3-0
 - Win rate: 40.0%

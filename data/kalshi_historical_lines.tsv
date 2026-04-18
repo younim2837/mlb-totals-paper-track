@@ -3316,3 +3316,184 @@ date	away_team	home_team	strike	yes_price	trade_time	has_10am_price	api_failed
 2026-04-16	Washington Nationals	Pittsburgh Pirates	16.5			False	False
 2026-04-16	Washington Nationals	Pittsburgh Pirates	17.5			False	False
 2026-04-16	Washington Nationals	Pittsburgh Pirates	18.5			False	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	3.5	0.95	2026-04-17T16:21:09.374149Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	4.5	0.92	2026-04-17T13:37:13.987052Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	5.5	0.85	2026-04-17T16:48:47.823888Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	6.5	0.77	2026-04-17T11:57:30.521395Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	7.5	0.69	2026-04-17T16:53:17.957832Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	8.5	0.59	2026-04-17T16:32:49.511845Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	9.5	0.49	2026-04-17T16:56:02.100856Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	10.5	0.43	2026-04-17T13:46:08.722937Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	11.5	0.34	2026-04-17T16:23:10.835171Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	12.5	0.25	2026-04-17T15:51:29.29809Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	13.5	0.2	2026-04-17T15:53:28.347985Z	True	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	14.5			False	False
+2026-04-17	Atlanta Braves	Philadelphia Phillies	15.5			False	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	2.5	0.98	2026-04-17T16:17:44.587599Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	3.5	0.91	2026-04-17T14:35:24.581763Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	4.5	0.85	2026-04-17T16:18:22.392537Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	5.5	0.73	2026-04-17T15:19:17.768548Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	6.5	0.66	2026-04-17T16:18:49.740703Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	7.5	0.56	2026-04-17T16:58:18.668518Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	8.5	0.47	2026-04-17T16:56:04.527585Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	9.5	0.37	2026-04-17T16:19:56.506143Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	10.5	0.29	2026-04-17T13:49:08.539028Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	11.5	0.2	2026-04-17T14:01:27.18223Z	True	False
+2026-04-17	Baltimore Orioles	Cleveland Guardians	12.5	0.18	2026-04-17T16:09:07.503321Z	True	False
+2026-04-17	Chicago White Sox	Athletics	3.5	0.95	2026-04-17T16:50:56.636975Z	True	False
+2026-04-17	Chicago White Sox	Athletics	4.5	0.87	2026-04-17T16:21:40.5235Z	True	False
+2026-04-17	Chicago White Sox	Athletics	5.5	0.82	2026-04-17T16:51:11.385373Z	True	False
+2026-04-17	Chicago White Sox	Athletics	6.5	0.76	2026-04-17T16:51:20.945052Z	True	False
+2026-04-17	Chicago White Sox	Athletics	7.5	0.63	2026-04-17T14:33:44.060765Z	True	False
+2026-04-17	Chicago White Sox	Athletics	8.5	0.56	2026-04-17T16:51:37.174439Z	True	False
+2026-04-17	Chicago White Sox	Athletics	9.5	0.46	2026-04-17T16:56:30.401499Z	True	False
+2026-04-17	Chicago White Sox	Athletics	10.5	0.38	2026-04-17T14:34:11.696146Z	True	False
+2026-04-17	Chicago White Sox	Athletics	11.5	0.31	2026-04-17T14:59:12.432916Z	True	False
+2026-04-17	Chicago White Sox	Athletics	12.5	0.25	2026-04-17T14:08:01.406966Z	True	False
+2026-04-17	Chicago White Sox	Athletics	13.5	0.19	2026-04-17T16:27:42.80051Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	1.5			False	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	2.5	0.98	2026-04-17T00:40:21.182426Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	3.5	0.91	2026-04-17T16:40:28.579949Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	4.5	0.85	2026-04-17T16:40:56.612392Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	5.5			False	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	6.5	0.67	2026-04-17T16:41:19.213491Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	7.5	0.54	2026-04-17T16:58:57.043413Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	8.5	0.48	2026-04-17T16:49:47.936264Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	9.5	0.35	2026-04-17T14:51:40.864808Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	10.5	0.3	2026-04-17T16:42:21.77007Z	True	False
+2026-04-17	Cincinnati Reds	Minnesota Twins	11.5	0.2	2026-04-17T14:08:00.650016Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	2.5	0.92	2026-04-17T00:43:28.787303Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	3.5	0.9	2026-04-17T16:37:13.758643Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	4.5	0.85	2026-04-17T16:37:35.841731Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	5.5	0.74	2026-04-17T14:29:28.651599Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	6.5	0.65	2026-04-17T16:38:01.739773Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	7.5	0.52	2026-04-17T16:58:56.69548Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	8.5	0.44	2026-04-17T16:38:35.38586Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	9.5	0.36	2026-04-17T14:10:56.227851Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	10.5	0.29	2026-04-17T16:38:55.979719Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	11.5	0.22	2026-04-17T14:11:36.111313Z	True	False
+2026-04-17	Detroit Tigers	Boston Red Sox	12.5	0.18	2026-04-17T14:12:02.17385Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	2.5	0.98	2026-04-17T16:31:32.761538Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	3.5	0.88	2026-04-17T00:40:29.806738Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	4.5	0.85	2026-04-17T16:32:03.263191Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	5.5	0.75	2026-04-17T16:14:39.032363Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	6.5	0.66	2026-04-17T16:32:29.732381Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	7.5	0.54	2026-04-17T16:53:02.859809Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	8.5	0.44	2026-04-17T16:56:23.607357Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	9.5	0.35	2026-04-17T16:33:37.614322Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	10.5	0.28	2026-04-17T16:53:49.683835Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	11.5	0.23	2026-04-17T15:59:04.492884Z	True	False
+2026-04-17	Kansas City Royals	New York Yankees	12.5	0.19	2026-04-17T08:41:56.410855Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	3.5	0.96	2026-04-17T16:46:22.853759Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	4.5	0.93	2026-04-17T07:06:08.357035Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	5.5	0.83	2026-04-17T16:46:42.463978Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	6.5	0.77	2026-04-17T16:04:56.167062Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	7.5	0.67	2026-04-17T16:47:01.112853Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	8.5	0.6	2026-04-17T15:59:49.995653Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	9.5	0.49	2026-04-17T16:59:54.536548Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	10.5	0.42	2026-04-17T14:00:58.480384Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	11.5	0.32	2026-04-17T16:47:52.593459Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	12.5	0.27	2026-04-17T16:18:26.646766Z	True	False
+2026-04-17	Los Angeles Dodgers	Colorado Rockies	13.5	0.21	2026-04-17T16:18:56.052852Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	2.5	0.99	2026-04-17T04:24:55.99554Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	3.5	0.91	2026-04-17T16:34:22.543141Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	4.5	0.86	2026-04-17T08:40:44.300618Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	5.5	0.75	2026-04-17T16:34:58.807202Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	6.5			False	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	7.5	0.56	2026-04-17T16:35:25.315349Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	8.5	0.47	2026-04-17T16:58:08.976067Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	9.5	0.37	2026-04-17T16:35:56.831225Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	10.5	0.3	2026-04-17T14:07:55.285635Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	11.5	0.23	2026-04-17T16:42:53.751333Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	12.5	0.18	2026-04-17T14:07:56.024208Z	True	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	13.5			False	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	14.5			False	False
+2026-04-17	Milwaukee Brewers	Miami Marlins	15.5			False	False
+2026-04-17	New York Mets	Chicago Cubs	4.5	0.95	2026-04-17T16:12:55.118772Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	5.5	0.9	2026-04-17T14:58:54.956815Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	6.5	0.8	2026-04-17T16:47:18.579979Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	7.5	0.71	2026-04-17T16:59:07.160606Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	8.5	0.65	2026-04-17T16:50:28.80246Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	9.5	0.55	2026-04-17T16:58:52.412397Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	10.5	0.46	2026-04-17T16:59:54.856592Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	11.5	0.4	2026-04-17T16:31:26.438753Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	12.5	0.31	2026-04-17T16:54:53.834646Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	13.5	0.27	2026-04-17T16:50:30.083653Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	14.5	0.21	2026-04-17T16:49:15.413183Z	True	False
+2026-04-17	New York Mets	Chicago Cubs	15.5			False	False
+2026-04-17	New York Mets	Chicago Cubs	16.5			False	False
+2026-04-17	New York Mets	Chicago Cubs	17.5			False	False
+2026-04-17	San Diego Padres	Los Angeles Angels	2.5			False	False
+2026-04-17	San Diego Padres	Los Angeles Angels	3.5	0.92	2026-04-17T16:48:49.02555Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	4.5	0.84	2026-04-17T12:53:34.99417Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	5.5	0.76	2026-04-17T16:49:00.707405Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	6.5	0.69	2026-04-17T14:30:59.992514Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	7.5	0.57	2026-04-17T16:49:10.450914Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	8.5	0.49	2026-04-17T16:52:02.756053Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	9.5	0.39	2026-04-17T16:49:24.121095Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	10.5	0.33	2026-04-17T14:07:57.568468Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	11.5	0.24	2026-04-17T16:49:34.83559Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	12.5	0.2	2026-04-17T14:07:58.339846Z	True	False
+2026-04-17	San Diego Padres	Los Angeles Angels	13.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	2.5	0.98	2026-04-17T16:26:49.569791Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	3.5	0.91	2026-04-17T16:24:43.968839Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	4.5	0.86	2026-04-17T16:25:10.964102Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	5.5	0.76	2026-04-17T14:28:55.893355Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	6.5	0.69	2026-04-17T16:44:55.51717Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	7.5	0.58	2026-04-17T16:57:09.826919Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	8.5	0.47	2026-04-17T16:59:53.928646Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	9.5	0.38	2026-04-17T16:26:53.295327Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	10.5	0.32	2026-04-17T16:13:49.258319Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	11.5	0.24	2026-04-17T16:37:30.10909Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	12.5	0.19	2026-04-17T15:26:30.419891Z	True	False
+2026-04-17	San Francisco Giants	Washington Nationals	13.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	14.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	15.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	16.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	17.5			False	False
+2026-04-17	San Francisco Giants	Washington Nationals	18.5			False	False
+2026-04-17	St. Louis Cardinals	Houston Astros	2.5			False	False
+2026-04-17	St. Louis Cardinals	Houston Astros	3.5	0.94	2026-04-17T16:43:53.776768Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	4.5	0.89	2026-04-17T15:57:33.425009Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	5.5	0.81	2026-04-17T16:44:16.466115Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	6.5	0.72	2026-04-17T16:34:07.226864Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	7.5	0.64	2026-04-17T16:44:40.11424Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	8.5	0.56	2026-04-17T16:48:09.100711Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	9.5	0.44	2026-04-17T16:44:59.495009Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	10.5	0.35	2026-04-17T16:30:05.85591Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	11.5	0.27	2026-04-17T16:45:26.587005Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	12.5	0.23	2026-04-17T16:22:16.333309Z	True	False
+2026-04-17	St. Louis Cardinals	Houston Astros	13.5			False	False
+2026-04-17	St. Louis Cardinals	Houston Astros	14.5			False	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	2.5	0.93	2026-04-17T00:43:51.686308Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	3.5	0.92	2026-04-17T16:28:03.913662Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	4.5	0.87	2026-04-17T08:40:28.946992Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	5.5	0.76	2026-04-17T16:29:11.416209Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	6.5	0.69	2026-04-17T15:54:48.424695Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	7.5	0.56	2026-04-17T16:50:52.33348Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	8.5	0.5	2026-04-17T16:42:11.376745Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	9.5	0.39	2026-04-17T16:30:05.195895Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	10.5	0.32	2026-04-17T12:52:04.328583Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	11.5	0.24	2026-04-17T16:30:28.82859Z	True	False
+2026-04-17	Tampa Bay Rays	Pittsburgh Pirates	12.5	0.19	2026-04-17T15:57:07.886403Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	1.5	0.95	2026-04-17T14:05:41.248687Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	2.5	0.94	2026-04-17T16:52:29.777884Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	3.5	0.82	2026-04-17T14:52:43.394403Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	4.5	0.73	2026-04-17T16:52:42.694358Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	5.5	0.58	2026-04-17T16:41:22.220465Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	6.5	0.49	2026-04-17T16:52:53.975011Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	7.5	0.38	2026-04-17T16:53:06.033373Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	8.5	0.3	2026-04-17T15:22:56.420146Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	9.5	0.23	2026-04-17T16:53:15.057865Z	True	False
+2026-04-17	Texas Rangers	Seattle Mariners	10.5	0.16	2026-04-17T16:16:36.957278Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	3.5	0.94	2026-04-17T00:58:03.721863Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	4.5	0.9	2026-04-17T00:37:53.825159Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	5.5	0.77	2026-04-17T01:15:34.584619Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	6.5	0.73	2026-04-17T12:30:27.378063Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	7.5	0.61	2026-04-17T15:10:52.7297Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	8.5	0.53	2026-04-17T16:49:44.722088Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	9.5	0.42	2026-04-17T16:29:35.68949Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	10.5	0.36	2026-04-17T11:58:38.182349Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	11.5	0.28	2026-04-17T14:08:02.323356Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	12.5	0.22	2026-04-17T14:08:02.853732Z	True	False
+2026-04-17	Toronto Blue Jays	Arizona Diamondbacks	13.5	0.17	2026-04-17T12:02:57.959021Z	True	False
