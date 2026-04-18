@@ -1,17 +1,26 @@
 """
 Collect historical Kalshi MLB total-run lines for the current season.
 
-Fetches the 10 AM Pacific (17:00 UTC) pre-game snapshot for every settled
-MLB totals event.  This matches the time the daily bot runs, so the prices
-reflect exactly what the bot would have seen.
+Morning mode (default):
+    Fetches the 10 AM Pacific (17:00 UTC) pre-game snapshot for every settled
+    MLB totals event.  This matches the time the daily bot runs, so the prices
+    reflect exactly what the bot would have seen.
+
+Closing mode (--mode closing):
+    Fetches the last trade before first pitch (game_datetime - 5 minutes) for
+    every game.  Requires mlb_games_raw.tsv to supply per-game start times.
 
 Usage:
-    python collect_kalshi_historical.py                # full 2026 season
+    python collect_kalshi_historical.py                        # morning, full 2026 season
     python collect_kalshi_historical.py --season 2026
-    python collect_kalshi_historical.py --date 2026-04-13   # single date
+    python collect_kalshi_historical.py --date 2026-04-13      # morning, single date
+    python collect_kalshi_historical.py --mode closing --season 2026
+    python collect_kalshi_historical.py --mode closing --date 2026-04-13
 
-Output: data/kalshi_historical_lines.tsv
-    date | away_team | home_team | strike | yes_price | has_10am_price
+Output:
+    morning mode:  data/kalshi_historical_lines.tsv
+    closing mode:  data/kalshi_closing_lines_2026.tsv
+        date | away_team | home_team | strike | yes_price | trade_time | has_closing_price
 """
 
 from __future__ import annotations
@@ -20,7 +29,7 @@ import argparse
 import re
 import sys
 import time
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -30,6 +39,7 @@ import requests
 PROJECT_DIR = Path(__file__).resolve().parent
 DATA_DIR    = PROJECT_DIR / "data"
 OUT_PATH    = DATA_DIR / "kalshi_historical_lines.tsv"
+OUT_PATH_CLOSING = DATA_DIR / "kalshi_closing_lines_2026.tsv"
 
 KALSHI_API       = "https://api.elections.kalshi.com/trade-api/v2"
 MLB_TOTAL_SERIES = "KXMLBTOTAL"
@@ -131,6 +141,139 @@ def snapshot_unix(game_date: date) -> int:
     dt = datetime(game_date.year, game_date.month, game_date.day, 17, 0, 0,
                   tzinfo=timezone.utc)
     return int(dt.timestamp())
+
+
+def load_game_datetimes(season: int) -> dict:
+    """
+    Return {(date_str, away_team, home_team): datetime_utc} from mlb_games_raw.tsv.
+
+    Used by closing mode to find the per-game first-pitch time so we can
+    set max_ts = game_datetime - 5 minutes.
+    """
+    path = DATA_DIR / "mlb_games_raw.tsv"
+    if not path.exists():
+        return {}
+
+    df = pd.read_csv(
+        path,
+        sep="\t",
+        usecols=["date", "game_datetime", "away_team", "home_team"],
+    )
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    df = df[df["date"].apply(lambda d: d.year) == season]
+
+    result: dict = {}
+    for row in df.itertuples(index=False):
+        key = (str(row.date), row.away_team, row.home_team)
+        try:
+            dt = pd.to_datetime(row.game_datetime, utc=True).to_pydatetime()
+            result[key] = dt
+        except Exception:
+            pass
+    return result
+
+
+def collect_date_closing(
+    game_date: date,
+    events: list[dict],
+    game_datetimes: dict,
+    rate: float = 0.20,
+) -> list[dict]:
+    """
+    For a single game date, collect the last-trade-before-first-pitch Kalshi
+    price for every strike.  max_ts = game_datetime - 5 minutes per game.
+    """
+    target_events = [
+        ev for ev in events if _event_date(ev.get("event_ticker", "")) == game_date
+    ]
+    if not target_events:
+        return []
+
+    rows: list[dict] = []
+    for ev in target_events:
+        teams = _parse_teams(ev.get("title", ""))
+        if not teams:
+            continue
+        away, home = teams
+
+        # Resolve the per-game first-pitch timestamp (UTC), fallback to noon UTC
+        key = (str(game_date), away, home)
+        game_dt = game_datetimes.get(key)
+        if game_dt is None:
+            # Try to find a match relaxing doubleheader order (same date/teams)
+            for k, v in game_datetimes.items():
+                if k[0] == str(game_date) and k[1] == away and k[2] == home:
+                    game_dt = v
+                    break
+        if game_dt is None:
+            # Fallback: use noon UTC (no start-time info)
+            game_dt = datetime(game_date.year, game_date.month, game_date.day,
+                               18, 0, 0, tzinfo=timezone.utc)
+
+        cutoff_dt = game_dt - timedelta(minutes=5)
+        max_ts = int(cutoff_dt.timestamp())
+
+        # Fetch strike markets
+        r = _api_get(
+            f"{KALSHI_API}/markets",
+            {"event_ticker": ev["event_ticker"], "limit": 50},
+        )
+        time.sleep(rate)
+        if r is None:
+            continue
+        markets = r.json().get("markets", [])
+
+        for mkt in markets:
+            strike = mkt.get("floor_strike")
+            if strike is None:
+                continue
+            strike = float(strike)
+
+            tr = _api_get(
+                f"{KALSHI_API}/markets/trades",
+                {"ticker": mkt["ticker"], "max_ts": max_ts, "limit": 1},
+            )
+            time.sleep(rate)
+
+            api_failed = tr is None
+            trades = [] if api_failed else tr.json().get("trades", [])
+
+            if trades:
+                t = trades[0]
+                rows.append({
+                    "date":              str(game_date),
+                    "away_team":         away,
+                    "home_team":         home,
+                    "strike":            strike,
+                    "yes_price":         float(t["yes_price_dollars"]),
+                    "trade_time":        t["created_time"],
+                    "has_closing_price": True,
+                    "api_failed":        False,
+                })
+            elif api_failed:
+                rows.append({
+                    "date":              str(game_date),
+                    "away_team":         away,
+                    "home_team":         home,
+                    "strike":            strike,
+                    "yes_price":         float("nan"),
+                    "trade_time":        None,
+                    "has_closing_price": False,
+                    "api_failed":        True,
+                })
+            else:
+                rows.append({
+                    "date":              str(game_date),
+                    "away_team":         away,
+                    "home_team":         home,
+                    "strike":            strike,
+                    "yes_price":         float("nan"),
+                    "trade_time":        None,
+                    "has_closing_price": False,
+                    "api_failed":        False,
+                })
+
+    return rows
 
 
 def load_all_settled_events() -> list[dict]:
@@ -294,7 +437,15 @@ def validate_coverage(df: pd.DataFrame, season: int) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Collect historical Kalshi 10-AM-PT lines")
+    parser = argparse.ArgumentParser(
+        description="Collect historical Kalshi lines (morning 10-AM-PT or closing pre-pitch)"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["morning", "closing"],
+        default="morning",
+        help="morning = 10 AM PT snapshot (default); closing = last trade before first pitch",
+    )
     parser.add_argument("--season", type=int, default=2026)
     parser.add_argument("--date",   type=str, default=None,
                         help="Collect a single date YYYY-MM-DD instead of whole season")
@@ -304,6 +455,12 @@ def main() -> None:
                         help="Re-fetch only strikes where api_failed=True in the existing file")
     args = parser.parse_args()
 
+    # ── Route to closing-mode handler ────────────────────────────────────────
+    if args.mode == "closing":
+        _main_closing(args)
+        return
+
+    # ── Morning-mode (original, unchanged) ───────────────────────────────────
     if args.date:
         dates = [date.fromisoformat(args.date)]
     else:
@@ -381,6 +538,96 @@ def main() -> None:
         if failed:
             print(f"WARNING: {failed} strikes have api_failed=True — run with --fix-missing to retry")
         validate_coverage(combined, args.season)
+
+
+def _main_closing(args) -> None:
+    """Closing-mode handler: last trade before first pitch (game_datetime - 5 min)."""
+    out_path = OUT_PATH_CLOSING
+
+    if args.date:
+        dates = [date.fromisoformat(args.date)]
+    else:
+        dates = season_dates(args.season)
+
+    if not dates:
+        print("No game dates found.")
+        return
+
+    # Load game start times from mlb_games_raw.tsv
+    print(f"Loading game datetimes for {args.season} season…")
+    game_datetimes = load_game_datetimes(args.season)
+    if not game_datetimes:
+        print(
+            "WARNING: No game_datetime data found in mlb_games_raw.tsv. "
+            "Closing prices will fall back to noon UTC per date."
+        )
+
+    # Load existing closing data if resuming or adding a single date
+    existing: pd.DataFrame = pd.DataFrame()
+    if (args.resume or args.fix_missing or args.date) and out_path.exists():
+        existing = pd.read_csv(out_path, sep="\t")
+        if "api_failed" not in existing.columns:
+            existing["api_failed"] = False
+
+    if args.fix_missing and not existing.empty:
+        if "api_failed" not in existing.columns:
+            print("No api_failed column in existing file — nothing to fix.")
+            return
+        failed = existing[existing["api_failed"].astype(bool)]
+        if failed.empty:
+            print("No API failures found in existing closing data.")
+            return
+        dates = sorted(pd.to_datetime(failed["date"]).dt.date.unique())
+        existing = existing[~existing["api_failed"].astype(bool)]
+        print(f"Fix-missing: {len(failed)} failed strikes across {len(dates)} dates — re-fetching")
+    elif args.resume and not existing.empty:
+        already = set(existing["date"].unique())
+        dates = [d for d in dates if str(d) not in already]
+        print(f"Resuming: {len(already)} dates already collected, {len(dates)} remaining")
+
+    if not dates:
+        print("All dates already collected.")
+        return
+
+    print("Fetching settled event list…")
+    all_events = load_all_settled_events()
+    print(f"  {len(all_events)} settled events found")
+
+    all_rows: list[dict] = []
+    for i, d in enumerate(dates, 1):
+        print(f"  [{i:2d}/{len(dates)}] {d}…", end=" ", flush=True)
+        rows = collect_date_closing(d, all_events, game_datetimes)
+        games = len({(r["away_team"], r["home_team"]) for r in rows})
+        priced = sum(1 for r in rows if r["has_closing_price"])
+        print(f"{games} games, {priced}/{len(rows)} strikes with closing price")
+        all_rows.extend(rows)
+
+    new_df = pd.DataFrame(all_rows)
+    if not existing.empty:
+        combined = pd.concat([existing, new_df], ignore_index=True)
+        combined = combined.drop_duplicates(subset=["date", "away_team", "home_team", "strike"])
+        combined = combined.sort_values(["date", "away_team", "home_team", "strike"])
+    else:
+        combined = new_df.sort_values(["date", "away_team", "home_team", "strike"])
+
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    combined.to_csv(out_path, sep="\t", index=False)
+    print(f"\nSaved {len(combined)} rows to {out_path.relative_to(PROJECT_DIR)}")
+
+    if not combined.empty:
+        priced = combined["has_closing_price"].sum()
+        total  = len(combined)
+        games  = combined.drop_duplicates(["date", "away_team", "home_team"]).shape[0]
+        failed = combined.get("api_failed", pd.Series(False, index=combined.index)).astype(bool).sum()
+        print(
+            f"Coverage: {games} games, {priced}/{total} strikes with closing price "
+            f"({priced/total*100:.0f}%)"
+        )
+        if failed:
+            print(
+                f"WARNING: {failed} strikes have api_failed=True — "
+                "run with --mode closing --fix-missing to retry"
+            )
 
 
 if __name__ == "__main__":
