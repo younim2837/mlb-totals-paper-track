@@ -1,10 +1,6 @@
 name: Per-Game Pregame Predictor
 
 on:
-  schedule:
-    # Every 20 minutes, all day. The Python script guards itself — it only
-    # predicts games starting 5–35 minutes from now, and skips everything else.
-    - cron: "*/20 * * * *"
   workflow_dispatch:
     inputs:
       run_date:
